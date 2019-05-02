@@ -18,7 +18,7 @@ public:
 	static const int AXIS_Z = 0b00000100;
 
 #ifdef _DEBUG
-	static const int MAT_SIZE = 2; //en nombre de chunks
+	static const int MAT_SIZE = 5; //en nombre de chunks
 #else
 	static const int MAT_SIZE = 5; //en nombre de chunks
 #endif // DEBUG
@@ -178,41 +178,41 @@ public:
 			}
 		// 4 : Caves
 		int caveNumber = int(MAT_SIZE_CUBES * MAT_SIZE_CUBES * MAT_HEIGHT_CUBES / (8192 * 2));
-		printf("Generating caves \n");
-		for (int k = 0; k < caveNumber; k++)
-		{
-			YVec3<int> cavePos = YVec3<int>(rand() % MAT_SIZE_CUBES, rand() % MAT_SIZE_CUBES, rand() % MAT_HEIGHT_CUBES);
-			int caveLength = int(randf() * randf() * 200);
-			// Definition de la direction des caves et de leur rayon
-			float theta = randf() * 2 * M_PI;
-			float deltaTheta = 0.0f;
-			float phi = randf() * 2 * M_PI;
-			float deltaPhi = 0.0f;
-			float caveRadius = randf() * randf();
-			for (int i = 0; i <= caveLength; i++)
-			{
-				cavePos.X += sin(theta) * cos(phi);
-				cavePos.Y += cos(theta) * cos(phi);
-				cavePos.Z += sin(phi);
+		//printf("Generating caves \n");
+		//for (int k = 0; k < caveNumber; k++)
+		//{
+		//	YVec3<int> cavePos = YVec3<int>(rand() % MAT_SIZE_CUBES, rand() % MAT_SIZE_CUBES, rand() % MAT_HEIGHT_CUBES);
+		//	int caveLength = int(randf() * randf() * 200);
+		//	// Definition de la direction des caves et de leur rayon
+		//	float theta = randf() * 2 * M_PI;
+		//	float deltaTheta = 0.0f;
+		//	float phi = randf() * 2 * M_PI;
+		//	float deltaPhi = 0.0f;
+		//	float caveRadius = randf() * randf();
+		//	for (int i = 0; i <= caveLength; i++)
+		//	{
+		//		cavePos.X += sin(theta) * cos(phi);
+		//		cavePos.Y += cos(theta) * cos(phi);
+		//		cavePos.Z += sin(phi);
 
-				theta += deltaTheta * 0.2f;
-				deltaTheta = (deltaTheta * 0.9f) + randf() - randf();
-				phi = phi / 2.0f + deltaPhi / 4.0f;
-				deltaPhi = (deltaPhi * 0.75f) + randf() - randf();
+		//		theta += deltaTheta * 0.2f;
+		//		deltaTheta = (deltaTheta * 0.9f) + randf() - randf();
+		//		phi = phi / 2.0f + deltaPhi / 4.0f;
+		//		deltaPhi = (deltaPhi * 0.75f) + randf() - randf();
 
-				if (randf() >= 0.1)
-				{
-					YVec3f centerPos = YVec3f(cavePos.X + (rand() % 4 - 2) * 0.2, cavePos.Y + (rand() % 4 - 2) * 0.2, cavePos.Z + (rand() % 4 - 2) * 0.2);
+		//		if (randf() >= 0.1)
+		//		{
+		//			YVec3f centerPos = YVec3f(cavePos.X + (rand() % 4 - 2) * 0.2, cavePos.Y + (rand() % 4 - 2) * 0.2, cavePos.Z + (rand() % 4 - 2) * 0.2);
 
-					float radius = (MAT_HEIGHT_CUBES - centerPos.Z) / MAT_HEIGHT_CUBES;
-					radius = 1.2f + (radius * 3.5f + 1) * caveRadius;
-					radius *= sin(i * M_PI / caveLength);
-					radius *= MCube::CUBE_SIZE;
+		//			float radius = (MAT_HEIGHT_CUBES - centerPos.Z) / MAT_HEIGHT_CUBES;
+		//			radius = 1.2f + (radius * 3.5f + 1) * caveRadius;
+		//			radius *= sin(i * M_PI / caveLength);
+		//			radius *= MCube::CUBE_SIZE;
 
-					fillOblateSpheroid(centerPos, radius, int(MCube::CUBE_AIR));
-				}
-			}
-		}
+		//			fillOblateSpheroid(centerPos, radius, int(MCube::CUBE_AIR));
+		//		}
+		//	}
+		//}
 		// 5 : Eau
 		MCube * cube;
 		printf("Generating water \n");

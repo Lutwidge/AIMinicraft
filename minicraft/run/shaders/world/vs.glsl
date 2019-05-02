@@ -115,36 +115,37 @@ void main()
 	worldPos = vecInWorld.xyz;
 
 	/* EAU */
-	if (vs_type_in == CUBE_EAU)
-	{
-		// Noise water
-		//vecInWorld.z += noiseWater(vecInWorld.xyz,elapsed,world_size);
-
-		// Gerstner water
-		vec3 tangent = vec3(1, 0, 0);
-		vec3 binormal = vec3(0, 0, 1);
-		vec3 gerstnerWave1 = gerstnerWater(vecInWorld.xyz, elapsed, 0.02f, 1, vec2(1,1), tangent, binormal);
-		vec3 gerstnerWave2 = gerstnerWater(vecInWorld.xyz, elapsed, 0.025f, 1, vec2(1,0), tangent, binormal);
-		vec3 gerstnerWave3 = gerstnerWater(vecInWorld.xyz, elapsed, 0.005f, 1, vec2(0,1.4), tangent, binormal);
-		vecInWorld.z -= 1.0f;
-		vecInWorld.xyz += gerstnerWave1;
-		vecInWorld.xyz += gerstnerWave2;
-		vecInWorld.xyz += gerstnerWave3;
-
-		normal = normalize(cross(binormal, tangent));
-	}
-	else
-	{
-		normal = (nmat * vec4(vs_normal_in, 1.0)).xyz; // Applique rotations aux normales, pas utile ici
-	}
+	normal = (nmat * vec4(vs_normal_in, 1.0)).xyz;
+	//if (vs_type_in == CUBE_EAU)
+	//{
+	//	// Noise water
+	//	//vecInWorld.z += noiseWater(vecInWorld.xyz,elapsed,world_size);
+	//
+	//	// Gerstner water
+	//	vec3 tangent = vec3(1, 0, 0);
+	//	vec3 binormal = vec3(0, 0, 1);
+	//	vec3 gerstnerWave1 = gerstnerWater(vecInWorld.xyz, elapsed, 0.02f, 1, vec2(1,1), tangent, binormal);
+	//	vec3 gerstnerWave2 = gerstnerWater(vecInWorld.xyz, elapsed, 0.025f, 1, vec2(1,0), tangent, binormal);
+	//	vec3 gerstnerWave3 = gerstnerWater(vecInWorld.xyz, elapsed, 0.005f, 1, vec2(0,1.4), tangent, binormal);
+	//	vecInWorld.z -= 1.0f;
+	//	vecInWorld.xyz += gerstnerWave1;
+	//	vecInWorld.xyz += gerstnerWave2;
+	//	vecInWorld.xyz += gerstnerWave3;
+	//
+	//	normal = normalize(cross(binormal, tangent));
+	//}
+	//else
+	//{
+	//	normal = (nmat * vec4(vs_normal_in, 1.0)).xyz; // Applique rotations aux normales, pas utile ici
+	//}
 
 	vec4 vecInView = v * vecInWorld; // Repère vue
 
 	/* AUTRES SORTIES */
 	uv = vs_uv_in;
 
-	/* DISTORTION DU MONDE */
-	vecInView.y -= pow(length(vecInView.xyz)/100, 3);
+	///* DISTORTION DU MONDE */
+	//vecInView.y -= pow(length(vecInView.xyz)/100, 3);
 	gl_Position = p * vecInView;
 
 	/* COULEUR */

@@ -62,24 +62,25 @@ void main()
 
 	/* EAU AVEC CALCUL NOUVELLE NORMALE SI NOISE */
 	vec3 normalFs = normal;
-	vec4 albedo = color;
-	if (type == CUBE_EAU)
-	{
-//		// Seulement pour noise water
-//		vec3 A = worldPos;
-//		vec3 B = worldPos + vec3(0.2,0,0);
-//		vec3 C = worldPos + vec3(0,0.2,0);
-//
-//		A.z += noiseWater(A, elapsed, world_size);
-//		B.z += noiseWater(B, elapsed, world_size);
-//		C.z += noiseWater(C, elapsed, world_size);
-//
-//		normalFs = normalize(cross(normalize(B-A), normalize(C-A)));
-	}
-	else
-	{
-		albedo = colorTex;
-	}
+	vec4 albedo = colorTex;
+	//albedo = colorTex;
+	//if (type == CUBE_EAU)
+	//{
+//	//	// Seulement pour noise water
+//	//	vec3 A = worldPos;
+//	//	vec3 B = worldPos + vec3(0.2,0,0);
+//	//	vec3 C = worldPos + vec3(0,0.2,0);
+//	//
+//	//	A.z += noiseWater(A, elapsed, world_size);
+//	//	B.z += noiseWater(B, elapsed, world_size);
+//	//	C.z += noiseWater(C, elapsed, world_size);
+//	//
+//	//	normalFs = normalize(cross(normalize(B-A), normalize(C-A)));
+	//}
+	//else
+	//{
+	//	albedo = colorTex;
+	//}
 
 	/* BLINN-PHONG */
 	// Diffuse
