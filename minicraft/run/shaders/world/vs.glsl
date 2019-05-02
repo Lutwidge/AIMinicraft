@@ -34,7 +34,25 @@ flat out float specLevel;
 #define CUBE_SABLE_01 17.0
 #define CUBE_FRUIT 30.0
 
-const vec4 CubeColors[18] = vec4[18](
+const vec4 CubeColors[36] = vec4[36](
+	vec4(0,1,0,1),
+	vec4(0.2,0.1,0,1),
+	vec4(0.2,0.1,0,1),
+	vec4(0.2,0.2,1.0,0.9),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
+	vec4(0, 1, 0, 1),
 	vec4(0,1,0,1),
 	vec4(0.2,0.1,0,1),
 	vec4(0.2,0.1,0,1),
@@ -55,7 +73,25 @@ const vec4 CubeColors[18] = vec4[18](
 	vec4(0, 1, 0, 1)
 );
 
-const float SpecLevels[18] = float[18](
+const float SpecLevels[36] = float[36](
+	0.1f,
+	0.1f,
+	0.1f,
+	1.0f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
 	0.1f,
 	0.1f,
 	0.1f,

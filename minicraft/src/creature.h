@@ -60,11 +60,12 @@ private:
 	{
 		int x = rand() % MWorld::MAT_SIZE_CUBES;
 		int y = rand() % MWorld::MAT_SIZE_CUBES;
-		int z = 33;
+		int height = world->getSurface(x, y);
+		int z = height;
 		if (canFly)
 		{
-			z = rand() % (MWorld::MAT_HEIGHT_CUBES - 33);
-			z += 33;
+			z = rand() % (MWorld::MAT_HEIGHT_CUBES - height);
+			z += height;
 		}
 
 		YVec3f target = YVec3f(x, y, z);

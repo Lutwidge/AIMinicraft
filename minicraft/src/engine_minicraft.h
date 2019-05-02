@@ -137,8 +137,8 @@ public :
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
 		// Elephant
-		elephant = new Creature("Elephant", World, YVec3f(32, 32, 33), false, 1);
-		elephant->startWandering();
+		//elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1);
+		//elephant->startWandering();
 
 		// Birb
 		birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f);
@@ -319,7 +319,7 @@ public :
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
 
-		elephant->update(elapsed);
+		//elephant->update(elapsed);
 		birb->update(elapsed);
 	}
 
@@ -660,13 +660,13 @@ inline void MEngineMinicraft::renderObjects()
 	/* RENDU DES CREATURES */
 
 	// Elephant
-	glPushMatrix();
+	/*glPushMatrix();
 	glUseProgram(ShaderCubeDebug);
 	glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
 	Renderer->updateMatricesFromOgl();
 	Renderer->sendMatricesToShader(ShaderCubeDebug);
 	VboCube->render();
-	glPopMatrix();
+	glPopMatrix();*/
 
 	// Birb
 	glPushMatrix();
