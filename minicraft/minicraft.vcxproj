@@ -22,8 +22,10 @@
     <ClInclude Include="..\src\engine\noise\perlin.h" />
     <ClInclude Include="..\src\engine\render\camera.h" />
     <ClInclude Include="MPerlin.h" />
+    <ClInclude Include="src\aStar.h" />
     <ClInclude Include="src\avatar.h" />
     <ClInclude Include="src\chunk.h" />
+    <ClInclude Include="src\creature.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine_minicraft.h" />
     <ClInclude Include="src\my_physics.h" />

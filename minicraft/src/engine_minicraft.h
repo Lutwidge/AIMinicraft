@@ -5,6 +5,7 @@
 
 #include "avatar.h"
 #include "world.h"
+#include "creature.h"
 //#include "my_physics.h"
 
 class MEngineMinicraft : public YEngine
@@ -70,6 +71,10 @@ private:
 	YTexFile * flowTex;
 	YTexFile * waterTex;
 
+	// Creatures
+	Creature * elephant;
+	Creature * birb;
+
 public :
 	//Gestion singleton
 	static YEngine * getInstance()
@@ -130,6 +135,14 @@ public :
 
 		// Textures
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
+
+		// Elephant
+		elephant = new Creature("Elephant", World, YVec3f(32, 32, 33), false, 1);
+		elephant->startWandering();
+
+		// Birb
+		birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f);
+		birb->startWandering();
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
@@ -305,6 +318,9 @@ public :
 			// On bouge la caméra en fonction des inputs
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
+
+		elephant->update(elapsed);
+		birb->update(elapsed);
 	}
 
 	void renderObjects();
@@ -640,6 +656,26 @@ inline void MEngineMinicraft::renderObjects()
 		glUseProgram(ShaderCubeDebug);
 		avatar->render(VboCube);
 	}
+
+	/* RENDU DES CREATURES */
+
+	// Elephant
+	glPushMatrix();
+	glUseProgram(ShaderCubeDebug);
+	glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
+	Renderer->updateMatricesFromOgl();
+	Renderer->sendMatricesToShader(ShaderCubeDebug);
+	VboCube->render();
+	glPopMatrix();
+
+	// Birb
+	glPushMatrix();
+	glUseProgram(ShaderCubeDebug);
+	glTranslatef(birb->position.X + MCube::CUBE_SIZE / 2.0f, birb->position.Y + MCube::CUBE_SIZE / 2.0f, birb->position.Z + MCube::CUBE_SIZE / 2.0f);
+	Renderer->updateMatricesFromOgl();
+	Renderer->sendMatricesToShader(ShaderCubeDebug);
+	VboCube->render();
+	glPopMatrix();
 	#pragma endregion
 
 	///* RENDU DES AXES */
