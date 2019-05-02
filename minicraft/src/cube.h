@@ -37,6 +37,7 @@ public :
 		CUBE_LAINE_07,
 		CUBE_LAINE_08,
 		CUBE_LAINE_09,
+		CUBE_FRUIT,
 		CUBE_LAINE_10,
 		CUBE_LAINE_11,
 		CUBE_LAINE_12,
@@ -130,6 +131,12 @@ public :
 		{
 			MCubeType type = getType();
 			return (type == CUBE_HERBE || type == CUBE_TERRE);
+		}
+
+		bool isFruit(void)
+		{
+			MCubeType type = getType();
+			return (type == CUBE_FRUIT);
 		}
 
 		void saveToFile(FILE * fs)

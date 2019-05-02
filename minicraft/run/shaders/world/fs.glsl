@@ -30,6 +30,7 @@ out vec4 color_out;
 #define CUBE_TRONC 5.0
 #define CUBE_BRIQUES 14.0
 #define CUBE_SABLE_01 17.0
+#define CUBE_FRUIT 30.0
 
 float noiseWater(vec3 surfPos, float time, float world_size)
 {

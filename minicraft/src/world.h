@@ -7,6 +7,7 @@
 #include "cube.h"
 #include "chunk.h"
 #include "octave_perlin.h"
+#include <vector>
 
 class MWorld
 {
@@ -17,7 +18,7 @@ public:
 	static const int AXIS_Z = 0b00000100;
 
 #ifdef _DEBUG
-	static const int MAT_SIZE = 5; //en nombre de chunks
+	static const int MAT_SIZE = 2; //en nombre de chunks
 #else
 	static const int MAT_SIZE = 5; //en nombre de chunks
 #endif // DEBUG
@@ -29,6 +30,9 @@ public:
 	static const int MAT_HEIGHT_METERS = (MAT_HEIGHT * MChunk::CHUNK_SIZE  * MCube::CUBE_SIZE);
 
 	MChunk * Chunks[MAT_SIZE][MAT_SIZE][MAT_HEIGHT];
+
+	vector<MCube*> fruitTargets;
+	int fruitCount = 0;
 
 	MWorld()
 	{
@@ -309,12 +313,41 @@ public:
 			}
 		}
 
+		// 9 : Fruit
+		for (int i = 0; i < fruitTargets.size(); i++)
+		{
+			if (randf() > 0.95)
+			{
+				fruitTargets[i]->setType(MCube::CUBE_FRUIT);
+			}
+		}
+
 		for (int x = 0; x < MAT_SIZE; x++)
 			for (int y = 0; y < MAT_SIZE; y++)
 				for (int z = 0; z < MAT_HEIGHT; z++)
 					Chunks[x][y][z]->disableHiddenCubes();
 
 		add_world_to_vbo();
+	}
+
+	void respawnFruit()
+	{
+		MCube* cube;
+		int randomFruit = rand() % (fruitTargets.size() - fruitCount);
+		for (int i = 0; i < fruitTargets.size(); i++)
+		{
+			cube = fruitTargets[i];
+
+			if (randomFruit <= 0)
+			{
+				cube->setType(MCube::CUBE_FRUIT);
+				break;
+			}
+			else if (cube->getType() == MCube::CUBE_BRANCHES)
+			{
+				randomFruit--;
+			}
+		}
 	}
 
 	void fillOblateSpheroid(YVec3f centerPos, float radius, int type)
@@ -393,7 +426,39 @@ public:
 			for (int y = treePos.Y - 2; y <= treePos.Y + 2; y++)
 				for (int z = treePos.Z + treeHeight - 3; z <= treePos.Z + treeHeight; z++)
 				{
-					getCube(x, y, z)->setType(MCube::CUBE_BRANCHES);
+					MCube* cube = getCube(x, y, z);
+					cube->setType(MCube::CUBE_BRANCHES);
+
+					if (x == treePos.X - 2)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
+					else if (x == treePos.X + 2)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
+					else if (y == treePos.Y - 2)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
+					else if (y == treePos.Y + 2)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
+					else if (z == treePos.Z + treeHeight - 3)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
+					else if (z == treePos.Z + treeHeight)
+					{
+						fruitTargets.push_back(cube);
+						fruitCount++;
+					}
 				}
 
 		// Construction de la partie finale du tronc
@@ -403,6 +468,9 @@ public:
 				{
 					getCube(x, y, z)->setType(MCube::CUBE_TRONC);
 				}
+
+		// Ajout des branches extérieures à la liste des cibles potentielles pour les fruits
+		fruitTargets.push_back(getCube(treePos.X - 2, treePos.Y - 2, treePos.Z + treeHeight - 3));
 	}
 
 	void add_world_to_vbo(void)
