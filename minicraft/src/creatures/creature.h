@@ -12,7 +12,7 @@ class Creature
 public:
 	YVec3f position;
 
-	Creature(string name, MWorld* world, YVec3f pos, bool canFly, float speed, float decay) :
+	Creature(string name, MWorld *world, YVec3f pos, bool canFly, float speed, float decay) :
 		name(name), world(world), position(pos), canFly(canFly), timeBetweenMoves(speed), gaugeDecay(decay), eatGauge(1.0f)
 	{
 
@@ -71,7 +71,7 @@ public:
 
 protected:
 	string name;
-	MWorld* world;
+	MWorld *world;
 	YVec3f targetPos;
 	vector<YVec3f> pathToTarget;
 	int currentMoveIndex = 0;

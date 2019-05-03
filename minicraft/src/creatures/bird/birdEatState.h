@@ -7,12 +7,12 @@
 class BirdEatState : public CreatureState
 {
 public:
-	virtual void enter(Bird* bird)
+	virtual void enter(Bird *bird)
 	{
 		bird->gotToEatTarget();
 	}
 
-	virtual void update(Bird* bird, float elapsed)
+	virtual void update(Bird *bird, float elapsed)
 	{
 		// Mise à jour de la satiété et check de si on est toujours en vie
 		if (bird->updateEatGauge(elapsed))

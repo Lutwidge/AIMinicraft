@@ -6,5 +6,5 @@ class CreatureState
 {
 public:
 	virtual ~CreatureState() {}
-	virtual void update(Creature* creature) {}
+	virtual void update(Creature *creature) {}
 };

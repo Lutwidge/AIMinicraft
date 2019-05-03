@@ -3,6 +3,8 @@
 #include "../creature.h"
 #include "../creatureState.h"
 #include "birdDeadState.h"
+#include "birdIdleState.h"
+#include "birdReproductionState.h"
 
 #define DIR_COUNT 4
 
@@ -19,6 +21,7 @@ protected:
 	int curDirIndex;
 	YVec3f eatTarget;
 	float fruitGaugeGain = 0.3f;
+	Bird* partner = nullptr;
 
 	virtual void setSpiralPath(int length, int index)
 	{
@@ -26,13 +29,13 @@ protected:
 	}
 
 public:
-	static class BirdDeadState* deadState;
-	static class BirdFleeState* fleeState;
-	static class BirdEatState* eatState;
-	static class BirdReproductionState* reprodState;
-	static class BirdIdleState* idleState;
+	static class BirdDeadState *deadState;
+	static class BirdFleeState *fleeState;
+	static class BirdEatState *eatState;
+	static class BirdReproductionState *reprodState;
+	static class BirdIdleState *idleState;
 
-	Bird(MWorld* world, YVec3f pos) : Creature("Bird", world, pos, true, speed, decay)
+	Bird(MWorld *world, YVec3f pos) : Creature("Bird", world, pos, true, speed, decay)
 	{
 		// Initialiser à l'état idle
 		setState(idleState);
@@ -42,6 +45,17 @@ public:
 	virtual void update(float elapsed)
 	{
 		state->update(this, elapsed);
+	}
+
+	virtual void setState(CreatureState* newState)
+	{
+		state = newState;
+		state->enter(this);
+	}
+
+	virtual CreatureState* getState()
+	{
+		return state;
 	}
 
 	virtual bool updateEatGauge(float elapsed)
@@ -54,13 +68,6 @@ public:
 		}
 		return true;
 	}
-
-	virtual void setState(CreatureState* newState)
-	{
-		state = newState;
-		state->enter(this);
-	}
-
 	virtual bool canReproduce()
 	{
 		return eatGauge >= reproductionThreshold;
@@ -116,5 +123,41 @@ public:
 		curDirIndex++;
 		curDirIndex % 4;
 		setSpiralPath(pathLength, curDirIndex);
+	}
+
+	/* REPRODUCTION */
+	virtual bool setPartner(Bird* newPartner)
+	{
+		// Verification qu'il n'y a pas déjà de partenaires définis
+		if (partner != nullptr && newPartner->partner != nullptr)
+		{
+			partner = newPartner;
+			newPartner->partner = this;
+			newPartner->setState(reprodState);
+			return true;
+		}
+		return false;
+	}
+
+	virtual void resetPartner()
+	{
+		partner = nullptr;
+	}
+
+	virtual bool isPartnerValid()
+	{
+		if (partner->getState() == Bird::reprodState)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	virtual void reproduce()
+	{
+		// TODO : Créer une nouvelle instance sur un manager ?
+		// On empêche ensuite le partenaire de créer un autre enfant
+		partner->resetPartner();
+		partner->setState(Bird::idleState);
 	}
 };

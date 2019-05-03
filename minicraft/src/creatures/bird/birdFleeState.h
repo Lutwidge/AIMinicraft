@@ -6,11 +6,13 @@
 class BirdFleeState : public CreatureState
 {
 public:
-	virtual void enter(Bird* bird)
+	virtual void enter(Bird *bird)
 	{
+		// On retire tout partenaire potentiel
+		bird->resetPartner();
 	}
 
-	virtual void update(Bird* bird, float elapsed)
+	virtual void update(Bird *bird, float elapsed)
 	{
 	}
 };

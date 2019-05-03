@@ -141,7 +141,7 @@ public :
 		//elephant->startWandering();
 
 		// Birb
-		birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f);
+		birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f, 0.02f);
 		birb->startWandering();
 	}
 
