@@ -1,21 +1,24 @@
-#ifndef __CREATURE__
-#define __CREATURE__
+#pragma once
 
-#include "world.h"
-#include "AStar.h"
+//#ifndef __CREATURE__
+//#define __CREATURE__
+
+#include "../world.h"
+#include "../AStar.h"
+class CreatureState;
 
 class Creature
 {
 public:
 	YVec3f position;
 
-	Creature(string name, MWorld * world, YVec3f pos, bool canFly, float speed) :
-		name(name), world(world), position(pos), canFly(canFly), timeBetweenMoves(speed)
+	Creature(string name, MWorld* world, YVec3f pos, bool canFly, float speed, float decay) :
+		name(name), world(world), position(pos), canFly(canFly), timeBetweenMoves(speed), gaugeDecay(decay), eatGauge(1.0f)
 	{
 
 	}
 
-	void update(float elapsed)
+	virtual void update(float elapsed)
 	{
 		if (!(position == targetPos) && pathToTarget.size() > 0)
 		{
@@ -31,7 +34,7 @@ public:
 			goTo(getRandomTarget());
 	}
 
-	void goTo(YVec3f targetPos)
+	virtual void goTo(YVec3f targetPos)
 	{
 		this->targetPos = targetPos;
 		pathToTarget = AStar::findpath(position, targetPos, world, canFly);
@@ -40,23 +43,46 @@ public:
 			YLog::log(YLog::USER_ERROR, "No path to target position");
 	}
 
-	void startWandering()
+	virtual void startWandering()
 	{
 		goTo(getRandomTarget());
 	}
 
-private:
+	virtual bool hasReachedTarget()
+	{
+		return (!(position == targetPos) && pathToTarget.size() > 0);
+	}
+
+	virtual void move(float elapsed)
+	{
+		timeSinceLastMove += elapsed;
+		if (timeSinceLastMove >= timeBetweenMoves)
+		{
+			timeSinceLastMove = 0;
+			position = pathToTarget[currentMoveIndex];
+			currentMoveIndex++;
+		}
+	}
+
+	virtual void death()
+	{
+
+	}
+
+protected:
 	string name;
-	MWorld * world;
+	MWorld* world;
 	YVec3f targetPos;
 	vector<YVec3f> pathToTarget;
 	int currentMoveIndex = 0;
 	float timeSinceLastMove = 0;
 	float timeBetweenMoves;
+	float eatGauge;
+	float gaugeDecay;
 
 	bool canFly;
 
-	YVec3f getRandomTarget()
+	virtual YVec3f getRandomTarget()
 	{
 		int x = rand() % MWorld::MAT_SIZE_CUBES;
 		int y = rand() % MWorld::MAT_SIZE_CUBES;
@@ -75,4 +101,5 @@ private:
 	}
 };
 
-#endif
+//#endif
+

@@ -35,7 +35,6 @@ public:
 	int fruitCount = 0;
 	int heightMap[MAT_SIZE_CUBES][MAT_SIZE_CUBES];
 
-
 	MWorld()
 	{
 		//On crée les chunks

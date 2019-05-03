@@ -51,6 +51,12 @@
     <Filter Include="shaders\godrays">
       <UniqueIdentifier>{b3285890-2016-48e5-bd7a-17cb58c21e96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\creatures">
+      <UniqueIdentifier>{89b9bebe-ac92-4a3e-934c-34a20fe02b25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\creatures\bird">
+      <UniqueIdentifier>{7da73e2e-8a65-4f19-9753-dece72c14091}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine_minicraft.h">
@@ -86,8 +92,32 @@
     <ClInclude Include="src\aStar.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="src\creature.h">
+    <ClInclude Include="src\creatures\bird\bird.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\bird\birdDeadState.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatureState.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\creature.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\bird\birdIdleState.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\bird\birdFleeState.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\bird\birdEatState.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\bird\birdReproductionState.h">
+      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,5 +189,8 @@
     <None Include="run\shaders\godrays\vs.glsl">
       <Filter>shaders\godrays</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="minicraft.rc" />
   </ItemGroup>
 </Project>

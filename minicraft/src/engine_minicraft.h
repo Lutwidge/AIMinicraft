@@ -5,7 +5,7 @@
 
 #include "avatar.h"
 #include "world.h"
-#include "creature.h"
+#include "creatures/creature.h"
 //#include "my_physics.h"
 
 class MEngineMinicraft : public YEngine
