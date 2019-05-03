@@ -31,7 +31,7 @@ private:
 	YVec3f unitVector2 = YVec3f(0, 0, 1);
 
 	/* POUR LES MOUVEMENTS DE CAMERA */
-	// Pour connaître les déplacements de souris
+	// Pour connaï¿½tre les dï¿½placements de souris
 	int lastx = -1;
 	int lasty = -1;
 	// Pour camera observation
@@ -86,7 +86,7 @@ public :
 
 	/*HANDLERS GENERAUX*/
 	void loadShaders() {
-		//Chargement du shader (dans loadShaders() pour etre lié à F5)
+		//Chargement du shader (dans loadShaders() pour etre liï¿½ ï¿½ F5)
 		ShaderCubeDebug = Renderer->createProgram("shaders/cube_debug");
 		ShaderCube = Renderer->createProgram("shaders/cube");
 		SunShader = Renderer->createProgram("shaders/sun");
@@ -109,12 +109,12 @@ public :
 		// 36 points car mode implicite : chaque face a 2 triangles, donc 6 points, et 6 faces : 36 points
 		VboCube = new YVbo(3, 36, YVbo::PACK_BY_ELEMENT_TYPE);
 
-		//Définition du contenu du VBO
+		//Dï¿½finition du contenu du VBO
 		VboCube->setElementDescription(0, YVbo::Element(3)); //Sommet
 		VboCube->setElementDescription(1, YVbo::Element(3)); //Normale
 		VboCube->setElementDescription(2, YVbo::Element(2)); //UV
 
-		//On demande d'allouer la mémoire coté CPU
+		//On demande d'allouer la mï¿½moire cotï¿½ CPU
 		VboCube->createVboCpu();
 
 		// Fill the cube
@@ -123,21 +123,21 @@ public :
 		//On envoie le contenu au GPU
 		VboCube->createVboGpu();
 
-		//On relache la mémoire CPU
+		//On relache la mï¿½moire CPU
 		VboCube->deleteVboCpu();
 
 		// Normaliser les vecteurs unitaires pour la rotation du soleil
 		unitVector1.normalize();
 		unitVector2.normalize();
 
-		// Création de l'avatar
+		// Crï¿½ation de l'avatar
 		avatar = new MAvatar(Renderer->Camera, World);
 
 		// Textures
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
 		// Elephant
-		//elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1);
+		elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1, 0.02f);
 		//elephant->startWandering();
 
 		// Birb
@@ -213,7 +213,7 @@ public :
 	void updateSunAndMoon()
 	{
 		// Determine l'angle du soleil / de la lune en fonction de l'heure
-		// Le soleil se lève à 6h et se couche à 19h
+		// Le soleil se lï¿½ve ï¿½ 6h et se couche ï¿½ 19h
 		SYSTEMTIME SystemTime;
 		GetSystemTime(&SystemTime);
 		if (increaseSunSpeed)
@@ -226,8 +226,8 @@ public :
 			sunAngle += 2 * M_PI;
 		sunAngle = fmodf(sunAngle, 2 * M_PI);
 
-		// Definition de la position du soleil / de la lune avec la formule mathématique d'un cercle en 3 dimensions
-		// La position de la caméra est utilisée pour donner l'illusion que les astres sont à l'infini
+		// Definition de la position du soleil / de la lune avec la formule mathï¿½matique d'un cercle en 3 dimensions
+		// La position de la camï¿½ra est utilisï¿½e pour donner l'illusion que les astres sont ï¿½ l'infini
 		sunDirection.X = circleRadius * (cos(sunAngle) * unitVector1.X + sin(sunAngle) * unitVector2.X);
 		sunDirection.Y = circleRadius * (cos(sunAngle) * unitVector1.Y + sin(sunAngle) * unitVector2.Y);
 		sunDirection.Z = circleRadius * (cos(sunAngle) * unitVector1.Z + sin(sunAngle) * unitVector2.Z);
@@ -249,7 +249,7 @@ public :
 			targetSkyColor = YColor(0.905f, 0.647f, 0.325f, 1.0f);
 			status = 1 - abs(cos(sunAngle));
 		}
-		else if (sunAngle >= M_PI / 2.0f && sunAngle < M_PI) // Couleur crépuscule
+		else if (sunAngle >= M_PI / 2.0f && sunAngle < M_PI) // Couleur crï¿½puscule
 		{
 			SkyColor = YColor(0.905f, 0.647f, 0.325f, 1.0f);
 			targetSkyColor = YColor(0.494f, 0.294f, 0.407f, 1.0f);
@@ -301,7 +301,7 @@ public :
 
 	void update(float elapsed)
 	{
-		// Update de l'avatar si nécessaire
+		// Update de l'avatar si nï¿½cessaire
 		CameraType cameraType = (CameraType)cameraTypeIndex;
 		if (cameraType == CameraType::FirstPerson || cameraType == CameraType::FirstPersonFly)
 		{
@@ -315,11 +315,11 @@ public :
 		}
 		else
 		{
-			// On bouge la caméra en fonction des inputs
+			// On bouge la camï¿½ra en fonction des inputs
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
 
-		//elephant->update(elapsed);
+		elephant->update(elapsed);
 		birb->update(elapsed);
 	}
 
@@ -622,7 +622,7 @@ inline void MEngineMinicraft::renderObjects()
 
 	/* RENDU DU MONDE */
 	glUseProgram(ShaderWorld);
-	// Envoi des données nécessaires au shader
+	// Envoi des donnï¿½es nï¿½cessaires au shader
 	GLuint var = glGetUniformLocation(ShaderWorld, "world_size");
 	glUniform1f(var, MWorld::MAT_SIZE_CUBES * MCube::CUBE_SIZE);
 
@@ -660,13 +660,13 @@ inline void MEngineMinicraft::renderObjects()
 	/* RENDU DES CREATURES */
 
 	// Elephant
-	/*glPushMatrix();
+	glPushMatrix();
 	glUseProgram(ShaderCubeDebug);
 	glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
 	Renderer->updateMatricesFromOgl();
 	Renderer->sendMatricesToShader(ShaderCubeDebug);
 	VboCube->render();
-	glPopMatrix();*/
+	glPopMatrix();
 
 	// Birb
 	glPushMatrix();
@@ -676,6 +676,7 @@ inline void MEngineMinicraft::renderObjects()
 	Renderer->sendMatricesToShader(ShaderCubeDebug);
 	VboCube->render();
 	glPopMatrix();
+
 	#pragma endregion
 
 	///* RENDU DES AXES */

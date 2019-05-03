@@ -121,56 +121,52 @@ private:
 	static vector<YVec3f> getNeighbours(MWorld * world, Node * node, bool canFly)
 	{
 		vector<YVec3f> neighbours;
-		pair<YVec3f, MCube *> neighbourPair[3][3][3];
-		bool neighbourExists[3][3][3];
+		pair<YVec3f, MCube *> neighbourPair[3][3][4];
+		bool neighbourExists[3][3][4];
 
 		for (int x = -1; x < 2; x++)
 		{
 			for (int y = -1; y < 2; y++)
 			{
-				for (int z = -1; z < 2; z++)
+				for (int z = -2; z < 2; z++)
 				{
 					if ((x == -1 && node->position.X == 0) || (x == 1 && node->position.X == MWorld::MAT_SIZE_CUBES - 1) ||
 						(y == -1 && node->position.Y == 0) || (y == 1 && node->position.Y == MWorld::MAT_SIZE_CUBES - 1) ||
-						(z == -1 && node->position.Z == 0) || (z == 1 && node->position.Z == MWorld::MAT_HEIGHT_CUBES - 1) ||
+						(z <= -1 && node->position.Z == 0) || (z == 1 && node->position.Z == MWorld::MAT_HEIGHT_CUBES - 1) ||
 						(x == 0 && y == 0 && z == 0))
 					{
-						neighbourExists[x + 1][y + 1][z + 1] = false;
+						neighbourExists[x + 1][y + 1][z + 2] = false;
 					}
 					else
 					{
 						YVec3f newPosition = YVec3f(node->position.X + x, node->position.Y + y, node->position.Z + z);
-						neighbourPair[x + 1][y + 1][z + 1] = make_pair(newPosition, world->getCube(newPosition.X, newPosition.Y, newPosition.Z));
+						neighbourPair[x + 1][y + 1][z + 2] = make_pair(newPosition, world->getCube(newPosition.X, newPosition.Y, newPosition.Z));
 					}						
 				}
 			}
 		}
 
-		pair<YVec3f, MCube *> pair;
+		pair<YVec3f, MCube *> pair, pairBelow, pairLowZ, pairSameZ, pairUpZ;
+		bool pairExists, pairBelowExists, existsLowZ, existsSameZ, existsUpZ;
 		int z0 = -1, z1 = 0, z2 = 1;
 		for (int x = -1; x < 2; x++)
 		{
 			for (int y = -1; y < 2; y++)
 			{
-				if (x == 0 && y == 0)
+				if (x == 0 && y == 0 && !canFly)
 					continue;
 
-				// Same level cube on z
-				pair = neighbourPair[x + 1][y + 1][z1 + 1];
-				if (neighbourExists[x + 1][y + 1][z1 + 1] && pair.second->getType() == MCube::CUBE_AIR)
+				for (int z = -1; z < 2; z++)
 				{
-					if (canFly || (neighbourExists[x + 1][y + 1][z0 + 1] && neighbourPair[x + 1][y + 1][z0 + 1].second->isSolid()))
+					pairExists = neighbourExists[x + 1][y + 1][z + 2];
+					pair = neighbourPair[x + 1][y + 1][z + 2];
+
+					pairBelowExists = neighbourExists[x + 1][y + 1][z + 1];
+					pairBelow = neighbourPair[x + 1][y + 1][z + 1];
+
+					if (pairExists && pair.second->getType() == MCube::CUBE_AIR && (canFly || (pairBelowExists && pairBelow.second->isSolid())))
 						neighbours.push_back(pair.first);
 				}
-
-				// Other levels if flying
-				pair = neighbourPair[x + 1][y + 1][z0 + 1];
-				if (canFly && neighbourExists[x + 1][y + 1][z0 + 1] && pair.second->getType() == MCube::CUBE_AIR)
-					neighbours.push_back(pair.first);
-
-				pair = neighbourPair[x + 1][y + 1][z2 + 1];
-				if (canFly && neighbourExists[x + 1][y + 1][z2 + 1] && pair.second->getType() == MCube::CUBE_AIR)
-					neighbours.push_back(pair.first);
 			}
 		}
 
