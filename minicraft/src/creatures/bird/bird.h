@@ -25,7 +25,24 @@ protected:
 
 	virtual void setSpiralPath(int length, int index)
 	{
-		goTo(YVec3f(position.X, world->getSurface(position.X, position.Y) + idleFlightHeight, position.Z) + directions[index] * length);
+		YVec3f addedDir = directions[index] * length;
+		YVec3f target = YVec3f(position.X + addedDir.X, world->getSurface(position.X + addedDir.X, position.Y + addedDir.Y) + idleFlightHeight, position.Z + addedDir.Z);
+
+		// Verification de si la target est appropriée (pas un arbre), sinon on réduit l'avancée dans la direction définie
+		if (!AStar::isTargetValid(target, world, true))
+		{
+			for (int i = 1; i <= length; i++)
+			{
+				YVec3f newTarget = target - directions[index] * i;
+				if (AStar::isTargetValid(newTarget, world, true))
+				{
+					target = newTarget;
+					break;
+				}
+			}
+		}
+
+		goTo(target);
 	}
 
 public:
