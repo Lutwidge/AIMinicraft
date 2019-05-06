@@ -60,6 +60,9 @@
     <Filter Include="Fichiers d%27en-tête\creatures\bear">
       <UniqueIdentifier>{e17cf408-cf41-4cc6-8909-16a92d7fe99b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\creatures">
+      <UniqueIdentifier>{47712eb4-5f92-4111-952e-ab2ae811b705}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine_minicraft.h">
@@ -132,6 +135,9 @@
     </ClCompile>
     <ClCompile Include="..\src\engine\utils\utils.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\creatures\CreatureManager.cpp">
+      <Filter>Fichiers sources\creatures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
