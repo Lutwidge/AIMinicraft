@@ -173,19 +173,18 @@ protected:
 
 	virtual void setSpiralPath(int length, int index) {
 		YVec3f addedDir = directions[index] * length;
-		YVec3f target = YVec3f(position.X + addedDir.X, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y) + idleFlightHeight, position.Z + addedDir.Z);
-		printf("%f \n", position.X + addedDir.X);
+		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y) + idleFlightHeight);
 
-		// Verification de si la target est appropriée (pas un arbre), sinon on réduit l'avancée dans la direction définie
-		if (!AStar::isTargetValid(target, world, true)) {
-			for (int i = 1; i <= length; i++) {
-				YVec3f newTarget = target - directions[index] * i;
-				if (AStar::isTargetValid(newTarget, world, true)) {
-					target = newTarget;
-					break;
-				}
-			}
-		}
+		//// Verification de si la target est appropriée (pas un arbre), sinon on réduit l'avancée dans la direction définie
+		//if (!AStar::isTargetValid(target, world, true)) {
+		//	for (int i = 1; i <= length; i++) {
+		//		YVec3f newTarget = target - directions[index] * i;
+		//		if (AStar::isTargetValid(newTarget, world, true)) {
+		//			target = newTarget;
+		//			break;
+		//		}
+		//	}
+		//}
 
 		goTo(target);
 	}
@@ -224,7 +223,7 @@ public:
 
 	virtual void incrementSpiralPath()
 	{
-		pathLength++;
+		pathLength += 2;
 		curDirIndex++;
 		curDirIndex = curDirIndex % DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);

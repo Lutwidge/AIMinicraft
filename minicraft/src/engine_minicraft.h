@@ -150,7 +150,7 @@ public :
 
 		// Spawn les premières créatures
 		cm = new CreatureManager();
-		bird = new Bird(World, cm, YVec3f(35, 29, 46));
+		bird = new Bird(World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
