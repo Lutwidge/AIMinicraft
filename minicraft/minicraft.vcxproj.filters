@@ -57,6 +57,9 @@
     <Filter Include="Fichiers d%27en-tête\creatures\bird">
       <UniqueIdentifier>{7da73e2e-8a65-4f19-9753-dece72c14091}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\creatures\bear">
+      <UniqueIdentifier>{e17cf408-cf41-4cc6-8909-16a92d7fe99b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine_minicraft.h">
@@ -95,9 +98,6 @@
     <ClInclude Include="src\creatures\bird\bird.h">
       <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\bird\birdDeadState.h">
-      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
-    </ClInclude>
     <ClInclude Include="src\creatureState.h">
       <Filter>Fichiers d%27en-tête\creatures</Filter>
     </ClInclude>
@@ -107,17 +107,17 @@
     <ClInclude Include="src\creatures\creature.h">
       <Filter>Fichiers d%27en-tête\creatures</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\bird\birdIdleState.h">
-      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    <ClInclude Include="src\creatures\bear\bear.h">
+      <Filter>Fichiers d%27en-tête\creatures\bear</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\bird\birdFleeState.h">
-      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    <ClInclude Include="src\creatures\AICreature.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\bird\birdEatState.h">
-      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    <ClInclude Include="src\creatures\CreatureManager.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\bird\birdReproductionState.h">
-      <Filter>Fichiers d%27en-tête\creatures\bird</Filter>
+    <ClInclude Include="src\SimpleList.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -69,6 +69,11 @@ public:
 		return vector<YVec3f>();
 	}
 
+	static bool isTargetValid(YVec3f targetPos, MWorld * world, bool canFly) {
+		return (world->getCube(targetPos.X, targetPos.Y, targetPos.Z)->getType() == MCube::CUBE_AIR &&
+			(canFly || (targetPos.Z == 0 || world->getCube(targetPos.X, targetPos.Y, targetPos.Z - 1)->isSolid())));
+	}
+
 private:
 	class Node
 	{
@@ -111,12 +116,6 @@ private:
 			return (x + y + z);
 		}
 	};
-	
-	static bool isTargetValid(YVec3f targetPos, MWorld * world, bool canFly)
-	{
-		return (world->getCube(targetPos.X, targetPos.Y, targetPos.Z)->getType() == MCube::CUBE_AIR &&
-			(canFly || (targetPos.Z == 0 || world->getCube(targetPos.X, targetPos.Y, targetPos.Z - 1)->isSolid())));
-	}
 
 	static vector<YVec3f> getNeighbours(MWorld * world, Node * node, bool canFly)
 	{

@@ -7,6 +7,8 @@
 #include "world.h"
 #include "creatures/creature.h"
 //#include "my_physics.h"
+#include "creatures/bird/bird.h"
+#include "creatures/CreatureManager.h"
 
 class MEngineMinicraft : public YEngine
 {
@@ -74,6 +76,8 @@ private:
 	// Creatures
 	Creature * elephant;
 	Creature * birb;
+	Bird * bird;
+	CreatureManager* cm;
 
 public :
 	//Gestion singleton
@@ -137,12 +141,16 @@ public :
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
 		// Elephant
-		elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1, 0.02f);
+		//elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1, 0.02f);
 		//elephant->startWandering();
 
 		// Birb
-		birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f, 0.02f);
-		birb->startWandering();
+		//birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f, 0.02f);
+		//birb->startWandering();
+
+		// Spawn les premières créatures
+		cm = new CreatureManager();
+		bird = new Bird(World, cm, YVec3f(35, 29, 46));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
@@ -319,8 +327,9 @@ public :
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
 
-		elephant->update(elapsed);
-		birb->update(elapsed);
+		//elephant->update(elapsed);
+		//birb->update(elapsed);
+		bird->update(elapsed);
 	}
 
 	void renderObjects();
@@ -659,19 +668,28 @@ inline void MEngineMinicraft::renderObjects()
 
 	/* RENDU DES CREATURES */
 
-	// Elephant
-	glPushMatrix();
-	glUseProgram(ShaderCubeDebug);
-	glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
-	Renderer->updateMatricesFromOgl();
-	Renderer->sendMatricesToShader(ShaderCubeDebug);
-	VboCube->render();
-	glPopMatrix();
+	//// Elephant
+	//glPushMatrix();
+	//glUseProgram(ShaderCubeDebug);
+	//glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
+	//Renderer->updateMatricesFromOgl();
+	//Renderer->sendMatricesToShader(ShaderCubeDebug);
+	//VboCube->render();
+	//glPopMatrix();
 
-	// Birb
+	//// Birb
+	//glPushMatrix();
+	//glUseProgram(ShaderCubeDebug);
+	//glTranslatef(birb->position.X + MCube::CUBE_SIZE / 2.0f, birb->position.Y + MCube::CUBE_SIZE / 2.0f, birb->position.Z + MCube::CUBE_SIZE / 2.0f);
+	//Renderer->updateMatricesFromOgl();
+	//Renderer->sendMatricesToShader(ShaderCubeDebug);
+	//VboCube->render();
+	//glPopMatrix();
+
+	// Bird
 	glPushMatrix();
 	glUseProgram(ShaderCubeDebug);
-	glTranslatef(birb->position.X + MCube::CUBE_SIZE / 2.0f, birb->position.Y + MCube::CUBE_SIZE / 2.0f, birb->position.Z + MCube::CUBE_SIZE / 2.0f);
+	glTranslatef(bird->position.X + MCube::CUBE_SIZE / 2.0f, bird->position.Y + MCube::CUBE_SIZE / 2.0f, bird->position.Z + MCube::CUBE_SIZE / 2.0f);
 	Renderer->updateMatricesFromOgl();
 	Renderer->sendMatricesToShader(ShaderCubeDebug);
 	VboCube->render();

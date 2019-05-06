@@ -77,6 +77,15 @@ public:
 		return heightMap[x][y] + 1;
 	}
 
+	inline int getHighestPoint(int x, int y) {
+		for (int i = 0; i < MAT_HEIGHT_CUBES; i++) {
+			if (getCube(x, y, heightMap[x][y] + 1 + i)->getType() == MCube::CUBE_AIR) {
+				return heightMap[x][y] + 1 + i;
+			}
+		}
+		return MAT_HEIGHT_CUBES - 1;
+	}
+
 	inline MCube * getCube(int x, int y, int z)
 	{
 		if (x < 0)x = 0;
