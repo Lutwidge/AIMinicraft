@@ -3,10 +3,11 @@
 #include <type_traits>
 #include <typeinfo>
 #include "../AICreature.h"
+#include "../ocelot/ocelot.h"
 
 #define DIR_COUNT 4
 #define BIRD_SPEED 0.1f
-#define BIRD_SATIATION_DECAY 0.002f
+#define BIRD_SATIATION_DECAY 0.01f
 #define BIRD_REPRODUCTION_THRESHOLD 0.8f
 #define BIRD_SIGHT_RANGE 15
 #define BIRD_SPIRAL_PATH_INCREMENT 4
@@ -29,6 +30,7 @@ protected:
 
 		virtual void enter()
 		{
+			//printf("%s : Idle \n", bird->name.c_str());
 			// On réinitialise la spirale
 			bird->initializeSpiralPath();
 		}
@@ -36,61 +38,41 @@ protected:
 		virtual void update(float elapsed) {
 
 			// Mise à jour de la satiété et check de si on est toujours en vie
-			if (bird->updateSatiation(elapsed))
-			{
-				//if (bird->manager->perceptor->creatureSight(bird, std::type_index(typeid(Ocelot))))
+			if (bird->updateSatiation(elapsed)) {
+				// Si on voit un prédateur, on fuit
+				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr) {
+					bird->switchState(new FleeState(bird));
+					return;
+				}
+				else {
+					// Reproduction prioritaire
+					if (bird->canReproduce()) {
+						// Si oui, on check s'il y a une target compatible
+						AICreature* targetBird = bird->manager->perceptor->creatureSight(bird, CreatureType::Bird, BIRD_SIGHT_RANGE);
+						if (targetBird != nullptr) {
+							// Si association réussie (pas de partenaire déjà défini pour les deux), on passe en reproduction pour les deux
+							if (bird->setPartner(targetBird)) {
+								bird->switchState(new ReproductionState(bird));
+								return;
+							}
+						}
+					}
 
-
-				YVec3f fruit;
-				if (bird->manager->perceptor->blockSight(bird, MCube::CUBE_FRUIT, BIRD_SIGHT_RANGE, fruit))
-				{
-					if (bird->setEatTarget(fruit))
-					{
-						bird->switchState(new EatState(bird));
-						return;
+					// Sinon, on regarde si on voit un fruit
+					YVec3f fruit;
+					if (bird->manager->perceptor->blockSight(bird, MCube::CUBE_FRUIT, BIRD_SIGHT_RANGE, fruit)) {
+						if (bird->setEatTarget(fruit)) {
+							bird->switchState(new EatState(bird));
+							return;
+						}
 					}
 				}
 
+				// Sinon, mouvement en spirale
 				if (bird->hasNotReachedTarget())
 					bird->move(elapsed);
 				else
 					bird->incrementSpiralPath();
-
-				//// Appel perception pour voir si on voit un predateur : (à voir si on garde cet état)
-				//// bird->switchState(new FleeState(this));
-				//// Sinon, on check si on a atteint la limite de reproduction
-				//if (bird->canReproduce())
-				//{
-				//	// Si oui, on check s'il y a une target compatible, et si oui, on récupère sa ref et on l'associe à ce bird
-				//	if (bird->setPartner(targetBird)) // Si association réussie (pas de partenaire déjà défini pour les deux)
-				//	{
-				//		bird->switchState(new ReproductionState(this));
-				//	}
-				//	else
-				//	{
-				//		// Appel perception pour voir si on voit un fruit
-				//		// Si oui :
-				//		// bird->setEatTarget(fruit);
-				//		// bird->switchState(new EatState(this));
-				//		// Sinon, logique de mouvement en spirale de la recherche de cible
-				//		if (!bird->hasReachedTarget())
-				//			bird->move(elapsed);
-				//		else
-				//			bird->incrementSpiralPath();
-				//	}
-				//}
-				//else
-				//{
-				//	// Appel perception pour voir si on voit un fruit
-				//	// Si oui :
-				//	// bird->setEatTarget(fruit);
-				//	// bird->switchState(new EatState(this));
-				//	// Sinon, logique de mouvement en spirale de la recherche de cible
-				//	if (!bird->hasReachedTarget())
-				//		bird->move(elapsed);
-				//	else
-				//		bird->incrementSpiralPath();
-				//}
 			}
 		}
 
@@ -103,6 +85,7 @@ protected:
 
 		virtual void enter()
 		{
+			//printf("%s : Eat \n", bird->name.c_str());
 			bird->gotToEatTarget();
 		}
 
@@ -111,18 +94,28 @@ protected:
 			// Mise à jour de la satiété et check de si on est toujours en vie
 			if (bird->updateSatiation(elapsed))
 			{
-				// On continue d'avancer tant que la target n'est pas atteinte, que le fruit est toujours là, et qu'il n'y a pas de prédateur proche
-				// Appel perception
-				// Si on voit prédateur
-				// bird->setState(Bird::fleeState);
-				if (bird->isEatTargetValid()) // Sinon si le fruit est toujours là
-				{
-					if (bird->hasNotReachedTarget())
-						bird->move(elapsed);
-					else
-						bird->eat();
-				} else // Sinon, retour à l'état idle
-					bird->switchState(new IdleState(bird));
+				// Si on voit un prédateur, on fuit
+				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr) {
+					bird->switchState(new FleeState(bird));
+					return;
+				}
+				else {
+					// Sinon si le fruit est toujours là, on continue vers lui jusqu'à l'atteindre
+					if (bird->isEatTargetValid()) 
+					{
+						if (bird->hasNotReachedTarget())
+							bird->move(elapsed);
+						else {
+							bird->eat();
+							return;
+						}
+					} 
+					// Sinon, retour à l'état idle
+					else {
+						bird->switchState(new IdleState(bird));
+						return;
+					}
+				}
 			}
 		}
 
@@ -148,32 +141,48 @@ protected:
 		ReproductionState(Bird* bird) : BirdState(bird) {}
 
 		virtual void enter() {
+			//printf("%s : Reproduction \n", bird->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Bird
 			YVec3f meetingPoint = (bird->position + ((Bird*) bird->partner)->position) / 2;
+			meetingPoint = YVec3f((int) meetingPoint.X, (int) meetingPoint.Y, (int) meetingPoint.Z);
 			bird->goTo(YVec3f(meetingPoint.X, meetingPoint.Y, bird->world->getHighestPoint(meetingPoint.X, meetingPoint.Y)));
 		}
 
-		virtual void update(float elapsed) {
+		virtual void update(float elapsed)
+		{
 			// Mise à jour de la satiété et check de si on est toujours en vie
-			if (bird->updateSatiation(elapsed)) {
-				// Appel perception pour voir si on voit un predateur : (à voir si on garde cet état)
-				bird->resetPartner(); // On retire tout partenaire potentiel
-				bird->switchState(new FleeState(bird));
-
-				// Sinon si la target est toujours en reproduction
-				/* else */if (bird->isPartnerValid()) {
-					if (bird->hasNotReachedTarget()) {
-						bird->move(elapsed);
-					} else if (!bird->partner->hasNotReachedTarget())// Reproduction si les deux sont arrivés
-					{
-						bird->reproduce();
-						bird->resetPartner(); // On retire tout partenaire potentiel
-						bird->switchState(new IdleState(bird));
-					}
-				} else // Sinon retour à idle
+			if (bird->updateSatiation(elapsed))
+			{
+				// Si on voit un prédateur, on fuit
+				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr)
 				{
 					bird->resetPartner(); // On retire tout partenaire potentiel
-					bird->switchState(new IdleState(bird));
+					bird->switchState(new FleeState(bird));
+					return;
+				}
+				else
+				{
+					// Sinon si la target est toujours en reproduction, on bouge jusqu'à atteindre la cible
+					if (bird->isPartnerValid())
+					{
+						if (bird->hasNotReachedTarget())
+						{
+							bird->move(elapsed);
+							return;
+						}
+						// Reproduction seulement si les deux sont arrivés
+						else if (!bird->partner->hasNotReachedTarget())
+						{
+							bird->reproduce();
+							return;
+						}
+					} 
+					else // Sinon retour à idle
+					{
+						bird->resetPartner(); // On retire tout partenaire potentiel
+						bird->switchState(new IdleState(bird));
+						return;
+					}
 				}
 			}
 		}
@@ -191,22 +200,12 @@ protected:
 		YVec3f addedDir = directions[index] * length;
 		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y) + BIRD_IDLE_HEIGHT);
 
-		//// Verification de si la target est appropriée (pas un arbre), sinon on réduit l'avancée dans la direction définie
-		//if (!AStar::isTargetValid(target, world, true)) {
-		//	for (int i = 1; i <= length; i++) {
-		//		YVec3f newTarget = target - directions[index] * i;
-		//		if (AStar::isTargetValid(newTarget, world, true)) {
-		//			target = newTarget;
-		//			break;
-		//		}
-		//	}
-		//}
-
 		goTo(target);
 	}
 
 public:
-	Bird(MWorld *world, CreatureManager* cm, YVec3f pos) : AICreature("Bird", world, cm, pos, true, BIRD_SPEED, BIRD_SATIATION_DECAY, BIRD_REPRODUCTION_THRESHOLD) {
+	Bird(string name, MWorld *world, CreatureManager* cm, YVec3f pos) : AICreature(name, world, cm, pos, true, BIRD_SPEED, BIRD_SATIATION_DECAY, BIRD_REPRODUCTION_THRESHOLD) {
+		manager->registerCreature(this);
 		switchState(new IdleState(this));
 	}
 
@@ -222,6 +221,8 @@ public:
 		// Regénérer le monde (mais coûteux... comme le picking)
 		world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
 		satiation += BIRD_EAT_GAIN;
+		if (satiation > 1.0f)
+			satiation = 1.0f;
 	}
 
 	virtual bool setEatTarget(YVec3f target) {
@@ -254,23 +255,24 @@ public:
 	virtual bool setPartner(AICreature* newPartner)
 	{
 		Bird* birdPartner = nullptr;
-		if (typeid(newPartner) == typeid(Bird*)) {
+		if (newPartner->getType() == CreatureType::Bird) {
 			birdPartner = (Bird*) newPartner; // Casting to Bird pointer to access protected members
-		}
-		// Verification qu'il n'y a pas déjà de partenaires définis
-		if (partner == nullptr && birdPartner->partner == nullptr)
-		{
-			partner = birdPartner;
-			birdPartner->partner = this;
-			birdPartner->switchState(new ReproductionState(this));
-			return true;
+
+			// Verification qu'il n'y a pas déjà de partenaires définis
+			if (partner == nullptr && birdPartner->partner == nullptr) {
+				partner = birdPartner;
+				birdPartner->partner = this;
+				birdPartner->switchState(new ReproductionState(birdPartner));
+				return true;
+			}
 		}
 		return false;
 	}
 
 	virtual bool isPartnerValid()
 	{
-		if (typeid(partner->state) == typeid(ReproductionState))
+		ReproductionState* partnerReprodState = dynamic_cast<ReproductionState*>(partner->state);
+		if (partnerReprodState != nullptr)
 		{
 			return true;
 		}
@@ -280,9 +282,16 @@ public:
 	virtual void reproduce()
 	{
 		// On crée une nouvelle instance, elle se register elle-même auprès du CreatureManager dans son constructeur
-		new Bird(world, manager, position);
+		new Bird("Bird", world, manager, position);
 		// On empêche ensuite le partenaire de créer un autre enfant
+		((Bird*) partner)->satiation -= 0.3f;
+		satiation -= 0.3f;
+		partner->switchState(new IdleState((Bird*) partner));
+		switchState(new IdleState(this));
 		partner->resetPartner();
-		partner->switchState(new IdleState(this));
+	}
+
+	virtual CreatureType getType() {
+		return CreatureType::Bird;
 	}
 };

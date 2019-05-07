@@ -2,9 +2,9 @@
 
 #include <unordered_map>
 #include <vector>
-#include <typeindex>
 #include "../external/gl/glew.h"
 #include "../external/gl/freeglut.h"
+#include "CreatureType.h"
 
 class AICreature;
 class MEngineMinicraft;
@@ -25,8 +25,8 @@ public:
 	void unregisterCreature(AICreature* creature);
 	void update(float dt);
 	void render(MEngineMinicraft* engine, GLuint shader, YVbo* vbo);
-	SimpleList<AICreature*>* getCreaturesOfType(std::type_index type);
+	SimpleList<AICreature*>* getCreaturesOfType(CreatureType type);
 
 private:
-	std::unordered_map<std::type_index, SimpleList<AICreature*>*> creatures;
+	std::unordered_map<CreatureType, SimpleList<AICreature*>*> creatures;
 };

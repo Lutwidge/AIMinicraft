@@ -32,6 +32,8 @@
     <ClInclude Include="src\creatures\bird\bird.h" />
     <ClInclude Include="src\creatures\creature.h" />
     <ClInclude Include="src\creatures\CreatureManager.h" />
+    <ClInclude Include="src\creatures\CreatureType.h" />
+    <ClInclude Include="src\creatures\ocelot\ocelot.h" />
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine_minicraft.h" />

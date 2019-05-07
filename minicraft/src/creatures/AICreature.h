@@ -4,6 +4,9 @@
 #include "../AStar.h"
 #include "CreatureManager.h"
 #include "Perceptor.h"
+#include "CreatureType.h"
+
+#define CREATURE_TYPE_COUNT 12
 
 class AICreature {
 public:
@@ -25,6 +28,7 @@ public:
 		DeadState(AICreature* creature) : State(creature) {}
 
 		virtual void enter() {
+			printf("%s : Dead \n", creature->name.c_str());
 			// On donne à la créature sa target finale
 			creature->goToFinalTarget();
 		}
@@ -44,9 +48,9 @@ public:
 	YVec3f forward;
 
 	AICreature(string name, MWorld *world, CreatureManager* manager, YVec3f pos, bool canFly, float speed, float decay, float reproThreshold) : 
-		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(1.0f), reproductionThreshold(reproThreshold) {
+		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(0.5f), reproductionThreshold(reproThreshold) {
 		//switchState(initialState);
-		manager->registerCreature(this);
+		//manager->registerCreature(this);
 		forward = YVec3f(1, 0, 0);
 	}
 
@@ -54,6 +58,8 @@ public:
 		manager->unregisterCreature(this);
 		delete state;
 	}
+
+	virtual CreatureType getType() = 0;
 
 	//// UPDATES ////
 	virtual void update(float elapsed) {
@@ -134,10 +140,10 @@ public:
 	}
 
 	virtual void resetPartner() {
-		partner = nullptr;
 		if (partner != nullptr) {
 			partner->partner = nullptr;
 		}
+		partner = nullptr;
 	}
 
 	virtual bool setPartner(AICreature* newPartner) = 0;

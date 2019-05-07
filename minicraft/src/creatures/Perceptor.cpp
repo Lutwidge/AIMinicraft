@@ -1,34 +1,38 @@
 #include "Perceptor.h"
 
-#include <type_traits>
-#include <typeinfo>
 #include "../SimpleList.h"
 #include "AICreature.h"
 #include "../my_physics.h"
 #include "CreatureManager.h"
 
 
-Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<std::type_index*>(4, 4)) {}
+Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<CreatureType>(4, 4)) {
+	for (int i = 0; i < CREATURE_TYPE_COUNT; i++) {
+		types->add((CreatureType) i);
+	}
+}
 
 Perceptor::~Perceptor() {}
 
-
-void Perceptor::registerType(std::type_index type) {
-	std::type_index* ptType = new std::type_index(type);
-	types->add(ptType);
-}
 
 void Perceptor::nextFrame() {
 	currentTypeIndex++;
 	currentTypeIndex = currentTypeIndex % types->count;
 }
 
-AICreature* Perceptor::creatureSight(AICreature* caller, std::type_index desiredType, float range) {
-	if (std::type_index(typeid(caller)) != *types->arr[currentTypeIndex]) {
+AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType desiredType, float range) {
+	unordered_map<CreatureType, AICreature*>* creaturePrevious;
+	if (caller->getType() != types->arr[currentTypeIndex]) {
 		AICreature* prev = nullptr;
-		auto search = previousTargets.find(caller);
-		if (search != previousTargets.end()) {
-			return search->second;
+		auto typeSearch = previousTargets.find(caller);
+		if (typeSearch != previousTargets.end()) {
+			auto creatureSearch = typeSearch->second->find(desiredType);
+			if (creatureSearch != typeSearch->second->end()) {
+				return creatureSearch->second;
+			}
+		} else {
+			creaturePrevious = new unordered_map<CreatureType, AICreature*>();
+			previousTargets[caller] = creaturePrevious;
 		}
 		return nullptr;
 	}
@@ -36,8 +40,14 @@ AICreature* Perceptor::creatureSight(AICreature* caller, std::type_index desired
 	AICreature* nearest = nullptr;
 	float nearestDistance = INFINITY;
 	SimpleList<AICreature*>* possibleTargets = manager->getCreaturesOfType(desiredType);
+	if (possibleTargets == nullptr) {
+		return nullptr;
+	}
 	for (unsigned int i = 0; i < possibleTargets->count; i++) {
 		AICreature* target = possibleTargets->arr[i];
+		if (target == caller) { // Discard self
+			continue;
+		}
 		YVec3f toTarget = caller->position - target->position;
 		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
 			continue;
@@ -53,6 +63,11 @@ AICreature* Perceptor::creatureSight(AICreature* caller, std::type_index desired
 		}
 	}
 
+	auto typeSearch2 = previousTargets.find(caller);
+	if (typeSearch2 != previousTargets.end()) {
+		creaturePrevious = typeSearch2->second;
+		(*creaturePrevious)[desiredType] = nearest;
+	}
 	return nearest;
 }
 

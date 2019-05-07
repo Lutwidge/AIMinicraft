@@ -267,6 +267,7 @@ public:
 };
 
 #define YVec3f YVec3<float>
+#define YVec3i YVec3<int>
 
 template<typename T>
 class YVec3

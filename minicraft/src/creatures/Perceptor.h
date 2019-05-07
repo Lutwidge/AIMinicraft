@@ -1,9 +1,9 @@
 #pragma once
 
-#include <typeindex>
 #include <unordered_map>
 #include "../engine/utils/types_3d.h"
 #include "../cube.h"
+#include "CreatureType.h"
 
 template<typename T>
 class SimpleList;
@@ -16,14 +16,13 @@ public:
 	Perceptor(CreatureManager* manager, MWorld* world);
 	~Perceptor();
 
-	void registerType(std::type_index type);
-	AICreature* creatureSight(AICreature* caller, std::type_index desiredType, float range);
+	AICreature* creatureSight(AICreature* caller, CreatureType desiredType, float range);
 	bool blockSight(AICreature* caller, MCube::MCubeType type, float range, YVec3f& pos);
 	void nextFrame();
 
 private:
-	SimpleList<std::type_index*>* types = nullptr;
-	std::unordered_map<AICreature*, AICreature*> previousTargets;
+	SimpleList<CreatureType>* types = nullptr;
+	std::unordered_map<AICreature*, unordered_map<CreatureType, AICreature*>*> previousTargets;
 	unsigned int currentTypeIndex = 0;
 	MWorld* world = nullptr;
 	CreatureManager* manager = nullptr;

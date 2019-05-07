@@ -168,4 +168,8 @@ public:
 		partner->resetPartner();
 		partner->switchState(new IdleState((Ocelot *)partner)); // --> new IdleState(this) ?
 	}
+
+	virtual CreatureType getType() {
+		return CreatureType::Ocelot;
+	}
 };

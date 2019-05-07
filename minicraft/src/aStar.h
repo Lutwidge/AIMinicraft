@@ -13,6 +13,9 @@ class AStar
 public:
 	static vector<YVec3f> findpath(YVec3f startPos, YVec3f endPos, MWorld * world, bool canFly)
 	{
+		startPos = YVec3f((int) startPos.X, (int) startPos.Y, (int) startPos.Z);
+		endPos = YVec3f((int) endPos.X, (int) endPos.Y, (int) endPos.Z);
+		
 		if (!isTargetValid(endPos, world, canFly))
 			return vector<YVec3f>();
 

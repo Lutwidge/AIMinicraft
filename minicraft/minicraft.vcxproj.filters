@@ -63,6 +63,9 @@
     <Filter Include="Fichiers sources\creatures">
       <UniqueIdentifier>{47712eb4-5f92-4111-952e-ab2ae811b705}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\creatures\ocelot">
+      <UniqueIdentifier>{7f8462e8-6063-4410-9915-554e9dec325c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine_minicraft.h">
@@ -123,6 +126,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="src\creatures\Perceptor.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\ocelot\ocelot.h">
+      <Filter>Fichiers d%27en-tête\creatures\ocelot</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\CreatureType.h">
       <Filter>Fichiers d%27en-tête\creatures</Filter>
     </ClInclude>
   </ItemGroup>
