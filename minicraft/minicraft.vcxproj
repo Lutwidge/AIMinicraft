@@ -32,6 +32,7 @@
     <ClInclude Include="src\creatures\bird\bird.h" />
     <ClInclude Include="src\creatures\creature.h" />
     <ClInclude Include="src\creatures\CreatureManager.h" />
+    <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine_minicraft.h" />
     <ClInclude Include="src\my_physics.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="..\src\engine\render\vbo.cpp" />
     <ClCompile Include="..\src\engine\utils\utils.cpp" />
     <ClCompile Include="src\creatures\CreatureManager.cpp" />
+    <ClCompile Include="src\creatures\Perceptor.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -5,15 +5,20 @@
 #include <typeindex>
 #include "../external/gl/glew.h"
 #include "../external/gl/freeglut.h"
-#include "../SimpleList.h"
 
 class AICreature;
 class MEngineMinicraft;
 class YVbo;
+template<typename T>
+class SimpleList;
+class Perceptor;
+class MWorld;
 
 class CreatureManager {
 public:
-	CreatureManager();
+	Perceptor* perceptor;
+
+	CreatureManager(MWorld* world);
 	~CreatureManager();
 
 	void registerCreature(AICreature* creature);

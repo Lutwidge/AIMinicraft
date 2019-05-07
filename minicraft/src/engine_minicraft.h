@@ -149,7 +149,7 @@ public :
 		//birb->startWandering();
 
 		// Spawn les premières créatures
-		cm = new CreatureManager();
+		cm = new CreatureManager(World);
 		bird = new Bird(World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 	}
 

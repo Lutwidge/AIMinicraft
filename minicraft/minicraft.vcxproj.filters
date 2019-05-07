@@ -122,6 +122,9 @@
     <ClInclude Include="src\SimpleList.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="src\creatures\Perceptor.h">
+      <Filter>Fichiers d%27en-tête\creatures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -137,6 +140,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="src\creatures\CreatureManager.cpp">
+      <Filter>Fichiers sources\creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\creatures\Perceptor.cpp">
       <Filter>Fichiers sources\creatures</Filter>
     </ClCompile>
   </ItemGroup>

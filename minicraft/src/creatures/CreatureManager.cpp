@@ -5,24 +5,29 @@
 #include "AICreature.h"
 #include "../engine_minicraft.h"
 #include "../engine/render/vbo.h"
+#include "../SimpleList.h"
+#include "Perceptor.h"
 
 
-CreatureManager::CreatureManager() {
-
+CreatureManager::CreatureManager(MWorld* world) {
+	perceptor = new Perceptor(world);
 }
 
 CreatureManager::~CreatureManager() {
 	// TODO cleanup creatures map
+	delete perceptor;
 }
 
 void CreatureManager::registerCreature(AICreature* creature) {
 	SimpleList<AICreature*>* typeVec;
-	auto search = creatures.find(std::type_index(typeid(creature)));
+	std::type_index type = std::type_index(typeid(creature));
+	auto search = creatures.find(type);
 	if (search != creatures.end()) {
 		typeVec = search->second;
 	} else {
 		typeVec = new SimpleList<AICreature*>(16, 16);
-		creatures[std::type_index(typeid(creature))] = typeVec;
+		creatures[type] = typeVec;
+		perceptor->registerType(type);
 	}
 	typeVec->add(creature);
 	

@@ -5,9 +5,13 @@
 #include "../AICreature.h"
 
 #define DIR_COUNT 4
-#define BIRD_SPEED 0.2f
-#define BIRD_SATIATION_DECAY 0.02f
+#define BIRD_SPEED 0.1f
+#define BIRD_SATIATION_DECAY 0.002f
 #define BIRD_REPRODUCTION_THRESHOLD 0.8f
+#define BIRD_SIGHT_RANGE 15
+#define BIRD_SPIRAL_PATH_INCREMENT 4
+#define BIRD_IDLE_HEIGHT 8
+#define BIRD_EAT_GAIN 0.3f
 
 class Bird : public AICreature
 {
@@ -31,13 +35,27 @@ protected:
 
 		virtual void update(float elapsed) {
 
-			if (bird->hasNotReachedTarget())
-				bird->move(elapsed);
-			else
-				bird->incrementSpiralPath();
-
 			// Mise à jour de la satiété et check de si on est toujours en vie
-			//if (bird->updateSatiation(elapsed)) {
+			if (bird->updateSatiation(elapsed))
+			{
+				//if (bird->manager->perceptor->creatureSight(bird, std::type_index(typeid(Ocelot))))
+
+
+				YVec3f fruit;
+				if (bird->manager->perceptor->blockSight(bird, MCube::CUBE_FRUIT, BIRD_SIGHT_RANGE, fruit))
+				{
+					if (bird->setEatTarget(fruit))
+					{
+						bird->switchState(new EatState(bird));
+						return;
+					}
+				}
+
+				if (bird->hasNotReachedTarget())
+					bird->move(elapsed);
+				else
+					bird->incrementSpiralPath();
+
 				//// Appel perception pour voir si on voit un predateur : (à voir si on garde cet état)
 				//// bird->switchState(new FleeState(this));
 				//// Sinon, on check si on a atteint la limite de reproduction
@@ -73,7 +91,7 @@ protected:
 				//	else
 				//		bird->incrementSpiralPath();
 				//}
-			//}
+			}
 		}
 
 		virtual void exit() {}
@@ -164,8 +182,6 @@ protected:
 	};
 	#pragma endregion
 
-	const int idleFlightHeight = 4;
-	const float fruitSatiationGain = 0.3f;
 	int pathLength;
 	YVec3f directions[DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(0, 1, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0) };
 	int curDirIndex;
@@ -173,7 +189,7 @@ protected:
 
 	virtual void setSpiralPath(int length, int index) {
 		YVec3f addedDir = directions[index] * length;
-		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y) + idleFlightHeight);
+		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y) + BIRD_IDLE_HEIGHT);
 
 		//// Verification de si la target est appropriée (pas un arbre), sinon on réduit l'avancée dans la direction définie
 		//if (!AStar::isTargetValid(target, world, true)) {
@@ -203,14 +219,19 @@ public:
 	{
 		world->getCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z)->setType(MCube::CUBE_BRANCHES);
 		world->respawnFruit();
-		// TODO : Regénérer le monde (mais coûteux... comme le picking)
-		satiation += fruitSatiationGain;
+		// Regénérer le monde (mais coûteux... comme le picking)
+		world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
+		satiation += BIRD_EAT_GAIN;
 	}
 
-	virtual void setEatTarget(YVec3f target) {
+	virtual bool setEatTarget(YVec3f target) {
 		realEatTarget = target;
-		// TODO : Define eat target as the nearest air cube near the fruit
-
+		// Define eat target as the nearest air cube near the fruit
+		eatTarget = world->getNearestAirCube(target.X, target.Y, target.Z);
+		if (eatTarget == realEatTarget)
+			return false;
+		else
+			return true;
 	}
 
 	/* IDLE */
@@ -223,7 +244,7 @@ public:
 
 	virtual void incrementSpiralPath()
 	{
-		pathLength += 2;
+		pathLength += BIRD_SPIRAL_PATH_INCREMENT;
 		curDirIndex++;
 		curDirIndex = curDirIndex % DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);

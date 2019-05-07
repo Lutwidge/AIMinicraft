@@ -18,7 +18,7 @@ public:
 	static const int AXIS_Z = 0b00000100;
 
 #ifdef _DEBUG
-	static const int MAT_SIZE = 3; //en nombre de chunks
+	static const int MAT_SIZE = 5; //en nombre de chunks
 #else
 	static const int MAT_SIZE = 5; //en nombre de chunks
 #endif // DEBUG
@@ -31,8 +31,7 @@ public:
 
 	MChunk * Chunks[MAT_SIZE][MAT_SIZE][MAT_HEIGHT];
 
-	vector<MCube*> fruitTargets;
-	int fruitCount = 0;
+	vector<YVec3<int>> fruitTargets;
 	int heightMap[MAT_SIZE_CUBES][MAT_SIZE_CUBES];
 
 	MWorld()
@@ -86,6 +85,28 @@ public:
 		return MAT_HEIGHT_CUBES - 1;
 	}
 
+	inline YVec3f getNearestAirCube(int x, int y, int z) {
+		MCube* cube = getCube(x - 1, y, z);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x - 1, y, z);
+		cube = getCube(x + 1, y, z);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x + 1, y, z);
+		cube = getCube(x, y - 1, z);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x, y - 1, z);
+		cube = getCube(x, y + 1, z);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x, y + 1, z);
+		cube = getCube(x, y, z - 1);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x, y, z - 1);
+		cube = getCube(x, y, z + 1);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x, y, z + 1);
+		return YVec3f(x, y, z);
+	}
+
 	inline MCube * getCube(int x, int y, int z)
 	{
 		if (x < 0)x = 0;
@@ -96,6 +117,10 @@ public:
 		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE) z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1;
 
 		return &(Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->_Cubes[x % MChunk::CHUNK_SIZE][y % MChunk::CHUNK_SIZE][z % MChunk::CHUNK_SIZE]);
+	}
+
+	inline MCube* getCube(YVec3<int> v) {
+		return getCube(v.X, v.Y, v.Z);
 	}
 
 	void updateCube(int x, int y, int z)
@@ -109,6 +134,11 @@ public:
 			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
 			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
 		}
+	}
+
+	void updateCube(YVec3<int> v) 
+	{
+		return updateCube(v.X, v.Y, v.Z);
 	}
 
 	void deleteCube(int x, int y, int z)
@@ -300,7 +330,7 @@ public:
 						cube->setType(MCube::CUBE_HERBE);
 			}
 		// 8 : Arbres
-		int treeNumber = int(MAT_SIZE_CUBES * MAT_SIZE_CUBES * MAT_HEIGHT_CUBES / (10 * 32000));
+		int treeNumber = int(MAT_SIZE_CUBES * MAT_SIZE_CUBES * MAT_HEIGHT_CUBES / (2 * 32000));
 		printf("Generating trees \n");
 		for (int k = 0; k < treeNumber; k++)
 		{
@@ -332,7 +362,7 @@ public:
 		{
 			if (randf() > 0.95)
 			{
-				fruitTargets[i]->setType(MCube::CUBE_FRUIT);
+				getCube(fruitTargets[i])->setType(MCube::CUBE_FRUIT);
 			}
 		}
 
@@ -347,14 +377,15 @@ public:
 	void respawnFruit()
 	{
 		MCube* cube;
-		int randomFruit = rand() % (fruitTargets.size() - fruitCount);
+		int randomFruit = rand() % fruitTargets.size();
 		for (int i = 0; i < fruitTargets.size(); i++)
 		{
-			cube = fruitTargets[i];
+			cube = getCube(fruitTargets[i]);
 
 			if (randomFruit <= 0)
 			{
 				cube->setType(MCube::CUBE_FRUIT);
+				updateCube(fruitTargets[i]);
 				break;
 			}
 			else if (cube->getType() == MCube::CUBE_BRANCHES)
@@ -406,7 +437,7 @@ public:
 				{
 					for (int z = treePos.Z; z < treePos.Z + treeHeight - 3; z++)
 					{
-						if (!(getCube(x, y, z)->getType() == MCube::CUBE_AIR))
+						if (getCube(x, y, z)->getType() != MCube::CUBE_AIR)
 							return false;
 					}
 				}
@@ -417,7 +448,7 @@ public:
 			for (int y = treePos.Y - 2; y <= treePos.Y + 2; y++)
 				for (int z = treePos.Z + treeHeight - 3; z <= treePos.Z + treeHeight; z++)
 				{
-					if (!getCube(x, y, z)->getType() == MCube::CUBE_AIR)
+					if (getCube(x, y, z)->getType() != MCube::CUBE_AIR)
 						return false;
 				}
 
@@ -443,36 +474,8 @@ public:
 					MCube* cube = getCube(x, y, z);
 					cube->setType(MCube::CUBE_BRANCHES);
 
-					if (x == treePos.X - 2)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
-					else if (x == treePos.X + 2)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
-					else if (y == treePos.Y - 2)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
-					else if (y == treePos.Y + 2)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
-					else if (z == treePos.Z + treeHeight - 3)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
-					else if (z == treePos.Z + treeHeight)
-					{
-						fruitTargets.push_back(cube);
-						fruitCount++;
-					}
+					if (x == treePos.X - 2 || x == treePos.X + 2 || y == treePos.Y - 2 || y == treePos.Y + 2 || z == treePos.Z + treeHeight)
+						fruitTargets.push_back(YVec3<int>(x, y, z));
 				}
 
 		// Construction de la partie finale du tronc
@@ -482,9 +485,6 @@ public:
 				{
 					getCube(x, y, z)->setType(MCube::CUBE_TRONC);
 				}
-
-		// Ajout des branches extérieures à la liste des cibles potentielles pour les fruits
-		fruitTargets.push_back(getCube(treePos.X - 2, treePos.Y - 2, treePos.Z + treeHeight - 3));
 	}
 
 	void add_world_to_vbo(void)

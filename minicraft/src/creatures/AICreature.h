@@ -3,6 +3,7 @@
 #include "../world.h"
 #include "../AStar.h"
 #include "CreatureManager.h"
+#include "Perceptor.h"
 
 class AICreature {
 public:
@@ -40,11 +41,13 @@ public:
 
 	State* state;
 	YVec3f position;
+	YVec3f forward;
 
 	AICreature(string name, MWorld *world, CreatureManager* manager, YVec3f pos, bool canFly, float speed, float decay, float reproThreshold) : 
 		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(1.0f), reproductionThreshold(reproThreshold) {
 		//switchState(initialState);
 		manager->registerCreature(this);
+		forward = YVec3f(1, 0, 0);
 	}
 
 	~AICreature() {
@@ -101,6 +104,7 @@ public:
 		timeSinceLastMove += elapsed;
 		if (timeSinceLastMove >= timeBetweenMoves) {
 			timeSinceLastMove = 0;
+			forward = (pathToTarget[currentMoveIndex] - position).normalize();
 			position = pathToTarget[currentMoveIndex];
 			currentMoveIndex++;
 		}
@@ -111,8 +115,9 @@ public:
 	}
 
 	//// EATING ////
-	virtual void setEatTarget(YVec3f target) {
+	virtual bool setEatTarget(YVec3f target) {
 		eatTarget = target;
+		return true;
 	}
 
 	virtual void gotToEatTarget() {
