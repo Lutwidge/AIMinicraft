@@ -150,7 +150,7 @@ public :
 
 		// Spawn les premières créatures
 		cm = new CreatureManager();
-		bird = new Bird(World, cm, YVec3f(35, 29, 46));
+		bird = new Bird(World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
@@ -329,7 +329,7 @@ public :
 
 		//elephant->update(elapsed);
 		//birb->update(elapsed);
-		bird->update(elapsed);
+		cm->update(elapsed);
 	}
 
 	void renderObjects();
@@ -667,33 +667,7 @@ inline void MEngineMinicraft::renderObjects()
 	}
 
 	/* RENDU DES CREATURES */
-
-	//// Elephant
-	//glPushMatrix();
-	//glUseProgram(ShaderCubeDebug);
-	//glTranslatef(elephant->position.X + MCube::CUBE_SIZE / 2.0f, elephant->position.Y + MCube::CUBE_SIZE / 2.0f, elephant->position.Z + MCube::CUBE_SIZE / 2.0f);
-	//Renderer->updateMatricesFromOgl();
-	//Renderer->sendMatricesToShader(ShaderCubeDebug);
-	//VboCube->render();
-	//glPopMatrix();
-
-	//// Birb
-	//glPushMatrix();
-	//glUseProgram(ShaderCubeDebug);
-	//glTranslatef(birb->position.X + MCube::CUBE_SIZE / 2.0f, birb->position.Y + MCube::CUBE_SIZE / 2.0f, birb->position.Z + MCube::CUBE_SIZE / 2.0f);
-	//Renderer->updateMatricesFromOgl();
-	//Renderer->sendMatricesToShader(ShaderCubeDebug);
-	//VboCube->render();
-	//glPopMatrix();
-
-	// Bird
-	glPushMatrix();
-	glUseProgram(ShaderCubeDebug);
-	glTranslatef(bird->position.X + MCube::CUBE_SIZE / 2.0f, bird->position.Y + MCube::CUBE_SIZE / 2.0f, bird->position.Z + MCube::CUBE_SIZE / 2.0f);
-	Renderer->updateMatricesFromOgl();
-	Renderer->sendMatricesToShader(ShaderCubeDebug);
-	VboCube->render();
-	glPopMatrix();
+	cm->render(this, ShaderCubeDebug, VboCube);
 
 	#pragma endregion
 
