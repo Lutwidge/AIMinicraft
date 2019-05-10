@@ -71,6 +71,40 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType desiredTyp
 	return nearest;
 }
 
+bool Perceptor::raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos)
+{
+	MCube* nearest = nullptr;
+	YVec3f nearestPosition(0, 0, 0);
+	float nearestDistance = INFINITY;
+	YVec3f cursorPosition = position;
+	direction = direction.normalize();
+
+	for (float dist = 0; dist < range; dist++, cursorPosition += direction)
+	{
+		MCube* cb = world->getCube(floorf(cursorPosition.X), floorf(cursorPosition.Y), floorf(cursorPosition.Z));
+
+		//Pas de collision mais on verifie quand meme via picking
+		if (cb->getType() == MCube::CUBE_AIR)
+		{
+			float distance;
+			int tx, ty, tz;
+			MMy_Physics::GetNearestPickableCube(position, cursorPosition, world, distance, tx, ty, tz);
+			MCube* hit = world->getCube(tx, ty, tz);
+			if (hit->getType() != MCube::CUBE_AIR && (cursorPosition - YVec3f(tx, ty, tz)).getSize() <= 1)
+			{
+				pos = YVec3f(tx, ty, tz);
+				return true;
+			}
+		}
+		else
+		{
+			pos = cursorPosition;
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Perceptor::blockSight(AICreature* caller, MCube::MCubeType type, float range, YVec3f& pos) {
 	int minX = floorf(caller->position.X - range);
 	int minY = floorf(caller->position.Y - range);
@@ -113,3 +147,4 @@ bool Perceptor::blockSight(AICreature* caller, MCube::MCubeType type, float rang
 	}
 	return false;
 }
+
