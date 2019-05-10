@@ -5,9 +5,12 @@
 #include "../AICreature.h"
 
 #define DIR_COUNT 4
-#define OCELOT_SPEED 0.2f
-#define OCELOT_SATIATION_DECAY 0.02f
+#define OCELOT_SPEED 0.08f
+#define OCELOT_SATIATION_DECAY 0.01f
 #define OCELOT_REPRODUCTION_THRESHOLD 0.8f
+#define OCELOT_SIGHT_RANGE 15
+#define OCELOT_MOVEMENT_RANGE 8
+#define OCELOT_EAT_GAIN 0.5f
 
 class Ocelot : public AICreature {
 protected:
@@ -25,19 +28,25 @@ protected:
 
 		virtual void enter() {
 			ocelot->ground();
-			ocelot->initializeRandomPath();
+			ocelot->initializePath();
 		}
 
 		virtual void update(float elapsed) {
-			ocelot->ground();
-			if (ocelot->hasNotReachedTarget()) {
-				ocelot->move(elapsed);
+			if (ocelot->updateSatiation(elapsed)) {
 
-				// Manger
+				ocelot->setEatTarget(ocelot->manager->perceptor->creatureSight(ocelot, CreatureType::Bird, OCELOT_SIGHT_RANGE));
+				if (ocelot->isEatTargetValid()) {
+					YLog::log(YLog::USER_INFO, toString("[OCELOT] Found prey !").c_str());
+					ocelot->switchState(new EatState(ocelot));
+				}
 
-			}
-			else {
-				ocelot->initializeRandomPath();
+				ocelot->ground();
+				if (ocelot->hasNotReachedTarget()) {
+					ocelot->move(elapsed);
+				}
+				else {
+					ocelot->initializePath();
+				}
 			}
 		}
 
@@ -52,17 +61,21 @@ protected:
 
 		}
 
-		virtual void enter() 
+		virtual void enter()
 		{
+			ocelot->eatTarget = ocelot->prey->position;
 			ocelot->gotToEatTarget();
 		}
 
 		virtual void update(float elapsed) {
-		
+			if (ocelot->updateSatiation(elapsed)) {
+				ocelot->move(elapsed);
+			}
 		}
 
 		virtual void exit() {
-
+			ocelot->lastPrey = ocelot->prey;
+			ocelot->prey = nullptr;
 		}
 	};
 
@@ -105,6 +118,9 @@ protected:
 
 #pragma endregion
 
+	AICreature * prey;
+	AICreature * lastPrey;
+
 	virtual void setRandomPath() {
 		int x = rand() % world->MAT_SIZE_METERS;
 		int y = rand() % world->MAT_SIZE_METERS;
@@ -112,9 +128,46 @@ protected:
 		goTo(target);
 	}
 
+	float normalX() {
+		float u = (rand() % 100) * 0.01;
+		float v = (rand() % 100) * 0.01;
+
+		float x = sqrt(-2 * log(u)) * cos(2 * 3.141592 * v);
+
+		return x;
+	}
+
+	float normalY() {
+		float u = (rand() % 100) * 0.01;
+		float v = (rand() % 100) * 0.01;
+
+		float y = sqrt(-2 * log(u)) * sin(2 * 3.141592 * v);
+
+		return y;
+	}
+
+	// Random walk
+	virtual void setPathArroundLastPrey() {
+		int x = normalX() * OCELOT_MOVEMENT_RANGE;
+		int y = normalY() * OCELOT_MOVEMENT_RANGE;
+		if (lastPrey != nullptr) {
+			// turn arround last prey
+			x += lastPrey->position.X;
+			y += lastPrey->position.Y;
+		}
+		else {
+			// turn arround myself
+			x += position.X;
+			y += position.Y;
+		}
+		YVec3f target = YVec3f(x, y, world->getSurface(x, y));
+		goTo(target);
+	}
+
 public:
 
-	Ocelot(MWorld * world, CreatureManager * cm, YVec3f pos) : AICreature("Ocelot", world, cm, pos, false, OCELOT_SPEED, OCELOT_SATIATION_DECAY, OCELOT_REPRODUCTION_THRESHOLD) {
+	Ocelot(string name, MWorld * world, CreatureManager * cm, YVec3f pos) : AICreature(name, world, cm, pos, false, OCELOT_SPEED, OCELOT_SATIATION_DECAY, OCELOT_REPRODUCTION_THRESHOLD) {
+		manager->registerCreature(this);
 		switchState(new IdleState(this));
 	}
 
@@ -125,10 +178,17 @@ public:
 
 	/* EATING */
 	virtual bool isEatTargetValid() {
-		return false;
+		return prey != nullptr;
 	}
 
-	virtual void eat() {}
+	virtual void setEatTarget(AICreature * creature) {
+		prey = creature;
+	}
+
+	virtual void eat() {
+		manager->unregisterCreature(prey);
+		satiation += OCELOT_EAT_GAIN;
+	}
 
 	virtual bool setPartner(AICreature* newPartner) {
 		Ocelot * ocelotPartner = nullptr;
@@ -145,17 +205,15 @@ public:
 		return false;
 	}
 
-	virtual void setEatTarget(AICreature * creature) {
-
-	}
-
 	virtual void initializeRandomPath() {
 		setRandomPath();
 	}
 
-	virtual void incrementRandomPath() {
-
+	virtual void initializePath() {
+		setPathArroundLastPrey();
 	}
+
+
 
 	virtual bool isPartnerValid() {
 		return false;
@@ -163,7 +221,9 @@ public:
 
 	virtual void reproduce() {
 		// Création d'un ocelot qui s'enregistre lui-même auprès du CreatureManager
-		new Ocelot(world, manager, position);
+		new Ocelot("Ocelot", world, manager, position);
+
+		satiation -= 0.3f;
 
 		partner->resetPartner();
 		partner->switchState(new IdleState((Ocelot *)partner)); // --> new IdleState(this) ?
