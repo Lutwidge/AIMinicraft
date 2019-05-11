@@ -192,7 +192,7 @@ protected:
 	#pragma endregion
 
 	int pathLength;
-	YVec3f directions[DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(0, 0, 1), YVec3f(-1, 0, 0), YVec3f(0, 0, -1) };
+	YVec3f directions[DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
 	int curDirIndex;
 	YVec3f realEatTarget;
 
