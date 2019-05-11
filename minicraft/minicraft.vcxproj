@@ -36,6 +36,7 @@
     <ClInclude Include="src\creatures\ocelot\ocelot.h" />
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\creatures\owl\Owl.h" />
+    <ClInclude Include="src\creatures\rat\rat.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine\utils\Bezier.h" />
     <ClInclude Include="src\engine_minicraft.h" />
@@ -147,7 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)minicraft\src\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
@@ -184,7 +185,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)minicraft\src\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4244</DisableSpecificWarnings>
     </ClCompile>
