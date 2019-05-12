@@ -8,6 +8,7 @@
 #include "creatures/creature.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
+#include "creatures/owl/Owl.h"
 #include "creatures/CreatureManager.h"
 
 class MEngineMinicraft : public YEngine
@@ -152,6 +153,7 @@ public :
 		cm = new CreatureManager(World);
 		new Bird("Bird1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 		new Bird("Bird2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
+		new Owl("Owl 1", World, cm, YVec3f(0, 0, World->getSurface(0, 0)));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)

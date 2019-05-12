@@ -90,7 +90,7 @@ bool Perceptor::raycast(YVec3f position, YVec3f direction, float range, YVec3f& 
 			int tx, ty, tz;
 			MMy_Physics::GetNearestPickableCube(position, cursorPosition, world, distance, tx, ty, tz);
 			MCube* hit = world->getCube(tx, ty, tz);
-			if (hit->getType() != MCube::CUBE_AIR && (cursorPosition - YVec3f(tx, ty, tz)).getSize() <= 1)
+			if (hit->getType() != MCube::CUBE_AIR && (cursorPosition - YVec3f(tx, ty, tz)).getSize() <= MWorld::MAT_SIZE_METERS)
 			{
 				pos = YVec3f(tx, ty, tz);
 				return true;
