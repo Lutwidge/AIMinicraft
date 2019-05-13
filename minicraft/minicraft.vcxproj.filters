@@ -31,48 +31,9 @@
     <ClInclude Include="src\octave_perlin.h" />
     <ClInclude Include="src\SimpleList.h" />
     <ClInclude Include="src\world.h" />
-    <ClInclude Include="src\creatures\bear\bear.h">
-      <Filter>creatures\bear</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\bird\bird.h">
-      <Filter>creatures\bird</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\ocelot\ocelot.h">
-      <Filter>creatures\ocelot</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\owl\Owl.h">
-      <Filter>creatures\owl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\rat\rat.h">
-      <Filter>creatures\rat</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\AICreature.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\creature.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\CreatureManager.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatureState.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\CreatureType.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\Perceptor.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\utils\Bezier.h">
-      <Filter>engine\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\render\camera.h">
-      <Filter>engine\render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\elephant\elephant.h">
-      <Filter>creatures\elephant</Filter>
-    </ClInclude>
+    <ClInclude Include="src\creatures\owl\Owl.h" />
+    <ClInclude Include="src\creatures\rat\rat.h" />
+    <ClInclude Include="src\creatures\wolf\Wolf.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />
