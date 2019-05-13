@@ -219,7 +219,7 @@ public:
 		world->getCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z)->setType(MCube::CUBE_BRANCHES);
 		world->respawnFruit();
 		// Regénérer le monde (mais coûteux... comme le picking)
-		world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
+		//world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
 		satiation += BIRD_EAT_GAIN;
 		if (satiation > 1.0f)
 			satiation = 1.0f;
