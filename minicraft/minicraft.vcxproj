@@ -33,6 +33,7 @@
     <ClInclude Include="src\creatures\creature.h" />
     <ClInclude Include="src\creatures\CreatureManager.h" />
     <ClInclude Include="src\creatures\CreatureType.h" />
+    <ClInclude Include="src\creatures\elephant\elephant.h" />
     <ClInclude Include="src\creatures\ocelot\ocelot.h" />
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\creatures\owl\Owl.h" />
