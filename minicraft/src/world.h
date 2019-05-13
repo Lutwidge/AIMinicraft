@@ -36,7 +36,7 @@ public:
 
 	MWorld()
 	{
-		//On crée les chunks
+		//On crï¿½e les chunks
 		for (int x = 0; x < MAT_SIZE; x++)
 			for (int y = 0; y < MAT_SIZE; y++)
 				for (int z = 0; z < MAT_HEIGHT; z++)
@@ -125,15 +125,22 @@ public:
 
 	void updateCube(int x, int y, int z)
 	{
-		if (x < 0)x = 0;
-		if (y < 0)y = 0;
-		if (z < 0)z = 0;
-		if (x >= MAT_SIZE * MChunk::CHUNK_SIZE)x = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
-		if (y >= MAT_SIZE * MChunk::CHUNK_SIZE)y = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
-		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE)z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1; {
-			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
-			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
-		}
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;
+		if (z < 0)
+			z = 0;
+		if (x >= MAT_SIZE * MChunk::CHUNK_SIZE)
+			x = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
+		if (y >= MAT_SIZE * MChunk::CHUNK_SIZE)
+			y = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
+		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE)
+			z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1;
+
+		YLog::log(YLog::ENGINE_INFO, ("Update world VAO + VBO"));
+		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
+		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
 	}
 
 	void updateCube(YVec3<int> v) 
@@ -162,8 +169,8 @@ public:
 				for (int z = 0; z < MAT_HEIGHT; z++)
 					Chunks[x][y][z]->reset();
 
-		// Generation du monde (utilise du bruit octave & bruit combiné avec du perlin)
-		// 0 : Definition des bruits qui seront nécessaires
+		// Generation du monde (utilise du bruit octave & bruit combinï¿½ avec du perlin)
+		// 0 : Definition des bruits qui seront nï¿½cessaires
 		YOctavePerlin * octaves[8] = { new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin(), new YOctavePerlin() };
 		for (int i = 0; i < 8; i++)
 		{
@@ -270,7 +277,7 @@ public:
 		//			else
 		//				cube->setType(MCube::CUBE_EAU);
 		//		}
-		//// 6 : Caves inondées
+		//// 6 : Caves inondï¿½es
 		//caveNumber = int(MAT_SIZE_CUBES * MAT_SIZE_CUBES * MAT_HEIGHT_CUBES / (8192 * 20));
 		//printf("Generating flooded caves \n");
 		//for (int k = 0; k < caveNumber; k++)
@@ -489,6 +496,7 @@ public:
 
 	void add_world_to_vbo(void)
 	{
+		YLog::log(YLog::ENGINE_INFO, ("Initialize world VAO + VBO "));
 		for (int x = 0; x<MAT_SIZE; x++)
 			for (int y = 0; y<MAT_SIZE; y++)
 				for (int z = 0; z<MAT_HEIGHT; z++)
@@ -735,7 +743,7 @@ public:
 				{
 					glPushMatrix();
 					glTranslatef(x * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE, y * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE, z * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE);
-					YRenderer::getInstance()->updateMatricesFromOgl(); //Calcule toute les matrices à partir des deux matrices OGL
+					YRenderer::getInstance()->updateMatricesFromOgl(); //Calcule toute les matrices ï¿½ partir des deux matrices OGL
 					YRenderer::getInstance()->sendMatricesToShader(YRenderer::getInstance()->CURRENT_SHADER); //Envoie les matrices au shader
 					Chunks[x][y][z]->render(false);
 					glPopMatrix();
@@ -751,7 +759,7 @@ public:
 					{
 						glPushMatrix();
 						glTranslatef(x * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE, y * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE, z * MChunk::CHUNK_SIZE * MCube::CUBE_SIZE);
-						YRenderer::getInstance()->updateMatricesFromOgl(); //Calcule toute les matrices à partir des deux matrices OGL
+						YRenderer::getInstance()->updateMatricesFromOgl(); //Calcule toute les matrices ï¿½ partir des deux matrices OGL
 						YRenderer::getInstance()->sendMatricesToShader(YRenderer::getInstance()->CURRENT_SHADER); //Envoie les matrices au shader
 						Chunks[x][y][z]->render(true);
 						glPopMatrix();
@@ -760,8 +768,8 @@ public:
 	}
 
 	/**
-	* Attention ce code n'est pas optimal, il est compréhensible. Il existe de nombreuses
-	* versions optimisées de ce calcul.
+	* Attention ce code n'est pas optimal, il est comprï¿½hensible. Il existe de nombreuses
+	* versions optimisï¿½es de ce calcul.
 	*/
 	inline bool intersecDroitePlan(const YVec3f & debSegment, const  YVec3f & finSegment,
 		const YVec3f & p1Plan, const YVec3f & p2Plan, const YVec3f & p3Plan,
@@ -772,8 +780,8 @@ public:
 	}
 
 	/**
-	* Attention ce code n'est pas optimal, il est compréhensible. Il existe de nombreuses
-	* versions optimisées de ce calcul. Il faut donner les points dans l'ordre (CW ou CCW)
+	* Attention ce code n'est pas optimal, il est comprï¿½hensible. Il existe de nombreuses
+	* versions optimisï¿½es de ce calcul. Il faut donner les points dans l'ordre (CW ou CCW)
 	*/
 	inline bool intersecDroiteCubeFace(const YVec3f & debSegment, const YVec3f & finSegment,
 		const YVec3f & p1, const YVec3f & p2, const YVec3f & p3, const  YVec3f & p4,
@@ -792,7 +800,7 @@ public:
 	}
 
 	/**
-	* De meme cette fonction peut être grandement opitimisée, on a priviligié la clarté
+	* De meme cette fonction peut ï¿½tre grandement opitimisï¿½e, on a priviligiï¿½ la clartï¿½
 	*/
 	bool getRayCollisionWithCube(const YVec3f & debSegment, const YVec3f & finSegment,
 		int x, int y, int z,
