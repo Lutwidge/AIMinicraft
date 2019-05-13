@@ -5,10 +5,10 @@
 
 #include "avatar.h"
 #include "world.h"
-#include "creatures/creature.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
 #include <creatures/rat/rat.h>
+#include "creatures/owl/Owl.h"
 #include "creatures/CreatureManager.h"
 
 class MEngineMinicraft : public YEngine
@@ -75,8 +75,6 @@ private:
 	YTexFile * waterTex;
 
 	// Creatures
-	Creature * elephant;
-	Creature * birb;
 	Bird * bird;
 	CreatureManager* cm;
 
@@ -141,20 +139,13 @@ public :
 		// Textures
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
-		// Elephant
-		//elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1, 0.02f);
-		//elephant->startWandering();
-
-		// Birb
-		//birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f, 0.02f);
-		//birb->startWandering();
-
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
         new Rat( "Rat", World, cm, YVec3f( ( MWorld::MAT_SIZE_METERS ) / 2, ( MWorld::MAT_SIZE_METERS ) / 2, World->getSurface( ( MWorld::MAT_SIZE_METERS ) / 2, ( MWorld::MAT_SIZE_METERS ) / 2 ) ) );
 
 		new Bird("Bird1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 		new Bird("Bird2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
+		new Owl("Owl 1", World, cm, YVec3f(0, 0, World->getSurface(0, 0)));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
@@ -331,8 +322,6 @@ public :
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
 
-		//elephant->update(elapsed);
-		//birb->update(elapsed);
 		cm->update(elapsed);
 	}
 
