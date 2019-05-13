@@ -75,7 +75,6 @@ private:
 	YTexFile * waterTex;
 
 	// Creatures
-	Bird * bird;
 	CreatureManager* cm;
 
 public :
