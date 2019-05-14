@@ -64,6 +64,12 @@ public:
 					return;
 				}
 
+				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+				if (creature != nullptr)
+				{
+					owl->switchState(new FleeState(owl, creature->position));
+				}
+
 				if (time < 0)
 				{
 					time = timeBeforeSearch;
@@ -121,6 +127,12 @@ public:
 		{
 			AICreature* targetSnake = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
 
+			AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+			if (creature != nullptr)
+			{
+				owl->switchState(new FleeState(owl, creature->position));
+			}
+
 			if (targetSnake != nullptr)
 			{
 				owl->setEatTarget(targetSnake->position);
@@ -155,6 +167,12 @@ public:
 			{
 				YVec3f toSnake(owl->target->position - owl->position);
 				YVec3f pos;
+
+				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+				if (creature != nullptr)
+				{
+					owl->switchState(new FleeState(owl, creature->position));
+				}
 
 				//Rien ne gene la vue
 				if (!owl->manager->perceptor->raycast(owl->position, toSnake, toSnake.getSize(), pos))
@@ -301,6 +319,11 @@ public:
 
 			if (owl->updateSatiation(elapsed))
 			{
+				AICreature * creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+				if (creature != nullptr)
+				{
+					owl->switchState(new FleeState(owl, creature->position));
+				}
 				YVec3f pos;
 
 				//Rien ne gene la vue
