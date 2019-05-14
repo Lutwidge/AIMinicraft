@@ -16,14 +16,14 @@ public:
 	Perceptor(CreatureManager* manager, MWorld* world);
 	~Perceptor();
 
-	AICreature* creatureSight(AICreature* caller, CreatureType desiredType, float range);
+	AICreature* creatureSight(AICreature* caller, CreatureType* desiredType, float range);
 	bool blockSight(AICreature* caller, MCube::MCubeType type, float range, YVec3f& pos);
 	bool raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos);
 	void nextFrame();
 
 private:
-	SimpleList<CreatureType>* types = nullptr;
-	std::unordered_map<AICreature*, unordered_map<CreatureType, AICreature*>*> previousTargets;
+	SimpleList<CreatureType*>* types = nullptr;
+	std::unordered_map<AICreature*, unordered_map<CreatureType*, AICreature*>*> previousTargets;
 	unsigned int currentTypeIndex = 0;
 	MWorld* world = nullptr;
 	CreatureManager* manager = nullptr;

@@ -18,7 +18,7 @@ CreatureManager::~CreatureManager() {
 
 void CreatureManager::registerCreature(AICreature* creature) {
 	SimpleList<AICreature*>* typeVec;
-	CreatureType type = creature->getType();
+	CreatureType* type = creature->getType();
 	auto search = creatures.find(type);
 	if (search != creatures.end()) {
 		typeVec = search->second;
@@ -45,7 +45,7 @@ void CreatureManager::unregisterCreature(AICreature* creature) {
 }
 
 void CreatureManager::update(float dt) {
-	for (std::pair<CreatureType, SimpleList<AICreature*>*> typePair : creatures) {
+	for (std::pair<CreatureType*, SimpleList<AICreature*>*> typePair : creatures) {
 		SimpleList<AICreature*>* typeCreatures = typePair.second;
 		for (unsigned int i = 0; i < typeCreatures->count; i++) {
 			typeCreatures->arr[i]->update(dt);
@@ -53,23 +53,16 @@ void CreatureManager::update(float dt) {
 	}
 }
 
-void CreatureManager::render(MEngineMinicraft* engine, GLuint shader, YVbo* vbo) {
-	for (std::pair<CreatureType, SimpleList<AICreature*>*> typePair : creatures) {
+void CreatureManager::render(MEngineMinicraft* engine) {
+	for (std::pair<CreatureType*, SimpleList<AICreature*>*> typePair : creatures) {
 		SimpleList<AICreature*>* typeCreatures = typePair.second;
 		for (unsigned int i = 0; i < typeCreatures->count; i++) {
-			AICreature* creature = typeCreatures->arr[i];
-			glPushMatrix();
-			glUseProgram(shader);
-			glTranslatef(creature->position.X + MCube::CUBE_SIZE / 2.0f, creature->position.Y + MCube::CUBE_SIZE / 2.0f, creature->position.Z + MCube::CUBE_SIZE / 2.0f);
-			engine->Renderer->updateMatricesFromOgl();
-			engine->Renderer->sendMatricesToShader(shader);
-			vbo->render();
-			glPopMatrix();
+			typeCreatures->arr[i]->render(engine);
 		}
 	}
 }
 
-SimpleList<AICreature*>* CreatureManager::getCreaturesOfType(CreatureType type) {
+SimpleList<AICreature*>* CreatureManager::getCreaturesOfType(CreatureType* type) {
 	auto search = creatures.find(type);
 	if (search != creatures.end()) {
 		return search->second;

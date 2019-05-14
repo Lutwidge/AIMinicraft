@@ -427,7 +427,7 @@ public:
 		return satiation;
 	}
 
-	CreatureType getType()
+	CreatureType* getType()
 	{
 		return CreatureType::Owl;
 	}

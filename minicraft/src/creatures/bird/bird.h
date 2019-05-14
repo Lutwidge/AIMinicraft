@@ -291,7 +291,7 @@ public:
 		partner->resetPartner();
 	}
 
-	virtual CreatureType getType() {
+	virtual CreatureType* getType() {
 		return CreatureType::Bird;
 	}
 };

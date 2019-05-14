@@ -24,9 +24,9 @@ public:
 	void registerCreature(AICreature* creature);
 	void unregisterCreature(AICreature* creature);
 	void update(float dt);
-	void render(MEngineMinicraft* engine, GLuint shader, YVbo* vbo);
-	SimpleList<AICreature*>* getCreaturesOfType(CreatureType type);
+	void render(MEngineMinicraft* engine);
+	SimpleList<AICreature*>* getCreaturesOfType(CreatureType* type);
 
 private:
-	std::unordered_map<CreatureType, SimpleList<AICreature*>*> creatures;
+	std::unordered_map<CreatureType*, SimpleList<AICreature*>*> creatures;
 };
