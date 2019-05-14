@@ -5,10 +5,9 @@
 
 #include "avatar.h"
 #include "world.h"
-#include "creatures/creature.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
-#include <creatures/rat/rat.h>
+#include "creatures/rat/rat.h"
 #include "creatures/owl/Owl.h"
 #include "creatures/CreatureManager.h"
 
@@ -76,9 +75,6 @@ private:
 	YTexFile * waterTex;
 
 	// Creatures
-	Creature * elephant;
-	Creature * birb;
-	Bird * bird;
 	CreatureManager* cm;
 
 public :
@@ -142,13 +138,8 @@ public :
 		// Textures
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
-		// Elephant
-		//elephant = new Creature("Elephant", World, YVec3f(32, 32, World->getSurface(32, 32)), false, 1, 0.02f);
-		//elephant->startWandering();
-
-		// Birb
-		//birb = new Creature("Birb", World, YVec3f(35, 29, 46), true, 0.1f, 0.02f);
-		//birb->startWandering();
+		// Initialisation des mesh par default pour tous les types de creatures
+		CreatureType::initMeshes(VboCube, ShaderCubeDebug);
 
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
@@ -333,8 +324,6 @@ public :
 			Renderer->Camera->move(Renderer->Camera->Direction * xMovement + Renderer->Camera->RightVec * yMovement);
 		}
 
-		//elephant->update(elapsed);
-		//birb->update(elapsed);
 		cm->update(elapsed);
 	}
 
@@ -673,7 +662,7 @@ inline void MEngineMinicraft::renderObjects()
 	}
 
 	/* RENDU DES CREATURES */
-	cm->render(this, ShaderCubeDebug, VboCube);
+	cm->render(this);
 
 	#pragma endregion
 

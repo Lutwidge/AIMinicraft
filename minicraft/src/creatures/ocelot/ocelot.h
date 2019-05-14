@@ -229,7 +229,7 @@ public:
 		partner->switchState(new IdleState((Ocelot *)partner)); // --> new IdleState(this) ?
 	}
 
-	virtual CreatureType getType() {
+	virtual CreatureType* getType() {
 		return CreatureType::Ocelot;
 	}
 };

@@ -5,14 +5,14 @@
 #include "../AICreature.h"
 #include "../ocelot/ocelot.h"
 
-#define DIR_COUNT 4
+#define BIRD_DIR_COUNT 4
 #define BIRD_SPEED 0.1f
 #define BIRD_SATIATION_DECAY 0.01f
 #define BIRD_REPRODUCTION_THRESHOLD 0.8f
 #define BIRD_SIGHT_RANGE 15
 #define BIRD_SPIRAL_PATH_INCREMENT 4
 #define BIRD_IDLE_HEIGHT 8
-#define BIRD_EAT_GAIN 0.3f
+#define BIRD_EAT_GAIN 0.1f
 
 class Bird : public AICreature
 {
@@ -219,7 +219,7 @@ public:
 		world->getCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z)->setType(MCube::CUBE_BRANCHES);
 		world->respawnFruit();
 		// Regénérer le monde (mais coûteux... comme le picking)
-		world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
+		//world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
 		satiation += BIRD_EAT_GAIN;
 		if (satiation > 1.0f)
 			satiation = 1.0f;
@@ -291,7 +291,7 @@ public:
 		partner->resetPartner();
 	}
 
-	virtual CreatureType getType() {
+	virtual CreatureType* getType() {
 		return CreatureType::Bird;
 	}
 };

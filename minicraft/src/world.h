@@ -125,15 +125,22 @@ public:
 
 	void updateCube(int x, int y, int z)
 	{
-		if (x < 0)x = 0;
-		if (y < 0)y = 0;
-		if (z < 0)z = 0;
-		if (x >= MAT_SIZE * MChunk::CHUNK_SIZE)x = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
-		if (y >= MAT_SIZE * MChunk::CHUNK_SIZE)y = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
-		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE)z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1; {
-			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
-			Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
-		}
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;
+		if (z < 0)
+			z = 0;
+		if (x >= MAT_SIZE * MChunk::CHUNK_SIZE)
+			x = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
+		if (y >= MAT_SIZE * MChunk::CHUNK_SIZE)
+			y = (MAT_SIZE * MChunk::CHUNK_SIZE) - 1;
+		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE)
+			z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1;
+
+		YLog::log(YLog::ENGINE_INFO, ("Update world VAO + VBO"));
+		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
+		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
 	}
 
 	void updateCube(YVec3<int> v) 
@@ -385,7 +392,7 @@ public:
 			if (randomFruit <= 0)
 			{
 				cube->setType(MCube::CUBE_FRUIT);
-				updateCube(fruitTargets[i]);
+				//updateCube(fruitTargets[i]);
 				break;
 			}
 			else if (cube->getType() == MCube::CUBE_BRANCHES)
@@ -489,6 +496,7 @@ public:
 
 	void add_world_to_vbo(void)
 	{
+		YLog::log(YLog::ENGINE_INFO, ("Initialize world VAO + VBO "));
 		for (int x = 0; x<MAT_SIZE; x++)
 			for (int y = 0; y<MAT_SIZE; y++)
 				for (int z = 0; z<MAT_HEIGHT; z++)

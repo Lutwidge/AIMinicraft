@@ -6,7 +6,7 @@
 #include "Perceptor.h"
 #include "CreatureType.h"
 
-#define CREATURE_TYPE_COUNT 12
+class MEngineMinicraft;
 
 class AICreature {
 public:
@@ -28,7 +28,7 @@ public:
 		DeadState(AICreature* creature) : State(creature) {}
 
 		virtual void enter() {
-			printf("%s : Dead \n", creature->name.c_str());
+			printf("%s: Dead\n", creature->name.c_str());
 			// On donne à la créature sa target finale
 			creature->goToFinalTarget();
 		}
@@ -46,6 +46,7 @@ public:
 	State* state;
 	YVec3f position;
 	YVec3f forward;
+	MWorld* world;
 
 	AICreature(string name, MWorld *world, CreatureManager* manager, YVec3f pos, bool canFly, float speed, float decay, float reproThreshold) : 
 		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(0.5f), reproductionThreshold(reproThreshold) {
@@ -59,7 +60,7 @@ public:
 		delete state;
 	}
 
-	virtual CreatureType getType() = 0;
+	virtual CreatureType* getType() = 0;
 
 	//// UPDATES ////
 	virtual void update(float elapsed) {
@@ -74,6 +75,8 @@ public:
 		}
 		return true;
 	}
+
+	virtual void render(MEngineMinicraft* engine);
 
 	//// STATES ////
 	void addPossibleState(std::string id, State* state) {
@@ -95,7 +98,7 @@ public:
 
 	//// MOVEMENT ////
 	virtual void goTo(YVec3f targetPos) {
-		this->targetPos = targetPos;
+		this->targetPos = targetPos;		
 		pathToTarget = AStar::findpath(position, targetPos, world, canFly);
 		currentMoveIndex = 0;
 		if (pathToTarget.size() == 0)
@@ -117,7 +120,9 @@ public:
 	}
 
 	void goToFinalTarget() {
-		goTo(YVec3f(position.X, position.Y, world->getHighestPoint(position.X, position.Y)));
+		YVec3f finalPos = YVec3f(position.X, position.Y, world->getHighestPoint(position.X, position.Y));
+		if (!(finalPos == position))
+			goTo(finalPos);
 	}
 
 	//// EATING ////
@@ -153,7 +158,6 @@ public:
 	virtual void reproduce() = 0;
 
 protected:
-	MWorld *world;
 	CreatureManager* manager = nullptr;
 
 	string name;

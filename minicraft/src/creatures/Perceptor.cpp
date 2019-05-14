@@ -6,9 +6,9 @@
 #include "CreatureManager.h"
 
 
-Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<CreatureType>(4, 4)) {
+Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<CreatureType*>(4, 4)) {
 	for (int i = 0; i < CREATURE_TYPE_COUNT; i++) {
-		types->add((CreatureType) i);
+		types->add((CreatureType*) i);
 	}
 }
 
@@ -20,8 +20,8 @@ void Perceptor::nextFrame() {
 	currentTypeIndex = currentTypeIndex % types->count;
 }
 
-AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType desiredType, float range) {
-	unordered_map<CreatureType, AICreature*>* creaturePrevious;
+AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType* desiredType, float range) {
+	unordered_map<CreatureType*, AICreature*>* creaturePrevious;
 	if (caller->getType() != types->arr[currentTypeIndex]) {
 		AICreature* prev = nullptr;
 		auto typeSearch = previousTargets.find(caller);
@@ -31,7 +31,7 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType desiredTyp
 				return creatureSearch->second;
 			}
 		} else {
-			creaturePrevious = new unordered_map<CreatureType, AICreature*>();
+			creaturePrevious = new unordered_map<CreatureType*, AICreature*>();
 			previousTargets[caller] = creaturePrevious;
 		}
 		return nullptr;

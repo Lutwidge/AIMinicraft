@@ -8,7 +8,7 @@
 namespace
 {
     static constexpr auto RAT_SIGHT_RANGE = 5;
-    static constexpr auto DIR_COUNT = 4;
+    static constexpr auto RAT_DIR_COUNT = 4;
     static constexpr auto RAT_SPEED = 2.0f;
     static constexpr auto RAT_SATIATION_DECAY = 0.01f;
     static constexpr auto RAT_REPRODUCTION_THRESHOLD = 1.75f;
@@ -192,7 +192,7 @@ protected:
 	#pragma endregion
 
 	int pathLength;
-	YVec3f directions[DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
+	YVec3f directions[RAT_DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
 	int curDirIndex;
 	YVec3f realEatTarget;
 
@@ -247,7 +247,7 @@ public:
 	{
 		pathLength += 1;
 		curDirIndex++;
-		curDirIndex = curDirIndex % DIR_COUNT;
+		curDirIndex = curDirIndex % RAT_DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);
 	}
 
@@ -291,7 +291,7 @@ public:
 		partner->resetPartner();
 	}
 
-	virtual CreatureType getType() {
+	virtual CreatureType* getType() {
 		return CreatureType::Rat;
 	}
 };
