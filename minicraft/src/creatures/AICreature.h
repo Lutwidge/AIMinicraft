@@ -6,7 +6,7 @@
 #include "Perceptor.h"
 #include "CreatureType.h"
 
-#define CREATURE_TYPE_COUNT 12
+class MEngineMinicraft;
 
 class AICreature {
 public:
@@ -60,7 +60,7 @@ public:
 		delete state;
 	}
 
-	virtual CreatureType getType() = 0;
+	virtual CreatureType* getType() = 0;
 
 	//// UPDATES ////
 	virtual void update(float elapsed) {
@@ -75,6 +75,8 @@ public:
 		}
 		return true;
 	}
+
+	virtual void render(MEngineMinicraft* engine);
 
 	//// STATES ////
 	void addPossibleState(std::string id, State* state) {

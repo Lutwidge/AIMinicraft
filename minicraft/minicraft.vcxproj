@@ -51,7 +51,9 @@
     <ClCompile Include="..\src\engine\render\fbo.cpp" />
     <ClCompile Include="..\src\engine\render\vbo.cpp" />
     <ClCompile Include="..\src\engine\utils\utils.cpp" />
+    <ClCompile Include="src\creatures\AICreature.cpp" />
     <ClCompile Include="src\creatures\CreatureManager.cpp" />
+    <ClCompile Include="src\creatures\CreatureType.cpp" />
     <ClCompile Include="src\creatures\Perceptor.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -83,13 +85,13 @@
     <ProjectGuid>{17FD557D-42BC-4AF9-ABD2-025A8F8A621D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>minicraft</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

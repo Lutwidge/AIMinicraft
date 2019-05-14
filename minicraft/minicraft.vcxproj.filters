@@ -17,6 +17,12 @@
     <ClCompile Include="..\src\engine\render\vbo.cpp">
       <Filter>engine\render</Filter>
     </ClCompile>
+    <ClCompile Include="src\creatures\CreatureType.cpp">
+      <Filter>creatures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\creatures\AICreature.cpp">
+      <Filter>creatures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\engine\noise\perlin.h" />

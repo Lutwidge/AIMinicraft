@@ -7,7 +7,7 @@
 #include "world.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
-#include <creatures/rat/rat.h>
+#include "creatures/rat/rat.h"
 #include "creatures/owl/Owl.h"
 #include "creatures/CreatureManager.h"
 
@@ -137,6 +137,9 @@ public :
 
 		// Textures
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
+
+		// Initialisation des mesh par default pour tous les types de creatures
+		CreatureType::initMeshes(VboCube, ShaderCubeDebug);
 
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
@@ -659,7 +662,7 @@ inline void MEngineMinicraft::renderObjects()
 	}
 
 	/* RENDU DES CREATURES */
-	cm->render(this, ShaderCubeDebug, VboCube);
+	cm->render(this);
 
 	#pragma endregion
 
