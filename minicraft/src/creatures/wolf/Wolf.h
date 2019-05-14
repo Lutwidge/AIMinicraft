@@ -8,11 +8,14 @@
 #define WOLF_SPEED = 0.1f;
 #define WOLF_SATIATION_DELAY = 0.01f;
 #define WOLF_REPRODUCTION_THRESHOLD = 0.8f;
+#define WOLF_REPRODUCTION_COUNT = 0.4f;
 #define WOLF_SIGHT_RANGE = 15;
 #define WOLF_EAT_GAIN = 0.3f;
+#define WOLF_SPIRAL_PATH_INCREMENT = 2;
 
 class Wolf : public AICreature 
 {
+protected:
 	#pragma region States
 	struct WolfState : public State {
 		Wolf* wolf;
@@ -25,6 +28,8 @@ class Wolf : public AICreature
 
 		virtual void enter() {
 			//initializePath
+			YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
+			wolf->initializeSpiralPath();
 		}
 
 		virtual void update(float elapsed) 
@@ -47,7 +52,7 @@ class Wolf : public AICreature
 						{
 							if (wolf->setPartner(targetWolf))
 							{
-								wolf->switchState(new ReproduceState(wolf));
+								wolf->switchState(new ReproductionState(wolf));
 								return;
 							}
 						}
@@ -55,9 +60,9 @@ class Wolf : public AICreature
 					}
 				}
 
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15) != nullptr)
 				{
-					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15));
+					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15));
 
 					if (wolf->isEatTargetValid()) 
 					{
@@ -65,22 +70,23 @@ class Wolf : public AICreature
 						wolf->switchState(new EatState(wolf));
 						return;
 					}
-
-					if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
-					//else bouger
 				}
+
+				if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
+				else wolf->incrementSpiralPath();
 			}
 		}
 
 		virtual void exit() {};
 	};
 
-	struct ReproduceState : public WolfState 
+	struct ReproductionState : public WolfState 
 	{
-		ReproduceState(Wolf* wolf) : WolfState(wolf) {}
+		ReproductionState(Wolf* wolf) : WolfState(wolf) {}
 
 		virtual void enter() 
 		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] Reproduce State Enter").c_str());
 			YVec3f meetingPoint = (wolf->position + ((Wolf*)wolf->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);
 			wolf->goTo(YVec3f(meetingPoint.X, meetingPoint.Y, wolf->world->getSurface(meetingPoint.X, meetingPoint.Y)));
@@ -90,7 +96,7 @@ class Wolf : public AICreature
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, 15) != nullptr)
 				{
 					wolf->resetPartner();
 					wolf->switchState(new FleeState(wolf));
@@ -110,6 +116,7 @@ class Wolf : public AICreature
 						else if (!wolf->hasNotReachedTarget() && !wolf->partner->hasNotReachedTarget())
 						{
 							wolf->reproduce();
+							return;
 						}
 
 						else
@@ -131,7 +138,10 @@ class Wolf : public AICreature
 	{
 		FleeState(Wolf* wolf) : WolfState(wolf) {}
 
-		virtual void enter(){}
+		virtual void enter()
+		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] Flee State Enter").c_str());
+		}
 
 		virtual void update(float elapsed) {
 
@@ -155,7 +165,6 @@ class Wolf : public AICreature
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				//TODO: faire une fonction détection
 				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15) != nullptr)
 				{
 					wolf->switchState(new FleeState(wolf));
@@ -184,19 +193,101 @@ class Wolf : public AICreature
 
 		virtual void exit() {}
 	};
+	#pragma endregion
+
+public:
+	Wolf(string name, MWorld* world, CreatureManager* cm, YVec3f pos) : AICreature(name, world, cm, pos, true, WOLF_SPEED, WOLF_SATIATION_DELAY, WOLF_REPRODUCTION_THRESHOLD)
+	{
+		manager->registerCreature(this);
+		switchState(new IdleState(this));
+	}
 
 	//EATING FUNCTIONS
 	AICreature* preyCreature;
 
-	virtual void setEatTarget(AICreature* creature) 
+	virtual void setEatTarget(AICreature* creature)
 	{
 		preyCreature = creature;
 	}
 
-	virtual bool isEatTargetValid() 
+	virtual bool isEatTargetValid()
 	{
 		return preyCreature != nullptr;
 	}
 
-	#pragma endregion
+	virtual void eat()
+	{
+		manager->unregisterCreature(preyCreature);
+		satiation += WOLF_EAT_GAIN;
+		preyCreature = nullptr;
+	}
+
+	//IDLE FUNCTIONS
+	int pathLength;
+	int curDirIndex;
+	YVec3f directions[4] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
+
+	virtual void initializeSpiralPath()
+	{
+		pathLength = 2;
+		curDirIndex = 0;
+		setSpiralPath(pathLength, curDirIndex);
+	}
+
+	virtual void setSpiralPath(int length, int index)
+	{
+		YVec3f addedDir = directions[index] * length;
+		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y));
+
+		goTo(target);
+	}
+
+	virtual void incrementSpiralPath()
+	{
+		pathLength += WOLF_SPIRAL_PATH_INCREMENT;
+		curDirIndex++;
+		curDirIndex = curDirIndex % DIR_COUNT;
+		setSpiralPath(pathLength, curDirIndex);
+	}
+
+	//REPRODUCTION FUNCTIONS
+	virtual bool setPartner(AICreature* newPartner)
+	{
+		Wolf* wolfPartner = nullptr;
+		if (newPartner->getType() == CreatureType::Wolf)
+		{
+			wolfPartner = (Wolf*)newPartner;
+			if (partner == nullptr && wolfPartner->partner == nullptr)
+			{
+				partner = wolfPartner;
+				wolfPartner->partner = this;
+				wolfPartner->switchState(new ReproductionState(wolfPartner));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	virtual bool isPartnerValid()
+	{
+		ReproductionState* partnerReprodState = dynamic_cast<ReproductionState*>(partner->state);
+		if (partnerReprodState != nullptr) return true;
+		return false;
+
+	}
+
+	virtual void reproduce()
+	{
+		new Wolf("Wolf", world, manager, position);
+		((Wolf*)partner)->satiation -= WOLF_REPRODUCTION_COUNT;
+		satiation -= WOLF_REPRODUCTION_COUNT;
+		partner->switchState(new IdleState((Wolf*)partner));
+		switchState(new IdleState(this));
+		partner->resetPartner();
+	}
+
+	virtual CreatureType* getType()
+	{
+		return CreatureType::Wolf;
+	}
 };
