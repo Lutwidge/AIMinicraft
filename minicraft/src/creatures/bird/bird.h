@@ -31,7 +31,7 @@ protected:
 
 		virtual void enter()
 		{
-			//printf("%s : Idle \n", bird->name.c_str());
+			printf("%s : Idle \n", bird->name.c_str());
 			// On réinitialise la spirale
 			bird->initializeSpiralPath();
 		}
@@ -87,7 +87,7 @@ protected:
 
 		virtual void enter()
 		{
-			//printf("%s : Eat \n", bird->name.c_str());
+			printf("%s : Eat \n", bird->name.c_str());
 			bird->gotToEatTarget();
 		}
 
@@ -159,7 +159,7 @@ protected:
 		ReproductionState(Bird* bird) : BirdState(bird) {}
 
 		virtual void enter() {
-			//printf("%s : Reproduction \n", bird->name.c_str());
+			printf("%s : Reproduction \n", bird->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Bird
 			YVec3f meetingPoint = (bird->position + ((Bird*) bird->partner)->position) / 2;
 			meetingPoint = YVec3f((int) meetingPoint.X, (int) meetingPoint.Y, (int) meetingPoint.Z);

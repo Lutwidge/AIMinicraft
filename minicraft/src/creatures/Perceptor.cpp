@@ -8,7 +8,7 @@
 
 Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<CreatureType*>(4, 4)) {
 	for (int i = 0; i < CREATURE_TYPE_COUNT; i++) {
-		types->add((CreatureType*) i);
+		types->add(CreatureType::all[i]);
 	}
 }
 
