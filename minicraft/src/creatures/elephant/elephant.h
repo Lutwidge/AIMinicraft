@@ -57,7 +57,6 @@ protected:
 
 					if (!elephant->wanderingForPartner)
 					{
-						printf("%s: Wandering for partner\n", elephant->name.c_str());
 						elephant->wanderingForFruit = false;
 						elephant->wanderingForPartner = true;
 						elephant->wander(elapsed, true);
@@ -78,7 +77,6 @@ protected:
 					}
 					else if (!elephant->wanderingForFruit)
 					{
-						printf("%s: Wandering for fruit\n", elephant->name.c_str());
 						elephant->wanderingForFruit = true;
 						elephant->wanderingForPartner = false;
 						elephant->wander(elapsed, true);
@@ -98,7 +96,6 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s: Going to eat\n", elephant->name.c_str());
 			elephant->gotToEatTarget();
 			//printf(("Fruit at (" + toString(elephant->targetPos.X) + ", " + toString(elephant->targetPos.Y) + ", " + toString(elephant->targetPos.Z) + ")\n").c_str());
 		}
@@ -113,7 +110,7 @@ protected:
 						elephant->move(elapsed);
 					else
 					{
-						printf("%s: Eating\n", elephant->name.c_str());
+						printf("%s: Eat\n", elephant->name.c_str());
 						//printf((elephant->name + " at (" + toString(elephant->position.X) + ", " + toString(elephant->position.Y) + ", " + toString(elephant->position.Z) + ")\n").c_str());
 						elephant->eat();
 						//printf((elephant->name + " satiation: " + toString(elephant->satiation) + "\n").c_str());
@@ -137,8 +134,6 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s: Going to reproduce\n", elephant->name.c_str());
-
 			YVec3f meetingPoint;
 			MCube::MCubeType cubeTypeUnder;
 			int xOffset = 0;
@@ -170,7 +165,7 @@ protected:
 					}
 					else if (!elephant->partner->hasNotReachedTarget())
 					{
-						printf("%s: Reproducing\n", elephant->name.c_str());
+						printf("%s: Reproduction\n", elephant->name.c_str());
 						elephant->reproduce();
 						return;
 					}
@@ -292,7 +287,7 @@ public:
 		partner->resetPartner();
 	}
 
-	virtual CreatureType getType() {
+	virtual CreatureType * getType() {
 		return CreatureType::Elephant;
 	}
 };
