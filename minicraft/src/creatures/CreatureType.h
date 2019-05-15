@@ -3,6 +3,8 @@
 #include "external/gl/glew.h"
 #include "external/gl/freeglut.h"
 
+#include "engine/utils/types_3d.h"
+
 #define CREATURE_TYPE_COUNT 12
 
 class YVbo;
@@ -29,6 +31,7 @@ public:
 	const int id;
 	YVbo* vbo;
 	GLuint shader;
+	YColor color;
 
 	CreatureType() = delete;
 	CreatureType(const CreatureType&) = delete;

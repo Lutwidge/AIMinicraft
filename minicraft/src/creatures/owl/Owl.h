@@ -7,7 +7,7 @@
 #define SPEED 4
 #define DECAY_SATIETY 0.02
 #define REPRO_THRESHOLD 0.8
-#define OWL_SIGHT_RANGE 15
+#define OWL_SIGHT_RANGE 30
 
 class Snake;
 
@@ -58,18 +58,37 @@ public:
 			time -= elapsed;
 			if (owl->updateSatiation(elapsed))
 			{
+				//Fuite de predateur prioritaire
+				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+				if (creature != nullptr)
+				{
+					owl->switchState(new FleeState(owl, creature->position));
+					return;
+				}
+
+				//Priorité recherche de bouffe
 				if (owl->getSatiation() < 0.2f)
 				{
 					owl->switchState(new LookingForFoodState(owl));
 					return;
 				}
-
-				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
-				if (creature != nullptr)
+				else
 				{
-					owl->switchState(new FleeState(owl, creature->position));
+					//Puis va chercher a se reproduire
+					if (owl->getSatiation() > 0.8f)
+					{
+						YLog::log(YLog::ENGINE_INFO, "Recherche partenaire");
+						AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Owl, owl->sightRange);
+						if (crea != nullptr)
+						{
+							YLog::log(YLog::ENGINE_INFO, "Trouvé partenaire");
+							owl->switchState(new GoPechoState(owl, (Owl*)crea));
+							return;
+						}
+					}
 				}
 
+				//recherche periodiquement a sa place de la nourriture
 				if (time < 0)
 				{
 					time = timeBeforeSearch;
@@ -79,8 +98,15 @@ public:
 					{
 						owl->target = crea;
 						owl->switchState(new ChaseState(owl));
+						return;
 					}					
-				}				
+				}
+
+				//Puis va chercher a etre sur une branche
+				if (!owl->isOnBranch)
+				{
+					owl->switchState(new LookingForTreeState(owl));
+				}
 			}
 		}
 
@@ -95,7 +121,6 @@ public:
 
 		LookingForFoodState(Owl* owl) : OwlState(owl) {}
 		YVec3f positionTarget;
-		float speed = 2.0;
 
 		void enter()
 		{
@@ -104,9 +129,31 @@ public:
 			int counter = 0;
 			bool found = false;
 			YVec3f hitPosition;
-			while (!found && counter < 20)
+			while (!found && counter < 10)
 			{
-				YVec3f directionRandom(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1);
+				YVec3f directionRandom(rand() % 100 - 50, rand() % 100 - 50, rand() % 100 - 50);
+				directionRandom = directionRandom.normalize();
+
+				if (owl->position.X <= 2)
+				{
+					directionRandom.X = abs(directionRandom.X);
+				}
+
+				if (owl->position.X >= MWorld::MAT_SIZE - 2)
+				{
+					directionRandom.X = -abs(directionRandom.X);
+				}
+
+				if (owl->position.Y >= MWorld::MAT_SIZE - 2)
+				{
+					directionRandom.Y = -abs(directionRandom.Y);
+				}
+
+				if (owl->position.Y < 2)
+				{
+					directionRandom.Y = abs(directionRandom.Y);
+				}
+
 				//Aucune collision , on peut voler par là
 				if (!owl->manager->perceptor->raycast(owl->position, directionRandom,owl->sightRange, hitPosition))
 				{
@@ -141,7 +188,7 @@ public:
 			}
 			else
 			{
-				owl->position += owl->forward * speed * elapsed;
+				owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
 
 				//Point depassé
 				if ((positionTarget - owl->position).dot(owl->forward) < 0)
@@ -223,7 +270,8 @@ public:
 				if (owl->manager->perceptor->blockSight(owl,MCube::MCubeType::CUBE_BRANCHES,owl->sightRange,pos))
 				{
 					treePos = pos;
-					owl->switchState(new IdleState(owl, false));
+					owl->switchState(new GoToTreeState(owl, treePos));
+					return;
 				}
 				counter++;
 			}
@@ -244,7 +292,7 @@ public:
 		void update(float elapsed)
 		{
 			YVec3f toTarget = treePos - owl->position;
-			owl->position += toTarget.normalize() * owl->timeBetweenMoves;
+			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
 
 			//Depassé , on se repose sur l'arbre
 			if (owl->forward.dot(treePos - owl->position) < 0)
@@ -389,8 +437,9 @@ public:
 		AICreature(name, world, manager, pos, true, SPEED, DECAY_SATIETY, REPRO_THRESHOLD)
 	{
 		manager->registerCreature(this);
+		satiation = 1;
 		sightRange = OWL_SIGHT_RANGE;
-		switchState(new IdleState(this, true));
+		switchState(new IdleState(this, false));
 	}
 
 	~Owl()
@@ -401,7 +450,7 @@ public:
 
 	bool isPartnerValid() override
 	{
-		return (partner != NULL && partner->canReproduce() && dynamic_cast<Owl*>(partner)->isOnBranch);
+		return (partner != NULL && partner->canReproduce());
 	}
 
 	bool setPartner(AICreature * newPartner) override

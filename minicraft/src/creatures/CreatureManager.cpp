@@ -9,6 +9,7 @@
 
 CreatureManager::CreatureManager(MWorld* world) {
 	perceptor = new Perceptor(this, world);
+	deadCreatures = new SimpleList<AICreature*>(4, 4);
 }
 
 CreatureManager::~CreatureManager() {
@@ -64,14 +65,22 @@ void CreatureManager::update(float dt) {
 			typeCreatures->arr[i]->update(dt);
 		}
 	}
+	perceptor->nextFrame();
 }
 
 void CreatureManager::render(MEngineMinicraft* engine) {
+	// Render alive creatures
 	for (std::pair<CreatureType*, SimpleList<AICreature*>*> typePair : creatures) {
 		SimpleList<AICreature*>* typeCreatures = typePair.second;
 		for (unsigned int i = 0; i < typeCreatures->count; i++) {
 			typeCreatures->arr[i]->render(engine);
 		}
+	}
+
+	// Render dead creatures
+	for (int i = 0; i < deadCreatures->count; i++)
+	{
+		deadCreatures->arr[i]->render(engine);
 	}
 }
 
@@ -81,4 +90,8 @@ SimpleList<AICreature*>* CreatureManager::getCreaturesOfType(CreatureType* type)
 		return search->second;
 	}
 	return nullptr;
+}
+
+SimpleList<AICreature*>* CreatureManager::getDeadCreatures() {
+	return deadCreatures;
 }

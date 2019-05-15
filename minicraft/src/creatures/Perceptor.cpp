@@ -8,7 +8,7 @@
 
 Perceptor::Perceptor(CreatureManager* manager, MWorld* world) : manager(manager), world(world), types(new SimpleList<CreatureType*>(4, 4)) {
 	for (int i = 0; i < CREATURE_TYPE_COUNT; i++) {
-		types->add((CreatureType*) i);
+		types->add(CreatureType::all[i]);
 	}
 }
 
@@ -68,6 +68,37 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType* desiredTy
 		creaturePrevious = typeSearch2->second;
 		(*creaturePrevious)[desiredType] = nearest;
 	}
+	return nearest;
+}
+
+AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
+{
+	AICreature* nearest = nullptr;
+	float nearestDistance = INFINITY;
+	SimpleList<AICreature*>* possibleTargets = manager->getDeadCreatures();
+	if (possibleTargets == nullptr) {
+		return nullptr;
+	}
+	for (unsigned int i = 0; i < possibleTargets->count; i++) {
+		AICreature* target = possibleTargets->arr[i];
+		if (target == caller) { // Discard self
+			continue;
+		}
+		YVec3f toTarget = caller->position - target->position;
+		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
+			continue;
+		}
+		float distance = INFINITY;
+		int tx, ty, tz;
+		if (MMy_Physics::GetNearestPickableCube(caller->position, target->position, world, distance, tx, ty, tz)) { // Discard targets not in view
+			continue;
+		}
+		if (nearest == nullptr || distance < nearestDistance) {
+			nearest = target;
+			nearestDistance = distance;
+		}
+	}
+
 	return nearest;
 }
 
