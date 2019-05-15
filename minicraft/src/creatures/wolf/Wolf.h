@@ -4,14 +4,14 @@
 #include <typeinfo>
 #include "../AICreature.h"
 
-#define DIR_COUNT = 4;
-#define WOLF_SPEED = 0.1f;
-#define WOLF_SATIATION_DELAY = 0.01f;
-#define WOLF_REPRODUCTION_THRESHOLD = 0.8f;
-#define WOLF_REPRODUCTION_COUNT = 0.4f;
-#define WOLF_SIGHT_RANGE = 15;
-#define WOLF_EAT_GAIN = 0.3f;
-#define WOLF_MOVEMENT_RANGE = 8;
+#define DIR_COUNT  4
+#define WOLF_SPEED  0.1f
+#define WOLF_SATIATION_DELAY  0.01f
+#define WOLF_REPRODUCTION_THRESHOLD  0.8f
+#define WOLF_REPRODUCTION_COUNT  0.4f
+#define WOLF_SIGHT_RANGE  15
+#define WOLF_EAT_GAIN  0.3f
+#define WOLF_MOVEMENT_RANGE  8
 
 class Wolf : public AICreature 
 {
@@ -220,6 +220,7 @@ public:
 	{
 		manager->unregisterCreature(preyCreature);
 		satiation += WOLF_EAT_GAIN;
+		if (satiation > 1.0f) satiation = 1.0f;
 		preyCreature = nullptr;
 	}
 
@@ -233,33 +234,38 @@ public:
 		position.Z = world->getSurface(position.X, position.Y);
 	}
 
-	float normalX()
-	{
-		float u = (rand() % 100) * 0.01;
-		float v = (rand() % 100) * 0.01;
-
-		float x = sqrt(-2 * log(u)) * cos(2 * 3.141592 * v);
-
-		return x;
-	}
-
-	float normalY()
-	{
-		float u = (rand() % 100) * 0.01;
-		float v = (rand() % 100) * 0.01;
-
-		float y = sqrt(-2 * log(u)) * sin(2 * 3.141592 * v);
-
-		return y;
-	}
-
 	virtual void initializePath()
 	{
-		int x = normalX() * WOLF_MOVEMENT_RANGE;
-		int y = normalY() * WOLF_MOVEMENT_RANGE;
+		int randomIndex = rand() % 3;
+
+		YVec3f randomDirection = directions[randomIndex];
+		int x = randomDirection.X * WOLF_MOVEMENT_RANGE;
+		int y = randomDirection.Y * WOLF_MOVEMENT_RANGE;
 
 		x += position.X;
 		y += position.Y;
+
+		if (x > world->MAT_SIZE_METERS)
+		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
+			x -= randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+
+		}
+		if (x < 0)
+		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
+			x += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+		}
+		if (y > world->MAT_SIZE_METERS)
+		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
+			y -= randomDirection.Y * WOLF_MOVEMENT_RANGE * 2;
+		}
+		if (y < 0)
+		{
+			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
+			y += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+		}
 
 		YVec3f target = YVec3f(x, y, world->getSurface(x, y));
 		goTo(target);
