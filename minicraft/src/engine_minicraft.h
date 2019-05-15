@@ -190,6 +190,10 @@ public :
 		// Trap
 		new Trap("Trap_1", World, cm, getRandomSpawnPos());
 
+		//Snake
+		new Snake("Snake 1", World, cm, getRandomSpawnPos());
+		new Snake("Snake 2", World, cm, getRandomSpawnPos());
+
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
 		{
