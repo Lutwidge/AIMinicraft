@@ -32,11 +32,11 @@ public:
 			creature->IsDead = true;
 			// On change de liste dans le CreatureManager
 			creature->manager->registerDeadCreature(creature);
-			// On donne � la cr�ature sa target finale
+			// On donne a la creature sa target finale
 			creature->goToFinalTarget();
 		}
 		virtual void update(float elapsed) {
-			// On fait tomber la cr�ature jusqu'au sol
+			// On fait tomber la creature jusqu'au sol
 			if (creature->hasNotReachedTarget())
 				creature->move(elapsed);
 		}
