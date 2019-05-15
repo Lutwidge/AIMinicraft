@@ -9,6 +9,7 @@
 
 CreatureManager::CreatureManager(MWorld* world) {
 	perceptor = new Perceptor(this, world);
+	deadCreatures = new SimpleList<AICreature*>(4, 4);
 }
 
 CreatureManager::~CreatureManager() {
