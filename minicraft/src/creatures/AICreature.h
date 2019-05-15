@@ -24,10 +24,11 @@ public:
 		AICreature* creature;
 	};
 
-	struct DeadState : public State {
+	struct DeadState final : public State {
 		DeadState(AICreature* creature) : State(creature) {}
 
 		virtual void enter() {
+			CreatureType* crtype = creature->getType();
 			printf("%s: Dead\n", creature->name.c_str());
 			creature->IsDead = true;
 			// On change de liste dans le CreatureManager
@@ -106,8 +107,8 @@ public:
 		this->targetPos = targetPos;		
 		pathToTarget = AStar::findpath(position, targetPos, world, canFly);
 		currentMoveIndex = 0;
-		if (pathToTarget.size() == 0)
-			YLog::log(YLog::USER_ERROR, "No path to target position");
+		//if (pathToTarget.size() == 0)
+			//YLog::log(YLog::USER_ERROR, "No path to target position");
 	}
 
 	virtual bool hasNotReachedTarget() {

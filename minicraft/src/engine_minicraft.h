@@ -163,54 +163,32 @@ public :
 		cm = new CreatureManager(World);
 		
 		// Birds
-		int x = rand() % MWorld::MAT_SIZE_METERS;
-		int y = rand() % MWorld::MAT_SIZE_METERS;
-		YVec3f randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
-		new Bird("Bird1", World, cm, randomPos);
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
-		new Bird("Bird2", World, cm, randomPos);
+		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
 
 		//// Owl
-		//x = rand() % MWorld::MAT_SIZE_METERS;
-		//y = rand() % MWorld::MAT_SIZE_METERS;
-		//randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
-		//new Owl("Owl 1", World, cm, randomPos);
+		//new Owl("Owl 1", World, cm, getRandomSpawnPos(true));
 
 		// Ocelot
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x,y));
-		new Ocelot("Ocelot1", World, cm, randomPos);
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x, y));
-		new Ocelot("Ocelot1", World, cm, randomPos);
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
 
+		// Bear
+		new Bear("Bear 1", World, cm, getRandomSpawnPos());
+		new Bear("Bear 2", World, cm, getRandomSpawnPos());
 
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x, y));
-		new Trap("Trap_1", World, cm, randomPos);
-
-		
-		//new Snake("Snake", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-		//new Snake("Snake 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-		//new Snake("Snake 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5)));
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10)));
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15)));
-
-		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-		
-		//{
-		//int x = rand() % MWorld::MAT_SIZE_METERS;
-		//int y = rand() % MWorld::MAT_SIZE_METERS;
-		//YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
-		//new Copycat("Copycat 1", World, cm, randomPos);
-		//}
+		// Trap
+		new Trap("Trap_1", World, cm, getRandomSpawnPos());
 
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
@@ -260,6 +238,13 @@ public :
 			if (corpse != nullptr)
 				corpse->die();
 		}
+	}
+
+	YVec3f getRandomSpawnPos(bool canFly = false, int flyHeight = 10) {
+		int x = rand() % MWorld::MAT_SIZE_METERS;
+		int y = rand() % MWorld::MAT_SIZE_METERS;
+		int z = canFly ? World->getHighestPoint(x, y) + flyHeight : World->getSurface(x, y);
+		return YVec3f(x, y, z);
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
