@@ -179,3 +179,11 @@ bool Perceptor::blockSight(AICreature* caller, MCube::MCubeType type, float rang
 	return false;
 }
 
+void Perceptor::removeFromHistory(AICreature* creature) {
+	for (pair<AICreature*, unordered_map<CreatureType*, AICreature*>*> p : previousTargets) {
+		auto search = p.second->find(creature->getType());
+		if (search != p.second->end() && search->second == creature) { // Found
+			p.second->erase(creature->getType());
+		}
+	}
+}

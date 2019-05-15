@@ -8,7 +8,7 @@
 #define OCELOT_SPEED 0.08f
 #define OCELOT_SATIATION_DECAY 0.01f
 #define OCELOT_REPRODUCTION_THRESHOLD 0.8f
-#define OCELOT_SIGHT_RANGE 15
+#define OCELOT_SIGHT_RANGE 50
 #define OCELOT_MOVEMENT_RANGE 8
 #define OCELOT_EAT_GAIN 0.5f
 
@@ -27,7 +27,7 @@ protected:
 		}
 
 		virtual void enter() {
-			ocelot->ground();
+			//ocelot->ground();
 			ocelot->initializePath();
 		}
 
@@ -38,9 +38,10 @@ protected:
 				if (ocelot->isEatTargetValid()) {
 					YLog::log(YLog::USER_INFO, toString("[OCELOT] Found prey !").c_str());
 					ocelot->switchState(new EatState(ocelot));
+					return;
 				}
 
-				ocelot->ground();
+				//ocelot->ground();
 				if (ocelot->hasNotReachedTarget()) {
 					ocelot->move(elapsed);
 				}
@@ -63,7 +64,9 @@ protected:
 
 		virtual void enter()
 		{
-			ocelot->eatTarget = ocelot->prey->position;
+			int x = ocelot->prey->position.X;
+			int y = ocelot->prey->position.Y;
+			ocelot->eatTarget = YVec3f(x, y, ocelot->world->getSurface(x, y));
 			ocelot->gotToEatTarget();
 		}
 
@@ -76,6 +79,7 @@ protected:
 					}
 					else {
 						ocelot->eat();
+						ocelot->switchState(new IdleState(ocelot));
 						return;
 					}
 				}
@@ -222,7 +226,7 @@ public:
 	}
 
 	virtual void eat() {
-		manager->unregisterCreature(prey);
+		prey->die();
 		satiation += OCELOT_EAT_GAIN;
 		if (satiation > 1.0) {
 			satiation = 1.0;
