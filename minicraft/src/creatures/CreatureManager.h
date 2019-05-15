@@ -23,10 +23,13 @@ public:
 
 	void registerCreature(AICreature* creature);
 	void unregisterCreature(AICreature* creature);
+	void registerDeadCreature(AICreature* creature);
+	void unregisterDeadCreature(AICreature* creature);
 	void update(float dt);
 	void render(MEngineMinicraft* engine);
 	SimpleList<AICreature*>* getCreaturesOfType(CreatureType* type);
 
 private:
 	std::unordered_map<CreatureType*, SimpleList<AICreature*>*> creatures;
+	SimpleList<AICreature*>* deadCreatures;
 };
