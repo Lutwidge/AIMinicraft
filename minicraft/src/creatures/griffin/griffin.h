@@ -7,8 +7,12 @@
 
 
 #define GRIFF_DIR_COUNT 4
-#define GRIFF_SPEED 1.0f
+#define GRIFF_SPEED 0.1f
 #define GRIFF_SATIATION_DECAY 0.01f
+#define GRIFF_DW_TIRENESS_THRESHOLD 0.5f
+#define GRIFF_UP_TIRENESS_THRESHOLD 2.5f
+#define GRIFF_TIRENESS_DECAY 0.1f
+#define GRIFF_TIRENESS_BONUS 0.2f
 #define GRIFF_REPRODUCTION_THRESHOLD 0.8f
 #define GRIFF_SIGHT_RANGE 30
 #define GRIFF_IDLE_HEIGHT 8
@@ -38,7 +42,8 @@ protected:
 		virtual void update(float elapsed) {
 
 			// Check de si on est toujours en vie
-			if (griffin->updateSatiation(elapsed) /*&& griffin->updateTireness(elapsed)*/) {
+			if (griffin->updateSatiation(elapsed) && griffin->updateTireness(elapsed))
+			{
 				// Reproduction prioritaire
 				if (griffin->canReproduce()) {
 					// Si oui, on check s'il y a une target compatible
@@ -50,6 +55,16 @@ protected:
 							return;
 						}
 					}
+				}
+
+				if (griffin->tireness < GRIFF_DW_TIRENESS_THRESHOLD) {
+					printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
+
+					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->world->getSurface(griffin->position.X, griffin->position.Y));
+					griffin->goTo(dest);
+
+					griffin->switchState(new GoingDownState(griffin));
+					return;
 				}
 
 				// Sinon, on regarde si on voit un fruit
@@ -65,7 +80,6 @@ protected:
 				// Sinon, mouvement en spirale
 				if (griffin->hasNotReachedTarget()) {
 					griffin->move(elapsed);
-					griffin->tireness -= 0.01f;
 				}
 				else
 					griffin->incrementSpiralPath();
@@ -84,19 +98,29 @@ protected:
 			printf("%s : I'm chasing that owl  \n", griffin->name.c_str());
 			griffin->gotToEatTarget();
 			griffin->chaseTime = 0;
-			griffin->timeBetweenMoves = GRIFF_SPEED * griffin->tireness;
 		}
 
 		virtual void update(float elapsed)
 		{
 			//Check if not dead
-			if (griffin->updateSatiation(elapsed))
+			if (griffin->updateSatiation(elapsed) && griffin->updateTireness(elapsed))
 			{
+				if (griffin->tireness < GRIFF_DW_TIRENESS_THRESHOLD) {
+					printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
+
+					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->world->getSurface(griffin->position.X, griffin->position.Y));
+					griffin->goTo(dest);
+
+					griffin->switchState(new GoingDownState(griffin));
+					return;
+				}
+
 				griffin->chaseTime += elapsed;
 				if (griffin->chaseTime > 1) {
 					//reset owl position. Else, chase the last position of the owl
 					griffin->setEatTarget(griffin->targetCreature->position);
 					griffin->chaseTime = 0;
+					printf("%s : Where are you ? %d size we are at %d\n", griffin->name.c_str(), griffin->pathToTarget.size(), griffin->currentMoveIndex);
 				}
 
 
@@ -114,14 +138,13 @@ protected:
 				else*/ if (griffin->isEatTargetValid())
 				{
 					if (griffin->hasNotReachedTarget()) {
-						/*printf("%s : I'm reaching for this owl. I'm at %d, %d and is at %d, %d \n", griffin->name.c_str(), 
+						/*printf("%s : I'm reaching for this owl. I'm at %d, %d and is at %d, %d \n", griffin->name.c_str(),
 							griffin->position.X, griffin->targetCreature->position.X,
 							griffin->position.Y, griffin->targetCreature->position.Y);*/
 						griffin->move(elapsed);
-						griffin->tireness -= 0.01f;
 					}
 					else {
-						//printf("%s : Reach !\n", griffin->name.c_str());
+						printf("%s : Reach !\n", griffin->name.c_str());
 						griffin->eat();
 						return;
 					}
@@ -139,6 +162,101 @@ protected:
 		virtual void exit() {}
 	};
 
+	struct GoingDownState : public GriffinState
+	{
+		GoingDownState(Griffin* griffin) : GriffinState(griffin) {}
+
+		virtual void enter()
+		{
+			printf("%s : GoingDown \n", griffin->name.c_str());
+
+		}
+
+		virtual void update(float elapsed) {
+
+			// Check de si on est toujours en vie
+			if (griffin->updateSatiation(elapsed)) {
+
+				if (griffin->updateTireness(elapsed)) {
+					if (griffin->hasNotReachedTargetInZ()) {
+						griffin->move(elapsed);
+					}
+					else {
+						printf("%s : GoingDown to rest !    ", griffin->name.c_str());
+						griffin->switchState(new RestState(griffin));
+						return;
+					}
+
+				}
+			}
+		}
+
+		virtual void exit() {}
+	};
+
+	struct RestState : public GriffinState
+	{
+		RestState(Griffin* griffin) : GriffinState(griffin) {}
+
+		virtual void enter()
+		{
+			printf("%s : Rest \n", griffin->name.c_str());
+		}
+
+		virtual void update(float elapsed) {
+
+			// Check de si on est toujours en vie
+			if (griffin->updateSatiation(elapsed)) {
+				
+				if (griffin->tireness > GRIFF_UP_TIRENESS_THRESHOLD) {
+					printf("%s : I'm back !  ", griffin->name.c_str());
+
+					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->position.Z + 12);
+					griffin->goTo(dest);
+
+					griffin->switchState(new GoingUpState(griffin));
+					return;
+				}
+				else {
+					griffin->tireness += GRIFF_TIRENESS_BONUS * elapsed;
+				}
+			}
+		}
+
+		virtual void exit() {}
+	};
+
+	struct GoingUpState : public GriffinState
+	{
+		GoingUpState(Griffin* griffin) : GriffinState(griffin) {}
+
+		virtual void enter()
+		{
+			printf("%s : Going Up ! \n", griffin->name.c_str());
+		}
+
+		virtual void update(float elapsed) {
+
+			// Check de si on est toujours en vie
+			if (griffin->updateSatiation(elapsed) /*&& griffin->updateTireness(elapsed)*/) {
+
+				if (griffin->updateTireness(elapsed)) {
+					if (griffin->hasNotReachedTargetInZ()) {
+						griffin->move(elapsed);
+					}
+					else {
+						printf("%s : Up to idle   ", griffin->name.c_str());
+						griffin->switchState(new IdleState(griffin));
+						return;
+					}
+
+				}
+			}
+		}
+
+		virtual void exit() {}
+	};
+	   
 	struct ReproductionState : public GriffinState
 	{
 		ReproductionState(Griffin* griffin) : GriffinState(griffin) {}
@@ -188,7 +306,6 @@ protected:
 	YVec3f directions[GRIFF_DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(0, 1, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0) };
 	int curDirIndex;
 	YVec3f realEatTarget;
-	float tirenessDecay;
 
 	virtual void setSpiralPath(int length, int index) {
 		YVec3f addedDir = directions[index] * length;
@@ -198,7 +315,8 @@ protected:
 	}
 
 	bool updateTireness(float elapsed) {
-		tireness -= tirenessDecay * elapsed;
+		tireness -= GRIFF_TIRENESS_DECAY * elapsed;
+		timeBetweenMoves = GRIFF_SPEED * (1 / tireness);
 		if (tireness <= 0.0f) {
 			die();
 			return false;
@@ -210,7 +328,6 @@ public:
 	Griffin(string name, MWorld *world, CreatureManager* cm, YVec3f pos) : AICreature(name, world, cm, pos, true, GRIFF_SPEED, GRIFF_SATIATION_DECAY, GRIFF_REPRODUCTION_THRESHOLD) {
 		manager->registerCreature(this);
 		tireness = 1.2f;
-		tirenessDecay = 0.02f;
 		chaseTime = 0;
 		targetCreature = nullptr;
 		switchState(new IdleState(this));
@@ -228,10 +345,17 @@ public:
 		realEatTarget = target;
 		// Define eat target as the nearest air cube near the fruit
 		eatTarget = world->getNearestAirCube(target.X, target.Y, target.Z);
+		goTo(eatTarget);
 		if (eatTarget == realEatTarget)
 			return false;
 		else
 			return true;
+	}
+
+	virtual void setTarget(AICreature* owl) {
+		targetCreature = owl;
+		setEatTarget(owl->position);
+		return;
 	}
 
 	virtual void eat()
@@ -243,14 +367,14 @@ public:
 			satiation = 1.0f;
 	}
 
-	virtual void setTarget(AICreature *owl) {
-		targetCreature = owl;
-		eatTarget = owl->position;
-		return;
-	}
 
 	virtual bool hasNotReachedTarget() {
-		bool hasReachIt = (abs((position - targetPos).X) < 1 && abs((position - targetPos).Y) < 1) || pathToTarget.size() <= 0;
+		bool hasReachIt = (abs((position - targetPos).X) < 0.1f && abs((position - targetPos).Y) < 0.1f) || pathToTarget.size() <= 0;
+		return !hasReachIt;
+	}
+
+	bool hasNotReachedTargetInZ() {
+		bool hasReachIt = (abs((position - targetPos).X) < 0.1f && abs((position - targetPos).Y) < 0.1f && abs((position - targetPos).Z) < 0.1f) || pathToTarget.size() <= 0;
 		return !hasReachIt;
 	}
 

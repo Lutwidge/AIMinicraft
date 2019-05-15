@@ -186,11 +186,11 @@ public :
 		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		
 		new Griffin("Griffin The Third aka. Pet3r", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
-			(MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)+5)
+			(MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)+12)
 		);
 
 		new Owl("Owl 1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
-			(MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2) + 5)
+			(MWorld::MAT_SIZE_METERS) / 2 + 20, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2) + 5)
 		);
 
 		{
