@@ -17,6 +17,7 @@ public:
 	~Perceptor();
 
 	AICreature* creatureSight(AICreature* caller, CreatureType* desiredType, float range);
+	AICreature* deadCreatureSight(AICreature* caller, float range);
 	bool blockSight(AICreature* caller, MCube::MCubeType type, float range, YVec3f& pos);
 	bool raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos);
 	void nextFrame();

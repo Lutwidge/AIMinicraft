@@ -71,6 +71,37 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType* desiredTy
 	return nearest;
 }
 
+AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
+{
+	AICreature* nearest = nullptr;
+	float nearestDistance = INFINITY;
+	SimpleList<AICreature*>* possibleTargets = manager->getDeadCreatures();
+	if (possibleTargets == nullptr) {
+		return nullptr;
+	}
+	for (unsigned int i = 0; i < possibleTargets->count; i++) {
+		AICreature* target = possibleTargets->arr[i];
+		if (target == caller) { // Discard self
+			continue;
+		}
+		YVec3f toTarget = caller->position - target->position;
+		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
+			continue;
+		}
+		float distance = INFINITY;
+		int tx, ty, tz;
+		if (MMy_Physics::GetNearestPickableCube(caller->position, target->position, world, distance, tx, ty, tz)) { // Discard targets not in view
+			continue;
+		}
+		if (nearest == nullptr || distance < nearestDistance) {
+			nearest = target;
+			nearestDistance = distance;
+		}
+	}
+
+	return nearest;
+}
+
 bool Perceptor::raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos)
 {
 	MCube* nearest = nullptr;

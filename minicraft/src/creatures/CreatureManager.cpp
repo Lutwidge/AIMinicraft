@@ -69,11 +69,18 @@ void CreatureManager::update(float dt) {
 }
 
 void CreatureManager::render(MEngineMinicraft* engine) {
+	// Render alive creatures
 	for (std::pair<CreatureType*, SimpleList<AICreature*>*> typePair : creatures) {
 		SimpleList<AICreature*>* typeCreatures = typePair.second;
 		for (unsigned int i = 0; i < typeCreatures->count; i++) {
 			typeCreatures->arr[i]->render(engine);
 		}
+	}
+
+	// Render dead creatures
+	for (int i = 0; i < deadCreatures->count; i++)
+	{
+		deadCreatures->arr[i]->render(engine);
 	}
 }
 
@@ -83,4 +90,8 @@ SimpleList<AICreature*>* CreatureManager::getCreaturesOfType(CreatureType* type)
 		return search->second;
 	}
 	return nullptr;
+}
+
+SimpleList<AICreature*>* CreatureManager::getDeadCreatures() {
+	return deadCreatures;
 }

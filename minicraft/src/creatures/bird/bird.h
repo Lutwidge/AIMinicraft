@@ -5,15 +5,19 @@
 #include "../AICreature.h"
 #include "../ocelot/ocelot.h"
 
-#define BIRD_DIR_COUNT 4
-#define BIRD_SPEED 0.1f
-#define BIRD_SATIATION_DECAY 0.01f
-#define BIRD_REPRODUCTION_THRESHOLD 0.8f
-#define BIRD_SIGHT_RANGE 15
-#define BIRD_SPIRAL_PATH_INCREMENT 4
-#define BIRD_IDLE_HEIGHT 8
-#define BIRD_EAT_GAIN 0.1f
-#define BIRD_FLEE_DISTANCE 6
+namespace
+{
+	static constexpr auto BIRD_SIGHT_RANGE = 15;
+	static constexpr auto BIRD_DIR_COUNT = 4;
+	static constexpr auto BIRD_SPEED = 0.2f;
+	static constexpr auto BIRD_SATIATION_DECAY = 0.01f;
+	static constexpr auto BIRD_REPRODUCTION_THRESHOLD = 0.8f;
+	static constexpr auto BIRD_EAT_GAIN = 0.1f;
+	static constexpr auto BIRD_MOVEMENT_RANGE = 8;
+	static constexpr auto BIRD_FLEE_DISTANCE = 6;
+	static constexpr auto BIRD_IDLE_HEIGHT = 8;
+	static constexpr auto BIRD_SPIRAL_PATH_INCREMENT = 4;
+}
 
 class Bird : public AICreature
 {
@@ -59,18 +63,19 @@ protected:
 							}
 						}
 					}
-
-					// Sinon, on regarde si on voit un fruit
-					YVec3f fruit;
-					if (bird->manager->perceptor->blockSight(bird, MCube::CUBE_FRUIT, BIRD_SIGHT_RANGE, fruit)) {
-						if (bird->setEatTarget(fruit)) {
-							bird->switchState(new EatState(bird));
-							return;
+					else {
+						// Sinon, on regarde si on voit un fruit
+						YVec3f fruit;
+						if (bird->manager->perceptor->blockSight(bird, MCube::CUBE_FRUIT, BIRD_SIGHT_RANGE, fruit)) {
+							if (bird->setEatTarget(fruit)) {
+								bird->switchState(new EatState(bird));
+								return;
+							}
 						}
 					}
 				}
 
-				// Sinon, mouvement en spirale
+				// Sinon, mouvement en spirale (y compris quand on cherche à se reproduire : priorité de la recherche de partenaire)
 				if (bird->hasNotReachedTarget())
 					bird->move(elapsed);
 				else

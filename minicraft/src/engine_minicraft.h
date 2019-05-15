@@ -7,7 +7,8 @@
 #include "world.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
-#include "creatures/rat/rat.h"
+#include "creatures/elephant/elephant.h"
+#include <creatures/rat/rat.h>
 #include "creatures/owl/Owl.h"
 #include "creatures/griffin/griffin.h"
 #include "creatures/CreatureManager.h"
@@ -142,7 +143,19 @@ public :
 		tex = YTexManager::getInstance()->loadTexture("textures/TexCustom_0.png");
 
 		// Initialisation des mesh par default pour tous les types de creatures
-		CreatureType::initMeshes(VboCube, ShaderCubeDebug);
+		CreatureType::initMeshes(VboCube, SunShader);
+		CreatureType::Bird->color = YColor(1, 0.2, 0, 1);
+		CreatureType::Griffin->color = YColor(1, 0.85, 0, 1);
+		CreatureType::Goat->color = YColor(0.96, 0.96, 0.86, 1);
+		CreatureType::Wolf->color = YColor(0.1, 0.1, 0.1, 1);
+		CreatureType::Copycat->color = YColor(0.29, 0.41, 0.74, 1);
+		CreatureType::Elephant->color = YColor(0.4, 0.4, 0.6, 1);
+		CreatureType::Owl->color = YColor(0.4, 0.2, 0, 1);
+		CreatureType::Snake->color = YColor(0, 0.8, 0, 1);
+		CreatureType::Bear->color = YColor(1, 1, 1, 1);
+		CreatureType::Ocelot->color = YColor(1, 0, 1, 1);
+		CreatureType::Trap->color = YColor(1, 0, 0, 1);
+		CreatureType::Rat->color = YColor(1, 0.7, 0.8, 1);
 
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
@@ -158,7 +171,60 @@ public :
 		//new Snake("Snake 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		//new Snake("Snake 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 
+		new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5)));
+		new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10)));
+		new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15)));
+
 		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
+		
+		// Spawn des cadavres
+		for (int i = 0; i < 5; i++)
+		{
+			int x = rand() % MWorld::MAT_SIZE_METERS;
+			int y = rand() % MWorld::MAT_SIZE_METERS;
+			YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
+			AICreature* corpse = nullptr;
+			CreatureType* randomType = CreatureType::all[rand() % CREATURE_TYPE_COUNT];
+			if (randomType == CreatureType::Bear)
+				corpse = new Bear("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Bird)
+				corpse = new Bird("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Copycat)
+			{
+				//corpse = new Copycat("Corpse", World, cm, randomPos);
+			}
+			else if (randomType == CreatureType::Elephant)
+			{
+				//corpse = new Elephant("Corpse", World, cm, randomPos);
+			}
+			else if (randomType == CreatureType::Goat)
+			{
+				//corpse = new Goat("Corpse", World, cm, randomPos);
+			}
+			else if (randomType == CreatureType::Griffin)
+				corpse = new Griffin("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Ocelot)
+				corpse = new Ocelot("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Owl)
+			{
+				//corpse = new Owl("Corpse", World, cm, randomPos);
+			}
+			else if (randomType == CreatureType::Rat)
+				corpse = new Rat("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Snake)
+				corpse = new Snake("Corpse", World, cm, randomPos);
+			else if (randomType == CreatureType::Trap)
+			{
+				//corpse = new Trap("Corpse", World, cm, randomPos);
+			}
+			else if (randomType == CreatureType::Wolf)
+			{
+				//corpse = new Wolf("Corpse", World, cm, randomPos);
+			}
+
+			if (corpse != nullptr)
+				corpse->die();
+		}
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
