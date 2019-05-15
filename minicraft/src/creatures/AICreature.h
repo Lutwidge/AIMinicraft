@@ -24,7 +24,7 @@ public:
 		AICreature* creature;
 	};
 
-	struct DeadState : public State {
+	struct DeadState final : public State {
 		DeadState(AICreature* creature) : State(creature) {}
 
 		virtual void enter() {

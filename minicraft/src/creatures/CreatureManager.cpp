@@ -46,6 +46,7 @@ void CreatureManager::unregisterCreature(AICreature* creature) {
 
 void CreatureManager::registerDeadCreature(AICreature* creature) {
 	unregisterCreature(creature);
+	perceptor->removeFromHistory(creature);
 	deadCreatures->add(creature);
 }
 
