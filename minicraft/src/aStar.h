@@ -39,7 +39,7 @@ public:
 		while (!openList.empty())
 		{
 			endTime = high_resolution_clock::now();
-			if (duration_cast<seconds>(endTime - beginTime).count() > 3)
+			if (duration_cast<duration<float>>(endTime - beginTime).count() > 0.2f)
 				return vector<YVec3f>();
 
 			sort(openList.begin(), openList.end(), Node::compare);

@@ -1,13 +1,15 @@
 #pragma once
 
 #include <creatures/AICreature.h>
+#include <world.h>
 
 namespace {
-	static constexpr auto BEAR_SIGHT_RANGE = 5;
+	static constexpr auto BEAR_SIGHT_RANGE = 10;
 	static constexpr auto BEAR_SPEED = 0.05f;
-	static constexpr auto BEAR_SATIATION_DECAY = 0.01f;
+	static constexpr auto BEAR_SATIATION_DECAY = 0.001f;
 	static constexpr auto BEAR_REPRODUCTION_THRESHOLD = 0.75f;
 	static constexpr auto BEAR_EAT_GAIN = 0.4f;
+	static constexpr auto BEAR_WANDERING_RANGE = 5;
 }
 
 class Bear : public AICreature {
@@ -23,7 +25,7 @@ protected:
 		virtual void enter() {
 			printf("%s : Idle \n", bear->name.c_str());
 			// On réinitialise la chemin
-			bear->waypoint = getNewWaypoint();
+			bear->goTo(getNewWaypoint());
 		}
 
 		virtual void update(float elapsed) {
@@ -44,20 +46,20 @@ protected:
 				}
 
 				// Sinon, on regarde si on voit un ocelot
-				YVec3f fruit;
 				AICreature* ocelot = bear->manager->perceptor->creatureSight(bear, CreatureType::Ocelot, BEAR_SIGHT_RANGE);
 				if (ocelot != nullptr) {
 					if (bear->setEatTarget(ocelot->position)) {
+						bear->prey = ocelot;
 						bear->switchState(new EatState(bear));
 						return;
 					}
 				}
 
-				// Sinon, mouvement en spirale
+				// Sinon, mouvement
 				if (bear->hasNotReachedTarget())
 					bear->move(elapsed);
 				else
-					bear->waypoint = getNewWaypoint();
+					bear->goTo(getNewWaypoint());
 			}
 		}
 
@@ -65,7 +67,19 @@ protected:
 
 	private:
 		YVec3f getNewWaypoint() {
-			return YVec3f(0, 0, 0);
+			int wx = bear->position.X + (rand() % BEAR_WANDERING_RANGE * 2 - BEAR_WANDERING_RANGE);
+			int wy = bear->position.Y + (rand() % BEAR_WANDERING_RANGE * 2 - BEAR_WANDERING_RANGE);
+			if (wx < 0) {
+				wx = 0;
+			} else if (wx > MWorld::MAT_SIZE_METERS - 1) {
+				wx = MWorld::MAT_SIZE_METERS - 1;
+			}
+			if (wy < 0) {
+				wy = 0;
+			} else if (wy > MWorld::MAT_SIZE_METERS - 1) {
+				wy = MWorld::MAT_SIZE_METERS - 1;
+			}
+			return YVec3f(wx, wy, bear->world->getSurface(wx, wy));
 		}
 	};
 
@@ -74,14 +88,14 @@ protected:
 		EatState(Bear* bear) : BearState(bear) {}
 
 		virtual void enter() {
-			//printf("%s : Eat \n", bear->name.c_str());
+			printf("%s : Eat \n", bear->name.c_str());
 			bear->gotToEatTarget();
 		}
 
 		virtual void update(float elapsed) {
 			// Mise à jour de la satiété et check de si on est toujours en vie
 			if (bear->updateSatiation(elapsed)) {
-				// Sinon si le fruit est toujours là, on continue vers lui jusqu'à l'atteindre
+				// Sinon si l'ocelot est toujours visible, on continue vers lui jusqu'à l'atteindre
 				if (bear->isEatTargetValid()) {
 					if (bear->hasNotReachedTarget())
 						bear->move(elapsed);
@@ -98,14 +112,16 @@ protected:
 			}
 		}
 
-		virtual void exit() {}
+		virtual void exit() {
+			bear->prey = nullptr;
+		}
 	};
 
 	struct ReproductionState : public BearState {
 		ReproductionState(Bear* bear) : BearState(bear) {}
 
 		virtual void enter() {
-			//printf("%s : Reproduction \n", bear->name.c_str());
+			printf("%s : Reproduction \n", bear->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Bear
 			YVec3f meetingPoint = (bear->position + ((Bear*)bear->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);
@@ -140,7 +156,7 @@ protected:
 	};
 #pragma endregion
 
-	YVec3f waypoint;
+	AICreature* prey = nullptr;
 
 public:
 	Bear(string name, MWorld *world, CreatureManager* cm, YVec3f pos) : AICreature(name, world, cm, pos, true, BEAR_SPEED, BEAR_SATIATION_DECAY, BEAR_REPRODUCTION_THRESHOLD) {
@@ -150,10 +166,13 @@ public:
 
 	/* EATING */
 	virtual bool isEatTargetValid() {
-		return true; // TODO implement
+		return prey != nullptr;
 	}
 
 	virtual void eat() {
+		if (prey == nullptr) return;
+		prey->die();
+		prey = nullptr;
 		satiation += BEAR_EAT_GAIN;
 		if (satiation > 1.0f)
 			satiation = 1.0f;
