@@ -173,4 +173,5 @@ protected:
 	bool canFly;
 	float reproductionThreshold = 0.8f;
 	AICreature* partner = nullptr;
+	AICreature* predator = nullptr;
 };
