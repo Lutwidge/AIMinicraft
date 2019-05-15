@@ -40,6 +40,18 @@
     <ClInclude Include="src\creatures\owl\Owl.h" />
     <ClInclude Include="src\creatures\rat\rat.h" />
     <ClInclude Include="src\creatures\wolf\Wolf.h" />
+    <ClInclude Include="..\src\engine\render\camera.h" />
+    <ClInclude Include="src\creatureState.h" />
+    <ClInclude Include="src\creatures\AICreature.h" />
+    <ClInclude Include="src\creatures\bear\bear.h" />
+    <ClInclude Include="src\creatures\bird\bird.h" />
+    <ClInclude Include="src\creatures\creature.h" />
+    <ClInclude Include="src\creatures\CreatureManager.h" />
+    <ClInclude Include="src\creatures\CreatureType.h" />
+    <ClInclude Include="src\creatures\elephant\elephant.h" />
+    <ClInclude Include="src\creatures\ocelot\ocelot.h" />
+    <ClInclude Include="src\creatures\Perceptor.h" />
+    <ClInclude Include="src\engine\utils\Bezier.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />
