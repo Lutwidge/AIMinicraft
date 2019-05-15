@@ -15,6 +15,7 @@
 #include "creatures/snake/Snake.h"
 #include "creatures/bear/bear.h"
 #include "creatures/copycat/copycat.h"
+#include "creatures/trap/trap.h"
 
 class MEngineMinicraft : public YEngine
 {
@@ -155,7 +156,7 @@ public :
 		CreatureType::Snake->color = YColor(0, 0.8, 0, 1);
 		CreatureType::Bear->color = YColor(1, 1, 1, 1);
 		CreatureType::Ocelot->color = YColor(1, 0, 1, 1);
-		CreatureType::Trap->color = YColor(1, 0, 0, 1);
+		CreatureType::Trap->color = YColor(0.55, 0.01, 0.01, 1);
 		CreatureType::Rat->color = YColor(1, 0.7, 0.8, 1);
 
 		// Spawn les premières créatures
@@ -185,6 +186,9 @@ public :
 		// Bear
 		new Bear("Bear 1", World, cm, getRandomSpawnPos());
 		new Bear("Bear 2", World, cm, getRandomSpawnPos());
+
+		// Trap
+		new Trap("Trap_1", World, cm, getRandomSpawnPos());
 
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
