@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <type_traits>
 
-#define SPEED 4
+#define SPEED 1
 #define DECAY_SATIETY 0.02
 #define REPRO_THRESHOLD 0.8
 #define OWL_SIGHT_RANGE 30
@@ -78,7 +78,7 @@ public:
 					if (owl->getSatiation() > 0.8f)
 					{
 						AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Owl, OWL_SIGHT_RANGE);
-						if (crea != nullptr)
+						if (crea != nullptr && crea->canReproduce())
 						{
 							YLog::log(YLog::ENGINE_INFO, "Trouvé part");
 							owl->switchState(new GoPechoState(owl, (Owl*)crea));
@@ -269,7 +269,7 @@ public:
 				if (owl->manager->perceptor->blockSight(owl,MCube::MCubeType::CUBE_BRANCHES,owl->sightRange,pos))
 				{
 					treePos = pos;
-					owl->switchState(new GoToTreeState(owl, treePos));
+					owl->switchState(new GoToTreeState(owl, owl->GetTreeAirBlock(treePos)));
 					return;
 				}
 				counter++;
@@ -349,13 +349,13 @@ public:
 	{
 		GoPechoState(Owl * owl, Owl * target) : OwlState(owl)
 		{
-			target = potentialPartner;
+			potentialPartner = target;
 		}
 		Owl* potentialPartner;
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
+			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
 			owl->forward = (potentialPartner->position - owl->position).normalize();
 		}
 
@@ -369,21 +369,21 @@ public:
 				if (creature != nullptr)
 				{
 					owl->switchState(new FleeState(owl, creature->position));
+					return;
 				}
 				YVec3f pos;
 
 				//Rien ne gene la vue
 				if (!owl->manager->perceptor->raycast(owl->position, toPartner, toPartner.getSize(), pos))
 				{
-
-					//Depassé (donc touché), on verifie que le partenaire est toujours valide
-					if (toPartner.dot(owl->forward) < 0 && potentialPartner->isPartnerValid())
+					if (toPartner.getSize() < 1)
 					{
-						
+						owl->switchState(new ReproState(owl, potentialPartner));
+						return;
 					}
 					else
 					{
-						owl->position += toPartner.normalize() * owl->timeBetweenMoves;
+						owl->position += toPartner.normalize() * owl->timeBetweenMoves * elapsed;
 					}
 				}
 				else
@@ -406,10 +406,15 @@ public:
 		Owl* part;
 		ReproState(Owl* owl, Owl * partner) : OwlState(owl), part(partner)
 		{
-			owl->setPartner(partner);
-
+			//owl->setPartner(partner);
+			owl->partner = part;
 			//Delai aleatoire pour eviter la double reproduction
 			timerBeforeReproduce = rand() % 3;
+		}
+
+		void enter()
+		{
+			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans truc");
 		}
 
 		void update(float elapsed)
@@ -419,8 +424,8 @@ public:
 			{
 				//Reproduction en soi
 				owl->reproduce();
-				owl->switchState(new IdleState(owl, true));
 				part->switchState(new IdleState(part, true));
+				owl->switchState(new IdleState(owl, true));
 			}
 		}
 
@@ -468,6 +473,11 @@ public:
 		return false;
 	}
 
+	bool canReproduce() override
+	{
+		return AICreature::canReproduce() && isOnBranch && partner == nullptr;
+	}
+
 	void eat() override
 	{
 		target->die();
@@ -485,6 +495,7 @@ public:
 	{
 		YVec3f spawnPosition = (partner->position + position) / 2;
 		new Owl("Owl enfant ", world, manager, spawnPosition);
+		satiation -= 0.2;
 	}
 
 	bool isEatTargetValid() override
@@ -500,6 +511,16 @@ public:
 	CreatureType* getType()
 	{
 		return CreatureType::Owl;
+	}
+
+	YVec3f GetTreeAirBlock(YVec3f input)
+	{
+		YVec3f cursor = input;
+		while (world->getCube(cursor.X, cursor.Y, cursor.Z)->getType() != MCube::CUBE_AIR)
+		{
+			cursor.Z++;
+		}
+		return cursor;
 	}
 
 	protected :
