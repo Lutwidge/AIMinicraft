@@ -9,9 +9,9 @@ namespace
 {
     static constexpr auto RAT_SIGHT_RANGE = 5;
     static constexpr auto RAT_DIR_COUNT = 4;
-    static constexpr auto RAT_SPEED = 2.0f;
+    static constexpr auto RAT_SPEED = 0.099f;
     static constexpr auto RAT_SATIATION_DECAY = 0.01f;
-    static constexpr auto RAT_REPRODUCTION_THRESHOLD = 1.75f;
+    static constexpr auto RAT_REPRODUCTION_THRESHOLD = 0.75f;
     static constexpr auto RAT_EAT_GAIN = 0.4f;
 }
 
@@ -254,15 +254,15 @@ public:
 	/* REPRODUCTION */
 	virtual bool setPartner(AICreature* newPartner)
 	{
-		Rat* birdPartner = nullptr;
+		Rat* ratPartner = nullptr;
 		if (newPartner->getType() == CreatureType::Rat) {
-			birdPartner = (Rat*) newPartner; // Casting to Rat pointer to access protected members
+			ratPartner = (Rat*) newPartner; // Casting to Rat pointer to access protected members
 
 			// Verification qu'il n'y a pas déjà de partenaires définis
-			if (partner == nullptr && birdPartner->partner == nullptr) {
-				partner = birdPartner;
-				birdPartner->partner = this;
-				birdPartner->switchState(new ReproductionState(birdPartner));
+			if (partner == nullptr && ratPartner->partner == nullptr) {
+				partner = ratPartner;
+				ratPartner->partner = this;
+				ratPartner->switchState(new ReproductionState(ratPartner));
 				return true;
 			}
 		}

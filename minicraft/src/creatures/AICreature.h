@@ -29,6 +29,8 @@ public:
 
 		virtual void enter() {
 			printf("%s: Dead\n", creature->name.c_str());
+			// On change de liste dans le CreatureManager
+			creature->manager->registerDeadCreature(creature);
 			// On donne à la créature sa target finale
 			creature->goToFinalTarget();
 		}
@@ -173,4 +175,5 @@ protected:
 	bool canFly;
 	float reproductionThreshold = 0.8f;
 	AICreature* partner = nullptr;
+	AICreature* predator = nullptr;
 };

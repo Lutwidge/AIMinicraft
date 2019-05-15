@@ -310,7 +310,6 @@ public:
 
 		void enter()
 		{
-
 			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans flee");
 			YVec3f directionFlee = (owl->position - predatorPos).normalize();
 			directionFlee.rotate(YVec3f(0, 0, 1), rand() % 20 - 10);
