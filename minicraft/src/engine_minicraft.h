@@ -11,6 +11,7 @@
 #include <creatures/rat/rat.h>
 #include "creatures/owl/Owl.h"
 #include "creatures/griffin/griffin.h"
+#include "creatures/wolf/Wolf.h"
 #include "creatures/CreatureManager.h"
 #include "creatures/snake/Snake.h"
 #include "creatures/bear/bear.h"
@@ -190,6 +191,11 @@ public :
 		// Trap
 		new Trap("Trap_1", World, cm, getRandomSpawnPos());
 
+		// Wolf
+		new Wolf("Wolf_1", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_2", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_3", World, cm, getRandomSpawnPos());
+
 		//Snake
 		new Snake("Snake 1", World, cm, getRandomSpawnPos());
 		new Snake("Snake 2", World, cm, getRandomSpawnPos());
@@ -236,7 +242,7 @@ public :
 			}
 			else if (randomType == CreatureType::Wolf)
 			{
-				//corpse = new Wolf("Corpse", World, cm, randomPos);
+				corpse = new Wolf("Corpse", World, cm, randomPos);
 			}
 
 			if (corpse != nullptr)
