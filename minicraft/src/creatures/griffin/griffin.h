@@ -204,7 +204,7 @@ public:
 	Griffin(string name, MWorld *world, CreatureManager* cm, YVec3f pos) : AICreature(name, world, cm, pos, true, GRIFF_SPEED, GRIFF_SATIATION_DECAY, GRIFF_REPRODUCTION_THRESHOLD) {
 		manager->registerCreature(this);
 		tireness = 1.2f;
-		tirenessDecay = = 0.02f;
+		tirenessDecay = 0.02f;
 		chaseTime = 0;
 		targetCreature = nullptr;
 		switchState(new IdleState(this));
