@@ -17,13 +17,16 @@ class AStar
 public:
 	static vector<YVec3f> findpath(YVec3f startPos, YVec3f endPos, MWorld * world, bool canFly)
 	{
-		high_resolution_clock::time_point beginTime = high_resolution_clock::now();
+		high_resolution_clock::time_point beginTime, endTime;
+		beginTime = high_resolution_clock::now();
 		
 		startPos = YVec3f((int) startPos.X, (int) startPos.Y, (int) startPos.Z);
 		endPos = YVec3f((int) endPos.X, (int) endPos.Y, (int) endPos.Z);
 		
 		if (!isTargetValid(startPos, endPos, world, canFly))
 			return vector<YVec3f>();
+
+		//YLog::log(YLog::ENGINE_INFO, "A* begins");
 
 		vector<Node *> openList;
 		vector<Node *> closedList;
@@ -35,6 +38,10 @@ public:
 
 		while (!openList.empty())
 		{
+			endTime = high_resolution_clock::now();
+			if (duration_cast<seconds>(endTime - beginTime).count() > 3)
+				return vector<YVec3f>();
+
 			sort(openList.begin(), openList.end(), Node::compare);
 			currentNode = openList[openList.size() - 1];
 
@@ -75,7 +82,7 @@ public:
 			}
 		}
 
-		high_resolution_clock::time_point endTime = high_resolution_clock::now();
+		endTime = high_resolution_clock::now();
 		long duration = duration_cast<seconds>(endTime - beginTime).count();
 		//YLog::log(YLog::ENGINE_INFO, ("Time to fail A*: " + toString(duration) + "ms").c_str());
 

@@ -232,7 +232,7 @@ public:
 
 	virtual void eat()
 	{
-		manager->unregisterCreature(preyCreature);
+		preyCreature->die();
 		satiation += SNAKE_EAT_GAIN;
 		preyCreature = nullptr;
 	}

@@ -29,13 +29,14 @@ public:
 
 		virtual void enter() {
 			printf("%s: Dead\n", creature->name.c_str());
+			creature->IsDead = true;
 			// On change de liste dans le CreatureManager
 			creature->manager->registerDeadCreature(creature);
-			// On donne à la créature sa target finale
+			// On donne ï¿½ la crï¿½ature sa target finale
 			creature->goToFinalTarget();
 		}
 		virtual void update(float elapsed) {
-			// On fait tomber la créature jusqu'au sol
+			// On fait tomber la crï¿½ature jusqu'au sol
 			if (creature->hasNotReachedTarget())
 				creature->move(elapsed);
 		}
@@ -49,12 +50,14 @@ public:
 	YVec3f position;
 	YVec3f forward;
 	MWorld* world;
+	bool IsDead;
 
 	AICreature(string name, MWorld *world, CreatureManager* manager, YVec3f pos, bool canFly, float speed, float decay, float reproThreshold) : 
 		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(0.5f), reproductionThreshold(reproThreshold) {
 		//switchState(initialState);
 		//manager->registerCreature(this);
 		forward = YVec3f(1, 0, 0);
+		IsDead = false;
 	}
 
 	~AICreature() {
@@ -113,7 +116,8 @@ public:
 
 	virtual void move(float elapsed) {
 		timeSinceLastMove += elapsed;
-		if (timeSinceLastMove >= timeBetweenMoves) {
+		if (timeSinceLastMove >= timeBetweenMoves && currentMoveIndex < pathToTarget.size())
+		{
 			timeSinceLastMove = 0;
 			forward = (pathToTarget[currentMoveIndex] - position).normalize();
 			position = pathToTarget[currentMoveIndex];
