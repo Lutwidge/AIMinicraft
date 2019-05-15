@@ -11,7 +11,7 @@ namespace
 	static constexpr auto COPYCAT_DIR_COUNT = 4;
 	static constexpr auto COPYCAT_SPEED = 0.2f;
 	static constexpr auto COPYCAT_SATIATION_DECAY = 0.01f;
-	static constexpr auto COPYCAT_REPRODUCTION_THRESHOLD = 5.0f;
+	static constexpr auto COPYCAT_REPRODUCTION_THRESHOLD = 0.9f;
 	static constexpr auto COPYCAT_EAT_GAIN = 0.4f;
 	static constexpr auto COPYCAT_MOVEMENT_RANGE = 12;
 }
