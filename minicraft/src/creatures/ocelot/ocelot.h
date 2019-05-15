@@ -222,7 +222,7 @@ public:
 	}
 
 	virtual void eat() {
-		manager->unregisterCreature(prey);
+		prey->die();
 		satiation += OCELOT_EAT_GAIN;
 		if (satiation > 1.0) {
 			satiation = 1.0;
