@@ -13,6 +13,7 @@
 #include "creatures/CreatureManager.h"
 #include "creatures/snake/Snake.h"
 #include "creatures/bear/bear.h"
+#include "creatures/copycat/copycat.h"
 
 class MEngineMinicraft : public YEngine
 {
@@ -172,6 +173,13 @@ public :
 
 		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		
+		{
+		int x = rand() % MWorld::MAT_SIZE_METERS;
+		int y = rand() % MWorld::MAT_SIZE_METERS;
+		YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
+		new Copycat("Copycat 1", World, cm, randomPos);
+		}
+
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
 		{
