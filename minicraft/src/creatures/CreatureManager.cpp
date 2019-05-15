@@ -65,6 +65,7 @@ void CreatureManager::update(float dt) {
 			typeCreatures->arr[i]->update(dt);
 		}
 	}
+	perceptor->nextFrame();
 }
 
 void CreatureManager::render(MEngineMinicraft* engine) {
