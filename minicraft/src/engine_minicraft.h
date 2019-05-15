@@ -187,6 +187,14 @@ public :
 
 		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		
+		new Griffin("Griffin The Third aka. Pet3r", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
+			(MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)+5)
+		);
+
+		new Owl("Owl 1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
+			(MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2) + 5)
+		);
+
 		{
 		int x = rand() % MWorld::MAT_SIZE_METERS;
 		int y = rand() % MWorld::MAT_SIZE_METERS;

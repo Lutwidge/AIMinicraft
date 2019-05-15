@@ -7,7 +7,7 @@
 
 
 #define GRIFF_DIR_COUNT 4
-#define GRIFF_SPEED 0.1f
+#define GRIFF_SPEED 1.0f
 #define GRIFF_SATIATION_DECAY 0.01f
 #define GRIFF_REPRODUCTION_THRESHOLD 0.8f
 #define GRIFF_SIGHT_RANGE 30
@@ -38,7 +38,7 @@ protected:
 		virtual void update(float elapsed) {
 
 			// Check de si on est toujours en vie
-			if (griffin->updateSatiation(elapsed) && griffin->updateTireness(elapsed)) {
+			if (griffin->updateSatiation(elapsed) /*&& griffin->updateTireness(elapsed)*/) {
 				// Reproduction prioritaire
 				if (griffin->canReproduce()) {
 					// Si oui, on check s'il y a une target compatible
@@ -52,12 +52,12 @@ protected:
 					}
 				}
 
-				printf("%s : Seak owl \n", griffin->name.c_str());
 				// Sinon, on regarde si on voit un fruit
 				AICreature *owl = griffin->manager->perceptor->creatureSight(griffin, CreatureType::Owl, GRIFF_SIGHT_RANGE);
 				if (owl != nullptr) {
-					printf("%s : Owl get \n", griffin->name.c_str());
-					griffin->eatTarget = owl->position;
+					printf("%s : Owl in sight ! \n", griffin->name.c_str());
+					griffin->setTarget(owl);
+
 					griffin->switchState(new EatState(griffin));
 					return;
 				}
@@ -81,7 +81,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : I'm going to eat \n", griffin->name.c_str());
+			printf("%s : I'm chasing that owl  \n", griffin->name.c_str());
 			griffin->gotToEatTarget();
 			griffin->chaseTime = 0;
 			griffin->timeBetweenMoves = GRIFF_SPEED * griffin->tireness;
@@ -96,33 +96,39 @@ protected:
 				if (griffin->chaseTime > 1) {
 					//reset owl position. Else, chase the last position of the owl
 					griffin->setEatTarget(griffin->targetCreature->position);
+					griffin->chaseTime = 0;
 				}
 
 
 				//check if owl not too far away
-				float dist = (griffin->position.X - griffin->targetCreature->position.X) * (griffin->position.X - griffin->targetCreature->position.X);
-				dist += (griffin->position.Y - griffin->targetCreature->position.Y) * (griffin->position.Y - griffin->targetCreature->position.Y);
+				//float dist = (griffin->position.X - griffin->targetCreature->position.X) * (griffin->position.X - griffin->targetCreature->position.X);
+				//dist += (griffin->position.Y - griffin->targetCreature->position.Y) * (griffin->position.Y - griffin->targetCreature->position.Y);
 
-				if (dist * dist > GRIFF_SIGHT_RANGE * GRIFF_SIGHT_RANGE)
+				/*if (dist * dist > GRIFF_SIGHT_RANGE * GRIFF_SIGHT_RANGE)
 				{
 					printf("%s : This owl was too quick !! \n", griffin->name.c_str());
 					griffin->switchState(new IdleState(griffin));
 					return;
 				}
 				//check if owl still alive
-				else if (griffin->isEatTargetValid())
+				else*/ if (griffin->isEatTargetValid())
 				{
 					if (griffin->hasNotReachedTarget()) {
+						/*printf("%s : I'm reaching for this owl. I'm at %d, %d and is at %d, %d \n", griffin->name.c_str(), 
+							griffin->position.X, griffin->targetCreature->position.X,
+							griffin->position.Y, griffin->targetCreature->position.Y);*/
 						griffin->move(elapsed);
 						griffin->tireness -= 0.01f;
 					}
 					else {
+						//printf("%s : Reach !\n", griffin->name.c_str());
 						griffin->eat();
 						return;
 					}
 				}
 				// Sinon, retour à l'état idle
 				else {
+					printf("%s : Owl perime \n", griffin->name.c_str());
 					griffin->switchState(new IdleState(griffin));
 					return;
 				}
@@ -230,6 +236,7 @@ public:
 
 	virtual void eat()
 	{
+		printf("%s : I EAT YOU MowlER FuuhER \n", name.c_str());
 		targetCreature->die();
 		satiation += GRIFF_EAT_GAIN;
 		if (satiation > 1.0f)
@@ -238,7 +245,13 @@ public:
 
 	virtual void setTarget(AICreature *owl) {
 		targetCreature = owl;
+		eatTarget = owl->position;
 		return;
+	}
+
+	virtual bool hasNotReachedTarget() {
+		bool hasReachIt = (abs((position - targetPos).X) < 1 && abs((position - targetPos).Y) < 1) || pathToTarget.size() <= 0;
+		return !hasReachIt;
 	}
 
 	/* IDLE */
