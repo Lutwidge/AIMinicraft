@@ -13,6 +13,7 @@
 #define BIRD_SPIRAL_PATH_INCREMENT 4
 #define BIRD_IDLE_HEIGHT 8
 #define BIRD_EAT_GAIN 0.1f
+#define BIRD_FLEE_DISTANCE 6
 
 class Bird : public AICreature
 {
@@ -40,7 +41,8 @@ protected:
 			// Mise à jour de la satiété et check de si on est toujours en vie
 			if (bird->updateSatiation(elapsed)) {
 				// Si on voit un prédateur, on fuit
-				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr) {
+				bird->predator = bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE);
+				if (bird->predator != nullptr) {
 					bird->switchState(new FleeState(bird));
 					return;
 				}
@@ -95,7 +97,8 @@ protected:
 			if (bird->updateSatiation(elapsed))
 			{
 				// Si on voit un prédateur, on fuit
-				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr) {
+				bird->predator = bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE);
+				if (bird->predator != nullptr) {
 					bird->switchState(new FleeState(bird));
 					return;
 				}
@@ -128,10 +131,25 @@ protected:
 
 		virtual void enter()
 		{
-
+			// Definir target de fuite
+			YVec3f fleeTarget = bird->position + (bird->position - bird->predator->position).normalize() * BIRD_FLEE_DISTANCE;
+			// On s'assure que la target de fuite est valide
+			fleeTarget = bird->world->getNearestAirCube(fleeTarget.X, fleeTarget.Y, fleeTarget.Z);
+			bird->goTo(fleeTarget);
 		}
 
-		virtual void update(float elapsed) {}
+		virtual void update(float elapsed)
+		{
+			// Mise à jour de la satiété et check de si on est toujours en vie
+			if (bird->updateSatiation(elapsed))
+			{
+				// On avance jusqu'à fuir à la target définie
+				if (bird->hasNotReachedTarget())
+					bird->move(elapsed);
+				else
+					bird->switchState(new IdleState(bird));
+			}
+		}
 
 		virtual void exit() {}
 	};
@@ -153,8 +171,8 @@ protected:
 			// Mise à jour de la satiété et check de si on est toujours en vie
 			if (bird->updateSatiation(elapsed))
 			{
-				// Si on voit un prédateur, on fuit
-				if (bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE) != nullptr)
+				bird->predator = bird->manager->perceptor->creatureSight(bird, CreatureType::Ocelot, BIRD_SIGHT_RANGE);
+				if (bird->predator != nullptr)
 				{
 					bird->resetPartner(); // On retire tout partenaire potentiel
 					bird->switchState(new FleeState(bird));
@@ -227,7 +245,7 @@ public:
 
 	virtual bool setEatTarget(YVec3f target) {
 		realEatTarget = target;
-		// Define eat target as the nearest air cube near the fruit
+		// Définir la target comme le cube d'air le plus proche du fruit
 		eatTarget = world->getNearestAirCube(target.X, target.Y, target.Z);
 		if (eatTarget == realEatTarget)
 			return false;
@@ -256,7 +274,7 @@ public:
 	{
 		Bird* birdPartner = nullptr;
 		if (newPartner->getType() == CreatureType::Bird) {
-			birdPartner = (Bird*) newPartner; // Casting to Bird pointer to access protected members
+			birdPartner = (Bird*) newPartner; // Cast en Bird pointer pour accéder aux membres protégés
 
 			// Verification qu'il n'y a pas déjà de partenaires définis
 			if (partner == nullptr && birdPartner->partner == nullptr) {

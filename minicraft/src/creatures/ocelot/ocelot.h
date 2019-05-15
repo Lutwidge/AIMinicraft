@@ -69,13 +69,49 @@ protected:
 
 		virtual void update(float elapsed) {
 			if (ocelot->updateSatiation(elapsed)) {
-				ocelot->move(elapsed);
+				// Si l'on n'a pas encore unregistered prey, alors on se déplace vers elle
+				if (ocelot->isEatTargetValid()) {
+					if (ocelot->hasNotReachedTarget()) {
+						ocelot->move(elapsed);
+					}
+					else {
+						ocelot->eat();
+						return;
+					}
+				}
+				// Quand prey à été unregisterd, on repasse à Idle
+				else {
+					ocelot->switchState(new IdleState(ocelot));
+					return;
+				}
 			}
+
 		}
 
 		virtual void exit() {
 			ocelot->lastPrey = ocelot->prey;
 			ocelot->prey = nullptr;
+		}
+	};
+
+
+	struct FleeState : public OcelotState
+	{
+		FleeState(Ocelot * ocelot) : OcelotState(ocelot) {}
+
+		virtual void enter()
+		{
+
+		}
+
+		virtual void update(float elapsed)
+		{
+
+		}
+
+		virtual void exit()
+		{
+
 		}
 	};
 
@@ -188,6 +224,9 @@ public:
 	virtual void eat() {
 		manager->unregisterCreature(prey);
 		satiation += OCELOT_EAT_GAIN;
+		if (satiation > 1.0) {
+			satiation = 1.0;
+		}
 	}
 
 	virtual bool setPartner(AICreature* newPartner) {

@@ -26,8 +26,7 @@ void CreatureManager::registerCreature(AICreature* creature) {
 		typeVec = new SimpleList<AICreature*>(16, 16);
 		creatures[type] = typeVec;
 	}
-	typeVec->add(creature);
-	
+	typeVec->add(creature);	
 }
 
 void CreatureManager::unregisterCreature(AICreature* creature) {
@@ -40,6 +39,20 @@ void CreatureManager::unregisterCreature(AICreature* creature) {
 				typeVec->remove(i);
 				return;
 			}
+		}
+	}
+}
+
+void CreatureManager::registerDeadCreature(AICreature* creature) {
+	unregisterCreature(creature);
+	deadCreatures->add(creature);
+}
+
+void CreatureManager::unregisterDeadCreature(AICreature* creature) {
+	for (int i = 0; i < deadCreatures->count; i++) {
+		if (deadCreatures->arr[i] == creature) {
+			deadCreatures->remove(i);
+			return;
 		}
 	}
 }
