@@ -12,6 +12,7 @@
 #define WOLF_SIGHT_RANGE  15
 #define WOLF_EAT_GAIN  0.3f
 #define WOLF_MOVEMENT_RANGE  8
+#define WOLF_FLEE_RANGE  6
 
 class Wolf : public AICreature 
 {
@@ -142,10 +143,19 @@ protected:
 		virtual void enter()
 		{
 			YLog::log(YLog::USER_INFO, toString("[WOLF] Flee State Enter").c_str());
+			YVec3f fleeTarget = wolf->position + (wolf->position - wolf->predator->position).normalize() * WOLF_FLEE_RANGE;
+
+			fleeTarget = wolf->world->getNearestAirCube(fleeTarget.X, fleeTarget.Y, fleeTarget.Z);
+			wolf->goTo(fleeTarget);
 		}
 
-		virtual void update(float elapsed) {
-
+		virtual void update(float elapsed) 
+		{
+			if (wolf->updateSatiation(elapsed))
+			{
+				if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
+				else wolf->switchState(new IdleState(wolf));
+			}
 		}
 
 		virtual void exit() {}
