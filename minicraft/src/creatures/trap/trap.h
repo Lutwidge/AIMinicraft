@@ -9,10 +9,7 @@
 #define TRAP_SPEED 0.f
 #define TRAP_SATIATION_DECAY 0.f
 #define TRAP_REPRODUCTION_THRESHOLD 0.f
-#define TRAP_SIGHT_RANGE 15
-#define TRAP_IDLE_HEIGHT 8
-#define TRAP_EAT_GAIN 0.1f
-#define TRAP_FLEE_DISTANCE 6
+#define TRAP_SIGHT_RANGE 10
 
 class Trap : public AICreature
 {
@@ -33,19 +30,15 @@ protected:
 			//printf("%s : Idle \n", trap->name.c_str());
 		}
 
-		virtual void update(float elapsed) {
-
-			// Mise à jour de la satiété et check de si on est toujours en vie
-			if (trap->updateSatiation(elapsed)) 
+		virtual void update(float elapsed) 
+		{
+			trap->predator = trap->manager->perceptor->creatureSight(trap, CreatureType::Wolf, TRAP_SIGHT_RANGE);
+			if (trap->predator != nullptr) 
 			{
-				// Si on voit un prédateur, on le bouffe
-				trap->predator = trap->manager->perceptor->creatureSight(trap, CreatureType::Wolf, TRAP_SIGHT_RANGE);
-				if (trap->predator != nullptr) 
-				{
-					trap->switchState(new EatState(trap, trap->predator));
-					return;
-				}
+				trap->switchState(new EatState(trap, trap->predator));
+				return;
 			}
+			
 		}
 
 		virtual void exit() {}
@@ -65,8 +58,12 @@ protected:
 		virtual void enter()
 		{
 			//printf("%s : Eat \n", trap->name.c_str());
-			trap->eat();
-			trap->switchState(new IdleState(trap));
+			if (toKill != nullptr)
+			{
+				printf("%s : Trap now ! \n", trap->name.c_str());
+				trap->TrapAnimal(toKill);
+				trap->switchState(new IdleState(trap));
+			}
 		}
 
 		virtual void update(float elapsed)
@@ -79,41 +76,18 @@ protected:
 
 #pragma endregion
 
-	int pathLength;
-	YVec3f directions[DIR_COUNT] = { YVec3f(1, 0, 0), YVec3f(0, 1, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0) };
-	int curDirIndex;
-	YVec3f realEatTarget;
 
 public:
-	Trap(string name, MWorld * world, CreatureManager * cm, YVec3f pos) : AICreature(name, world, cm, pos, true, TRAP_SPEED, TRAP_SATIATION_DECAY, TRAP_REPRODUCTION_THRESHOLD) 
+	Trap(string name, MWorld * world, CreatureManager * cm, YVec3f pos) : AICreature(name, world, cm, pos, false, TRAP_SPEED, TRAP_SATIATION_DECAY, TRAP_REPRODUCTION_THRESHOLD) 
 	{
 		manager->registerCreature(this);
 		switchState(new IdleState(this));
 	}
 
-	/* EATING */
-	virtual bool isEatTargetValid() 
+	//TRAP ANIMAL 
+	virtual void TrapAnimal(AICreature* creatureToKill)
 	{
-		return world->getCube((int)realEatTarget.X, (int)realEatTarget.Y, (int)realEatTarget.Z)->isFruit();
-	}
-
-	virtual void eat()
-	{
-		//world->getCube((int)realEatTarget.X, (int)realEatTarget.Y, (int)realEatTarget.Z)->setType(MCube::CUBE_BRANCHES);
-		//world->respawnFruit();
-		// Regénérer le monde (mais coûteux... comme le picking)
-		//world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
-	}
-
-	virtual bool setEatTarget(YVec3f target) 
-	{
-		realEatTarget = target;
-		// Définir la target comme le cube d'air le plus proche du fruit
-		eatTarget = world->getNearestAirCube(target.X, target.Y, target.Z);
-		if (eatTarget == realEatTarget)
-			return false;
-		else
-			return true;
+		creatureToKill->switchState(new DeadState(creatureToKill));
 	}
 
 	bool updateSatiation(float elapsed) override
@@ -125,4 +99,11 @@ public:
 	{
 		return CreatureType::Trap;
 	}
+
+	virtual void eat(){}
+	virtual void setEatTarget(AICreature* creature){}
+	virtual bool isEatTargetValid() { return false; }
+	virtual bool setPartner(AICreature* newPartner) { return false; }
+	virtual bool isPartnerValid() { return false; }
+	virtual void reproduce(){}
 };

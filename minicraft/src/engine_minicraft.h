@@ -15,6 +15,7 @@
 #include "creatures/snake/Snake.h"
 #include "creatures/bear/bear.h"
 #include "creatures/copycat/copycat.h"
+#include "creatures/trap/trap.h"
 
 class MEngineMinicraft : public YEngine
 {
@@ -155,7 +156,7 @@ public :
 		CreatureType::Snake->color = YColor(0, 0.8, 0, 1);
 		CreatureType::Bear->color = YColor(1, 1, 1, 1);
 		CreatureType::Ocelot->color = YColor(1, 0, 1, 1);
-		CreatureType::Trap->color = YColor(1, 0, 0, 1);
+		CreatureType::Trap->color = YColor(0.55, 0.01, 0.01, 1);
 		CreatureType::Rat->color = YColor(1, 0.7, 0.8, 1);
 
 		// Spawn les premières créatures
@@ -186,6 +187,13 @@ public :
 		y = rand() % MWorld::MAT_SIZE_METERS;
 		randomPos = YVec3f(x, y, World->getSurface(x, y));
 		new Ocelot("Ocelot1", World, cm, randomPos);
+
+
+		x = rand() % MWorld::MAT_SIZE_METERS;
+		y = rand() % MWorld::MAT_SIZE_METERS;
+		randomPos = YVec3f(x, y, World->getSurface(x, y));
+		new Trap("Trap_1", World, cm, randomPos);
+
 		
 		//new Snake("Snake", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		//new Snake("Snake 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
