@@ -66,6 +66,9 @@
     <ClInclude Include="src\creatures\rat\rat.h">
       <Filter>creatures\rat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\0 - SI TU PROG DE L%27IA TU VIENS ICI\AIMinicraft\minicraft\src\creatures\trap\trap.h">
+      <Filter>creatures\trap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />
@@ -123,6 +126,9 @@
     </Filter>
     <Filter Include="creatures\wolf">
       <UniqueIdentifier>{58ff37a0-1274-4a20-832f-2e9eb2b9c2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="creatures\trap">
+      <UniqueIdentifier>{82525aae-7767-4773-a3cd-1f24bc9ea2ac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

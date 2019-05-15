@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\0 - SI TU PROG DE L%27IA TU VIENS ICI\AIMinicraft\minicraft\src\creatures\trap\trap.h" />
     <ClInclude Include="..\src\engine\noise\perlin.h" />
     <ClInclude Include="..\src\engine\render\camera.h" />
     <ClInclude Include="MPerlin.h" />
