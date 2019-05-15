@@ -191,6 +191,11 @@ public :
 		// Trap
 		new Trap("Trap_1", World, cm, getRandomSpawnPos());
 
+		// Wolf
+		new Wolf("Wolf_1", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_2", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_3", World, cm, getRandomSpawnPos());
+
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
 		{
@@ -233,7 +238,7 @@ public :
 			}
 			else if (randomType == CreatureType::Wolf)
 			{
-				//corpse = new Wolf("Corpse", World, cm, randomPos);
+				corpse = new Wolf("Corpse", World, cm, randomPos);
 			}
 
 			if (corpse != nullptr)

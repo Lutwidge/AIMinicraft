@@ -28,9 +28,7 @@ protected:
 		IdleState(Wolf* wolf): WolfState(wolf) {}
 
 		virtual void enter() {
-			//initializePath
 			YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
-			wolf->ground();
 			wolf->initializePath();
 		}
 
@@ -228,10 +226,10 @@ public:
 	virtual void eat()
 	{
 		preyCreature->die();
+
 		satiation += WOLF_EAT_GAIN;
 		if (satiation > 1.0f) satiation = 1.0f;
 
-		preyCreature->die();
 		preyCreature = nullptr;
 	}
 
@@ -239,11 +237,6 @@ public:
 	int pathLength;
 	int curDirIndex;
 	YVec3f directions[4] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
-
-	virtual void ground()
-	{
-		position.Z = world->getSurface(position.X, position.Y);
-	}
 
 	virtual void initializePath()
 	{
@@ -256,27 +249,13 @@ public:
 		x += position.X;
 		y += position.Y;
 
-		if (x > world->MAT_SIZE_METERS)
-		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
-			x -= randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+		if (x > world->MAT_SIZE_METERS) x -= randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
 
-		}
-		if (x < 0)
-		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
-			x += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
-		}
-		if (y > world->MAT_SIZE_METERS)
-		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
-			y -= randomDirection.Y * WOLF_MOVEMENT_RANGE * 2;
-		}
-		if (y < 0)
-		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] BORDER").c_str());
-			y += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
-		}
+		if (x < 0) x += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+
+		if (y > world->MAT_SIZE_METERS) y -= randomDirection.Y * WOLF_MOVEMENT_RANGE * 2;
+
+		if (y < 0) y += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
 
 		YVec3f target = YVec3f(x, y, world->getSurface(x, y));
 		goTo(target);
