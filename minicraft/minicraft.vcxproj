@@ -38,6 +38,7 @@
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\creatures\owl\Owl.h" />
     <ClInclude Include="src\creatures\rat\rat.h" />
+    <ClInclude Include="src\creatures\wolf\Wolf.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine\utils\Bezier.h" />
     <ClInclude Include="src\engine_minicraft.h" />
