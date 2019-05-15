@@ -77,11 +77,10 @@ public:
 					//Puis va chercher a se reproduire
 					if (owl->getSatiation() > 0.8f)
 					{
-						YLog::log(YLog::ENGINE_INFO, "Recherche partenaire");
-						AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Owl, owl->sightRange);
+						AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Owl, OWL_SIGHT_RANGE);
 						if (crea != nullptr)
 						{
-							YLog::log(YLog::ENGINE_INFO, "Trouvé partenaire");
+							YLog::log(YLog::ENGINE_INFO, "Trouvé part");
 							owl->switchState(new GoPechoState(owl, (Owl*)crea));
 							return;
 						}
