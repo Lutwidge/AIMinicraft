@@ -28,6 +28,7 @@ public:
 	void update(float dt);
 	void render(MEngineMinicraft* engine);
 	SimpleList<AICreature*>* getCreaturesOfType(CreatureType* type);
+	SimpleList<AICreature*>* getDeadCreatures();
 
 private:
 	std::unordered_map<CreatureType*, SimpleList<AICreature*>*> creatures;
