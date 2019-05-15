@@ -14,6 +14,7 @@ namespace
 	static constexpr auto SNAKE_REPRODUCTION_THRESHOLD = 1.75f;
 	static constexpr auto SNAKE_EAT_GAIN = 0.4f;
 	static constexpr auto SNAKE_MOVEMENT_RANGE = 8;
+	static constexpr auto SNAKE_FLEE_DISTANCE = 6;
 }
 
 class Snake : public AICreature
@@ -127,10 +128,25 @@ protected:
 
 		virtual void enter()
 		{
-
+			// Definir target de fuite
+			YVec3f fleeTarget = snake->position + (snake->position - snake->predator->position).normalize() * SNAKE_FLEE_DISTANCE;
+			// On s'assure que la target de fuite est valide
+			fleeTarget = snake->world->getNearestAirCube(fleeTarget.X, fleeTarget.Y, fleeTarget.Z);
+			snake->goTo(fleeTarget);
 		}
 
-		virtual void update(float elapsed) {}
+		virtual void update(float elapsed) 
+		{
+			// Mise à jour de la satiété et check de si on est toujours en vie
+			if (snake->updateSatiation(elapsed))
+			{
+				// On avance jusqu'à fuir à la target définie
+				if (snake->hasNotReachedTarget())
+					snake->move(elapsed);
+				else
+					snake->switchState(new IdleState(snake));
+			}
+		}
 
 		virtual void exit() {}
 	};
