@@ -31,11 +31,11 @@ public:
 			printf("%s: Dead\n", creature->name.c_str());
 			// On change de liste dans le CreatureManager
 			creature->manager->registerDeadCreature(creature);
-			// On donne à la créature sa target finale
+			// On donne ï¿½ la crï¿½ature sa target finale
 			creature->goToFinalTarget();
 		}
 		virtual void update(float elapsed) {
-			// On fait tomber la créature jusqu'au sol
+			// On fait tomber la crï¿½ature jusqu'au sol
 			if (creature->hasNotReachedTarget())
 				creature->move(elapsed);
 		}
@@ -113,7 +113,8 @@ public:
 
 	virtual void move(float elapsed) {
 		timeSinceLastMove += elapsed;
-		if (timeSinceLastMove >= timeBetweenMoves) {
+		if (timeSinceLastMove >= timeBetweenMoves && currentMoveIndex < pathToTarget.size())
+		{
 			timeSinceLastMove = 0;
 			forward = (pathToTarget[currentMoveIndex] - position).normalize();
 			position = pathToTarget[currentMoveIndex];

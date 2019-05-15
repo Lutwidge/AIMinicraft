@@ -7,7 +7,8 @@
 #include "world.h"
 //#include "my_physics.h"
 #include "creatures/bird/bird.h"
-#include "creatures/rat/rat.h"
+#include "creatures/elephant/elephant.h"
+#include <creatures/rat/rat.h>
 #include "creatures/owl/Owl.h"
 #include "creatures/griffin/griffin.h"
 #include "creatures/CreatureManager.h"
