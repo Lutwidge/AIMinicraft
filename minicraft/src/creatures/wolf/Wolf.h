@@ -11,7 +11,7 @@
 #define WOLF_REPRODUCTION_COUNT = 0.4f;
 #define WOLF_SIGHT_RANGE = 15;
 #define WOLF_EAT_GAIN = 0.3f;
-#define WOLF_SPIRAL_PATH_INCREMENT = 2;
+#define WOLF_MOVEMENT_RANGE = 8;
 
 class Wolf : public AICreature 
 {
@@ -29,7 +29,8 @@ protected:
 		virtual void enter() {
 			//initializePath
 			YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
-			wolf->initializeSpiralPath();
+			wolf->ground();
+			wolf->initializePath();
 		}
 
 		virtual void update(float elapsed) 
@@ -37,7 +38,7 @@ protected:
 			if (wolf->updateSatiation(elapsed)) 
 			{	
 				//TO-DO: A CHANGER POUR POINTER VERS TRAP
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15) != nullptr) 
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, WOLF_SIGHT_RANGE) != nullptr) 
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -73,7 +74,7 @@ protected:
 				}
 
 				if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
-				else wolf->incrementSpiralPath();
+				else wolf->initializePath();
 			}
 		}
 
@@ -227,27 +228,41 @@ public:
 	int curDirIndex;
 	YVec3f directions[4] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
 
-	virtual void initializeSpiralPath()
+	virtual void ground()
 	{
-		pathLength = 2;
-		curDirIndex = 0;
-		setSpiralPath(pathLength, curDirIndex);
+		position.Z = world->getSurface(position.X, position.Y);
 	}
 
-	virtual void setSpiralPath(int length, int index)
+	float normalX()
 	{
-		YVec3f addedDir = directions[index] * length;
-		YVec3f target = YVec3f(position.X + addedDir.X, position.Y + addedDir.Y, world->getHighestPoint(position.X + addedDir.X, position.Y + addedDir.Y));
+		float u = (rand() % 100) * 0.01;
+		float v = (rand() % 100) * 0.01;
 
+		float x = sqrt(-2 * log(u)) * cos(2 * 3.141592 * v);
+
+		return x;
+	}
+
+	float normalY()
+	{
+		float u = (rand() % 100) * 0.01;
+		float v = (rand() % 100) * 0.01;
+
+		float y = sqrt(-2 * log(u)) * sin(2 * 3.141592 * v);
+
+		return y;
+	}
+
+	virtual void initializePath()
+	{
+		int x = normalX() * WOLF_MOVEMENT_RANGE;
+		int y = normalY() * WOLF_MOVEMENT_RANGE;
+
+		x += position.X;
+		y += position.Y;
+
+		YVec3f target = YVec3f(x, y, world->getSurface(x, y));
 		goTo(target);
-	}
-
-	virtual void incrementSpiralPath()
-	{
-		pathLength += WOLF_SPIRAL_PATH_INCREMENT;
-		curDirIndex++;
-		curDirIndex = curDirIndex % DIR_COUNT;
-		setSpiralPath(pathLength, curDirIndex);
 	}
 
 	//REPRODUCTION FUNCTIONS
