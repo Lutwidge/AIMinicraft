@@ -56,6 +56,7 @@
     <ClCompile Include="src\creatures\AICreature.cpp" />
     <ClCompile Include="src\creatures\CreatureManager.cpp" />
     <ClCompile Include="src\creatures\CreatureType.cpp" />
+    <ClCompile Include="src\creatures\elephant\elephant.cpp" />
     <ClCompile Include="src\creatures\Perceptor.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -87,7 +88,7 @@
     <ProjectGuid>{17FD557D-42BC-4AF9-ABD2-025A8F8A621D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>minicraft</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -106,7 +107,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

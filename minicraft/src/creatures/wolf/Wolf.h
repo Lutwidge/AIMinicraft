@@ -227,6 +227,7 @@ public:
 
 	virtual void eat()
 	{
+		preyCreature->die();
 		satiation += WOLF_EAT_GAIN;
 		if (satiation > 1.0f) satiation = 1.0f;
 

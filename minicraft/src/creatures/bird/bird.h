@@ -115,6 +115,7 @@ protected:
 							bird->move(elapsed);
 						else {
 							bird->eat();
+							bird->switchState(new IdleState(bird));
 							return;
 						}
 					} 

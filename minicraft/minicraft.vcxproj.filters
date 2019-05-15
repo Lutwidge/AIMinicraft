@@ -1,234 +1,46 @@
-<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="..\src\engine\render\fbo.cpp" />
+    <ClCompile Include="..\src\engine\render\vbo.cpp" />
+    <ClCompile Include="..\src\engine\utils\utils.cpp" />
+    <ClCompile Include="src\creatures\AICreature.cpp" />
+    <ClCompile Include="src\creatures\CreatureManager.cpp" />
+    <ClCompile Include="src\creatures\CreatureType.cpp" />
+    <ClCompile Include="src\creatures\elephant\elephant.cpp" />
+    <ClCompile Include="src\creatures\Perceptor.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\creatures\CreatureManager.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\Perceptor.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\utils\utils.cpp">
-      <Filter>engine\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\render\fbo.cpp">
-      <Filter>engine\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\render\vbo.cpp">
-      <Filter>engine\render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\CreatureType.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\AICreature.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\engine\noise\perlin.h" />
+    <ClInclude Include="..\src\engine\render\camera.h" />
     <ClInclude Include="MPerlin.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\aStar.h" />
     <ClInclude Include="src\avatar.h" />
     <ClInclude Include="src\chunk.h" />
-    <ClInclude Include="src\cube.h" />
-    <ClInclude Include="src\engine_minicraft.h" />
-    <ClInclude Include="src\my_physics.h" />
-    <ClInclude Include="src\octave_perlin.h" />
-    <ClInclude Include="src\SimpleList.h" />
-    <ClInclude Include="src\world.h" />
-    <ClInclude Include="..\src\engine\render\camera.h" />
     <ClInclude Include="src\creatureState.h" />
     <ClInclude Include="src\creatures\AICreature.h" />
+    <ClInclude Include="src\creatures\bear\bear.h" />
+    <ClInclude Include="src\creatures\bird\bird.h" />
     <ClInclude Include="src\creatures\creature.h" />
     <ClInclude Include="src\creatures\CreatureManager.h" />
     <ClInclude Include="src\creatures\CreatureType.h" />
+    <ClInclude Include="src\creatures\elephant\elephant.h" />
+    <ClInclude Include="src\creatures\griffin\griffin.h" />
+    <ClInclude Include="src\creatures\ocelot\ocelot.h" />
     <ClInclude Include="src\creatures\Perceptor.h" />
-    <ClInclude Include="src\engine\utils\Bezier.h" />
-    <ClInclude Include="src\creatures\bear\bear.h">
-      <Filter>creatures\bear</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\bird\bird.h">
-      <Filter>creatures\bird</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\elephant\elephant.h">
-      <Filter>creatures\elephant</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\ocelot\ocelot.h">
-      <Filter>creatures\ocelot</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\owl\Owl.h">
-      <Filter>creatures\owl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\wolf\Wolf.h">
-      <Filter>creatures\wolf</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\rat\rat.h">
-      <Filter>creatures\rat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\0 - SI TU PROG DE L%27IA TU VIENS ICI\AIMinicraft\minicraft\src\creatures\trap\trap.h">
-      <Filter>creatures\trap</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="minicraft.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="run\shaders\birds\fs.glsl" />
-    <None Include="run\shaders\birds\vs.glsl" />
-    <None Include="run\shaders\cube\fs.glsl" />
-    <None Include="run\shaders\cube\vs.glsl" />
-    <None Include="run\shaders\cube_debug\fs.glsl" />
-    <None Include="run\shaders\cube_debug\vs.glsl" />
-    <None Include="run\shaders\godrays\fs.glsl" />
-    <None Include="run\shaders\godrays\vs.glsl" />
-    <None Include="run\shaders\occlusion\fs.glsl" />
-    <None Include="run\shaders\occlusion\vs.glsl" />
-    <None Include="run\shaders\postprocess\fs.glsl" />
-    <None Include="run\shaders\postprocess\vs.glsl" />
-    <None Include="run\shaders\shadowmap\fs.glsl" />
-    <None Include="run\shaders\shadowmap\vs.glsl" />
-    <None Include="run\shaders\sun\fs.glsl" />
-    <None Include="run\shaders\sun\vs.glsl" />
-    <None Include="run\shaders\world\fs.glsl" />
-    <None Include="run\shaders\world\vs.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="creatures">
-      <UniqueIdentifier>{19829509-6db4-4195-8373-8228e26375e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\bear">
-      <UniqueIdentifier>{8848604f-52dd-4b34-a773-ffaa69745a8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\bird">
-      <UniqueIdentifier>{2616be2d-1300-418a-a8d0-a974d3c4cf34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\ocelot">
-      <UniqueIdentifier>{f4d045ad-a748-4917-8587-348515d966f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\owl">
-      <UniqueIdentifier>{73a10472-5d5c-4462-a71c-6af1ffc2da3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\rat">
-      <UniqueIdentifier>{15e4a533-efc1-43fe-97a1-289de57ef1b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine">
-      <UniqueIdentifier>{e4fc7e5d-1dc4-4c7d-a0cd-be565288dd3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\utils">
-      <UniqueIdentifier>{89ad3cbb-0375-4be0-8bbf-1883a58808f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\render">
-      <UniqueIdentifier>{2a0b1383-2906-4d79-8ff0-bbdebd2dd564}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\elephant">
-      <UniqueIdentifier>{6fb476c0-54dc-4c88-93e1-a4c241631b1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\wolf">
-      <UniqueIdentifier>{58ff37a0-1274-4a20-832f-2e9eb2b9c2ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\trap">
-      <UniqueIdentifier>{82525aae-7767-4773-a3cd-1f24bc9ea2ac}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-=======
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\creatures\CreatureManager.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\Perceptor.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\utils\utils.cpp">
-      <Filter>engine\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\render\fbo.cpp">
-      <Filter>engine\render</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\engine\render\vbo.cpp">
-      <Filter>engine\render</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\CreatureType.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-    <ClCompile Include="src\creatures\AICreature.cpp">
-      <Filter>creatures</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\engine\noise\perlin.h" />
-    <ClInclude Include="MPerlin.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="src\aStar.h" />
-    <ClInclude Include="src\avatar.h" />
-    <ClInclude Include="src\chunk.h" />
-    <ClInclude Include="src\cube.h" />
-    <ClInclude Include="src\engine_minicraft.h" />
-    <ClInclude Include="src\my_physics.h" />
-    <ClInclude Include="src\octave_perlin.h" />
-    <ClInclude Include="src\SimpleList.h" />
-    <ClInclude Include="src\world.h" />
+    <ClInclude Include="src\creatures\owl\Owl.h" />
+    <ClInclude Include="src\creatures\rat\rat.h" />
+    <ClInclude Include="src\creatures\snake\Snake.h" />
     <ClInclude Include="src\creatures\wolf\Wolf.h" />
-    <ClInclude Include="..\src\engine\render\camera.h" />
-    <ClInclude Include="src\creatureState.h" />
-    <ClInclude Include="src\creatures\AICreature.h" />
-    <ClInclude Include="src\creatures\creature.h" />
-    <ClInclude Include="src\creatures\CreatureManager.h" />
-    <ClInclude Include="src\creatures\CreatureType.h" />
-    <ClInclude Include="src\creatures\Perceptor.h" />
+    <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine\utils\Bezier.h" />
-    <ClInclude Include="src\creatures\bear\bear.h">
-      <Filter>creatures\bear</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\bird\bird.h">
-      <Filter>creatures\bird</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\elephant\elephant.h">
-      <Filter>creatures\elephant</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\ocelot\ocelot.h">
-      <Filter>creatures\ocelot</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\owl\Owl.h">
-      <Filter>creatures\owl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\rat\rat.h">
-      <Filter>creatures\rat</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\snake\Snake.h">
-      <Filter>creatures\snake</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\creature.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\CreatureManager.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatureState.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\CreatureType.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\Perceptor.h">
-      <Filter>creatures</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\utils\Bezier.h">
-      <Filter>engine\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\engine\render\camera.h">
-      <Filter>engine\render</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\elephant\elephant.h">
-      <Filter>creatures\elephant</Filter>
-    </ClInclude>
-    <ClInclude Include="src\creatures\griffin\griffin.h">
-      <Filter>creatures\griffin</Filter>
-    </ClInclude>
+    <ClInclude Include="src\engine_minicraft.h" />
+    <ClInclude Include="src\my_physics.h" />
+    <ClInclude Include="src\octave_perlin.h" />
+    <ClInclude Include="src\SimpleList.h" />
+    <ClInclude Include="src\world.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />
@@ -253,43 +65,4 @@
     <None Include="run\shaders\world\fs.glsl" />
     <None Include="run\shaders\world\vs.glsl" />
   </ItemGroup>
-  <ItemGroup>
-    <Filter Include="creatures">
-      <UniqueIdentifier>{19829509-6db4-4195-8373-8228e26375e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\bear">
-      <UniqueIdentifier>{8848604f-52dd-4b34-a773-ffaa69745a8f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\bird">
-      <UniqueIdentifier>{2616be2d-1300-418a-a8d0-a974d3c4cf34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\ocelot">
-      <UniqueIdentifier>{f4d045ad-a748-4917-8587-348515d966f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\owl">
-      <UniqueIdentifier>{73a10472-5d5c-4462-a71c-6af1ffc2da3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\rat">
-      <UniqueIdentifier>{15e4a533-efc1-43fe-97a1-289de57ef1b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine">
-      <UniqueIdentifier>{e4fc7e5d-1dc4-4c7d-a0cd-be565288dd3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\utils">
-      <UniqueIdentifier>{89ad3cbb-0375-4be0-8bbf-1883a58808f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="engine\render">
-      <UniqueIdentifier>{2a0b1383-2906-4d79-8ff0-bbdebd2dd564}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\elephant">
-      <UniqueIdentifier>{6fb476c0-54dc-4c88-93e1-a4c241631b1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\griffin">
-      <UniqueIdentifier>{f723691a-def2-4964-af28-e4121fd25868}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="creatures\snake">
-      <UniqueIdentifier>{2ff0c667-6842-41e2-8e81-60e506d21903}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
->>>>>>> master
 </Project>

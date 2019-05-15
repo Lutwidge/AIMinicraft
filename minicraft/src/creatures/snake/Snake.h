@@ -11,7 +11,7 @@ namespace
 	static constexpr auto SNAKE_DIR_COUNT = 4;
 	static constexpr auto SNAKE_SPEED = 0.2f;
 	static constexpr auto SNAKE_SATIATION_DECAY = 0.01f;
-	static constexpr auto SNAKE_REPRODUCTION_THRESHOLD = 1.75f;
+	static constexpr auto SNAKE_REPRODUCTION_THRESHOLD = 0.8f;
 	static constexpr auto SNAKE_EAT_GAIN = 0.4f;
 	static constexpr auto SNAKE_MOVEMENT_RANGE = 8;
 	static constexpr auto SNAKE_FLEE_DISTANCE = 6;
@@ -232,7 +232,7 @@ public:
 
 	virtual void eat()
 	{
-		manager->unregisterCreature(preyCreature);
+		preyCreature->die();
 		satiation += SNAKE_EAT_GAIN;
 		preyCreature = nullptr;
 	}
