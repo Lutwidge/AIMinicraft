@@ -109,7 +109,7 @@ public :
 		World->init_world(16807);
 
 		Renderer->setBackgroundColor(YColor(0.0f,0.0f,0.0f,1.0f));
-		Renderer->Camera->setPosition(YVec3f(10, 10, 10));
+		Renderer->Camera->setPosition(YVec3f(100, 100, 100));
 		Renderer->Camera->setLookAt(YVec3f());
 
 		//Creation du VBO cube

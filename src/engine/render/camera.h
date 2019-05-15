@@ -31,7 +31,7 @@ public:
 			
 	YCamera()
 	{
-		Position = YVec3<float>(0, -1, 0);
+		Position = YVec3<float>(100, 100, 100);
 		LookAt = YVec3<float>(0, 0, 0);
 		UpRef = YVec3<float>(0, 0, 1);
 		UpVec = UpRef;
