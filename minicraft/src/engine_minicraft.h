@@ -143,6 +143,7 @@ public :
 
 		// Initialisation des mesh par default pour tous les types de creatures
 		CreatureType::initMeshes(VboCube, ShaderCubeDebug);
+		CreatureType::Bird->color = YColor(1, 1, 1, 1);
 
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
