@@ -218,7 +218,7 @@ public:
 
 	virtual void eat()
 	{
-		manager->unregisterCreature(preyCreature);
+		preyCreature->die();
 		satiation += WOLF_EAT_GAIN;
 		preyCreature = nullptr;
 	}

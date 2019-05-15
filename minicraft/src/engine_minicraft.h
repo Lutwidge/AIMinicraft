@@ -160,12 +160,21 @@ public :
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
 		
-        //new Rat( "Rat", World, cm, YVec3f( ( MWorld::MAT_SIZE_METERS ) / 2, ( MWorld::MAT_SIZE_METERS ) / 2, World->getSurface( ( MWorld::MAT_SIZE_METERS ) / 2, ( MWorld::MAT_SIZE_METERS ) / 2 ) ) );
+		// Birds
+		int x = rand() % MWorld::MAT_SIZE_METERS;
+		int y = rand() % MWorld::MAT_SIZE_METERS;
+		YVec3f randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
+		new Bird("Bird1", World, cm, randomPos);
+		x = rand() % MWorld::MAT_SIZE_METERS;
+		y = rand() % MWorld::MAT_SIZE_METERS;
+		randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
+		new Bird("Bird2", World, cm, randomPos);
 
-		new Bird("Bird1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
-		new Bird("Bird2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
-		//new Owl("Owl 1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface(0, 0)+6));
-		//new Griffin("Griffin III", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface(0, 0)+12));
+		// Owl
+		x = rand() % MWorld::MAT_SIZE_METERS;
+		y = rand() % MWorld::MAT_SIZE_METERS;
+		randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
+		new Owl("Owl 1", World, cm, randomPos);
 		
 		new Snake("Snake", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		//new Snake("Snake 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
