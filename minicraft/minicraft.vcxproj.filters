@@ -37,6 +37,7 @@
     <ClInclude Include="src\octave_perlin.h" />
     <ClInclude Include="src\SimpleList.h" />
     <ClInclude Include="src\world.h" />
+    <ClInclude Include="src\creatures\wolf\Wolf.h" />
     <ClInclude Include="..\src\engine\render\camera.h" />
     <ClInclude Include="src\creatureState.h" />
     <ClInclude Include="src\creatures\AICreature.h" />
@@ -60,11 +61,11 @@
     <ClInclude Include="src\creatures\owl\Owl.h">
       <Filter>creatures\owl</Filter>
     </ClInclude>
-    <ClInclude Include="src\creatures\wolf\Wolf.h">
-      <Filter>creatures\wolf</Filter>
-    </ClInclude>
     <ClInclude Include="src\creatures\rat\rat.h">
       <Filter>creatures\rat</Filter>
+    </ClInclude>
+    <ClInclude Include="src\creatures\snake\Snake.h">
+      <Filter>creatures\snake</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,8 +122,8 @@
     <Filter Include="creatures\elephant">
       <UniqueIdentifier>{6fb476c0-54dc-4c88-93e1-a4c241631b1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="creatures\wolf">
-      <UniqueIdentifier>{58ff37a0-1274-4a20-832f-2e9eb2b9c2ad}</UniqueIdentifier>
+    <Filter Include="creatures\snake">
+      <UniqueIdentifier>{2ff0c667-6842-41e2-8e81-60e506d21903}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

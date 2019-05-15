@@ -2,17 +2,17 @@
   vbo.cpp
   utils.cpp
   main.cpp
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(100): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(101): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(103): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(104): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(106): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(107): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(111): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(112): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(114): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(115): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(117): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-c:\users\lutwidge\desktop\projects\cpp projects\aiminicraft\engine_test\src\engine_test.h(118): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(100): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(101): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(103): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(104): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(106): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(107): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(111): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(112): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(114): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(115): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(117): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Séverin\Desktop\AIMinicraft\engine_test\src\engine_test.h(118): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
   Génération de code en cours...
-  engine_test.vcxproj -> C:\Users\Lutwidge\Desktop\PROJECTS\Cpp Projects\AIMinicraft\Debug\engine_test.exe
+  engine_test.vcxproj -> C:\Users\Séverin\Desktop\AIMinicraft\Debug\engine_test.exe

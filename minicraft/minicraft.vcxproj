@@ -38,6 +38,7 @@
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\creatures\owl\Owl.h" />
     <ClInclude Include="src\creatures\rat\rat.h" />
+    <ClInclude Include="src\creatures\snake\Snake.h" />
     <ClInclude Include="src\creatures\wolf\Wolf.h" />
     <ClInclude Include="src\cube.h" />
     <ClInclude Include="src\engine\utils\Bezier.h" />
@@ -104,7 +105,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
