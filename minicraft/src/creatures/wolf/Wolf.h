@@ -38,8 +38,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed)) 
 			{	
-				//TO-DO: A CHANGER POUR POINTER VERS TRAP
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, WOLF_SIGHT_RANGE) != nullptr) 
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr) 
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -49,7 +48,7 @@ protected:
 				{
 					if (wolf->canReproduce())
 					{
-						AICreature* targetWolf = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, 15);
+						AICreature* targetWolf = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE);
 						if (targetWolf != nullptr)
 						{
 							if (wolf->setPartner(targetWolf))
@@ -62,9 +61,9 @@ protected:
 					}
 				}
 
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE) != nullptr)
 				{
-					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15));
+					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE));
 
 					if (wolf->isEatTargetValid()) 
 					{
@@ -98,7 +97,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE) != nullptr)
 				{
 					wolf->resetPartner();
 					wolf->switchState(new FleeState(wolf));
@@ -176,7 +175,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr)
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -228,9 +227,10 @@ public:
 
 	virtual void eat()
 	{
-		manager->unregisterCreature(preyCreature);
 		satiation += WOLF_EAT_GAIN;
 		if (satiation > 1.0f) satiation = 1.0f;
+
+		preyCreature->die();
 		preyCreature = nullptr;
 	}
 

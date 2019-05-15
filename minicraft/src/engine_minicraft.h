@@ -173,6 +173,11 @@ public :
 
 		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
 		
+		new Wolf("Wolf", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
+		/*new Wolf("Wolf 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
+		new Wolf("Wolf 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 4, (MWorld::MAT_SIZE_METERS) / 4, World->getSurface((MWorld::MAT_SIZE_METERS) / 4, (MWorld::MAT_SIZE_METERS) / 4)));*/
+
+		/*new Ocelot("Ocelot", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 4, (MWorld::MAT_SIZE_METERS) / 4, World->getSurface((MWorld::MAT_SIZE_METERS) / 4, (MWorld::MAT_SIZE_METERS) / 4)));*/
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
 		{
