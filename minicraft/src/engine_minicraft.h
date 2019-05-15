@@ -147,7 +147,8 @@ public :
 
 		new Bird("Bird1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
 		new Bird("Bird2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2) + 4));
-		new Owl("Owl 1", World, cm, YVec3f(0, 0, World->getSurface(0, 0)));
+		new Owl("Owl 1", World, cm, YVec3f(1, 1, World->getSurface(0, 0)));
+		new Owl("Séverin la chouette pas malin (oui je sait c'est maline tg)", World, cm, YVec3f(0, 0, World->getSurface(0, 0)));
 	}
 
 	int addQuadToVbo(YVbo * vbo, int iVertice, YVec3f & a, YVec3f & b, YVec3f & c, YVec3f & d)
