@@ -31,7 +31,7 @@ public:
 
 	void remove(unsigned int index) {
 		for (unsigned int i = index + 1; i < count; i++) {
-			arr[index - 1] = arr[index];
+			arr[i - 1] = arr[i];
 		}
 		count--;
 	}

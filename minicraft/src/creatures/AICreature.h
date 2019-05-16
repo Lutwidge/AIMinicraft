@@ -52,6 +52,7 @@ public:
 	YVec3f forward;
 	MWorld* world;
 	bool IsDead;
+	bool CadaverBeingTargetted;
 
 	AICreature(string name, MWorld *world, CreatureManager* manager, YVec3f pos, bool canFly, float speed, float decay, float reproThreshold) : 
 		name(name), world(world), manager(manager), position(pos), canFly(canFly), timeBetweenMoves(speed), satiationDecay(decay), satiation(0.5f), reproductionThreshold(reproThreshold) {
@@ -59,6 +60,7 @@ public:
 		//manager->registerCreature(this);
 		forward = YVec3f(1, 0, 0);
 		IsDead = false;
+		CadaverBeingTargetted = false;
 	}
 
 	~AICreature() {

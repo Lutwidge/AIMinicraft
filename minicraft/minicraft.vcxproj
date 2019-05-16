@@ -40,6 +40,7 @@
     <ClInclude Include="src\creatures\Perceptor.h" />
     <ClInclude Include="src\creatures\owl\Owl.h" />
     <ClInclude Include="src\creatures\rat\rat.h" />
+    <ClInclude Include="src\creatures\sheep\goat.h" />
     <ClInclude Include="src\creatures\snake\Snake.h" />
     <ClInclude Include="src\creatures\trap\trap.h" />
     <ClInclude Include="src\creatures\wolf\Wolf.h" />
