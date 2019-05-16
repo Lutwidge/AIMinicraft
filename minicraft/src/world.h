@@ -18,7 +18,7 @@ public:
 	static const int AXIS_Z = 0b00000100;
 
 #ifdef _DEBUG
-	static const int MAT_SIZE = 5; //en nombre de chunks
+	static const int MAT_SIZE = 2; //en nombre de chunks
 #else
 	static const int MAT_SIZE = 5; //en nombre de chunks
 #endif // DEBUG

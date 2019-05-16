@@ -40,6 +40,7 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType* desiredTy
 	AICreature* nearest = nullptr;
 	float nearestDistance = INFINITY;
 	SimpleList<AICreature*>* possibleTargets = manager->getCreaturesOfType(desiredType);
+	float sqrRange = range * range;
 	if (possibleTargets == nullptr) {
 		return nullptr;
 	}
@@ -49,7 +50,7 @@ AICreature* Perceptor::creatureSight(AICreature* caller, CreatureType* desiredTy
 			continue;
 		}
 		YVec3f toTarget = caller->position - target->position;
-		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
+		if (toTarget.getSqrSize() > sqrRange || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
 			continue;
 		}
 		float distance = INFINITY;
@@ -76,6 +77,7 @@ AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
 	AICreature* nearest = nullptr;
 	float nearestDistance = INFINITY;
 	SimpleList<AICreature*>* possibleTargets = manager->getDeadCreatures();
+	float sqrRange = range * range;
 	if (possibleTargets == nullptr) {
 		return nullptr;
 	}
@@ -88,7 +90,7 @@ AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
 			continue;
 		}
 		YVec3f toTarget = caller->position - target->position;
-		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
+		if (toTarget.getSqrSize() > sqrRange || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
 			continue;
 		}
 		float distance = INFINITY;
@@ -105,39 +107,39 @@ AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
 	return nearest;
 }
 
-bool Perceptor::raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos)
-{
-	MCube* nearest = nullptr;
-	YVec3f nearestPosition(0, 0, 0);
-	float nearestDistance = INFINITY;
-	YVec3f cursorPosition = position;
-	direction = direction.normalize();
-
-	for (float dist = 0; dist < range; dist++, cursorPosition += direction)
-	{
-		MCube* cb = world->getCube(floorf(cursorPosition.X), floorf(cursorPosition.Y), floorf(cursorPosition.Z));
-
-		//Pas de collision mais on verifie quand meme via picking
-		if (cb->getType() == MCube::CUBE_AIR)
-		{
-			float distance;
-			int tx, ty, tz;
-			MMy_Physics::GetNearestPickableCube(position, cursorPosition, world, distance, tx, ty, tz);
-			MCube* hit = world->getCube(tx, ty, tz);
-			if (hit->getType() != MCube::CUBE_AIR && (cursorPosition - YVec3f(tx, ty, tz)).getSize() <= MWorld::MAT_SIZE_METERS)
-			{
-				pos = YVec3f(tx, ty, tz);
-				return true;
-			}
-		}
-		else
-		{
-			pos = cursorPosition;
-			return true;
-		}
-	}
-	return false;
-}
+//bool Perceptor::raycast(YVec3f position, YVec3f direction, float range, YVec3f& pos)
+//{
+//	MCube* nearest = nullptr;
+//	YVec3f nearestPosition(0, 0, 0);
+//	float nearestDistance = INFINITY;
+//	YVec3f cursorPosition = position;
+//	direction = direction.normalize();
+//
+//	for (float dist = 0; dist < range; dist++, cursorPosition += direction)
+//	{
+//		MCube* cb = world->getCube(floorf(cursorPosition.X), floorf(cursorPosition.Y), floorf(cursorPosition.Z));
+//
+//		//Pas de collision mais on verifie quand meme via picking
+//		if (cb->getType() == MCube::CUBE_AIR)
+//		{
+//			float distance;
+//			int tx, ty, tz;
+//			MMy_Physics::GetNearestPickableCube(position, cursorPosition, world, distance, tx, ty, tz);
+//			MCube* hit = world->getCube(tx, ty, tz);
+//			if (hit->getType() != MCube::CUBE_AIR && (cursorPosition - YVec3f(tx, ty, tz)).getSize() <= MWorld::MAT_SIZE_METERS)
+//			{
+//				pos = YVec3f(tx, ty, tz);
+//				return true;
+//			}
+//		}
+//		else
+//		{
+//			pos = cursorPosition;
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 bool Perceptor::blockSight(AICreature* caller, MCube::MCubeType type, float range, YVec3f& pos) {
 	int minX = floorf(caller->position.X - range);
@@ -150,12 +152,17 @@ bool Perceptor::blockSight(AICreature* caller, MCube::MCubeType type, float rang
 	MCube* nearest = nullptr;
 	YVec3f nearestPosition(0, 0, 0);
 	float nearestDistance = INFINITY;
+	YVec3f blockPos;
+	YVec3f toBlock;
+	float sqrRange = range * range;
 	for (int x = minX; x < maxX; x++) {
 		for (int y = minY; y < maxY; y++) {
 			for (int z = minZ; z < maxZ; z++) {
-				YVec3f blockPos(x, y, z);
-				YVec3f toBlock = (blockPos - caller->position);
-				if (toBlock.getSize() > range || toBlock.normalize().dot(caller->forward) < 0) { // Discard blocks too far or behind the creature
+				blockPos.X = x;
+				blockPos.Y = y;
+				blockPos.Z = z;
+				toBlock = (blockPos - caller->position);
+				if (toBlock.getSqrSize() > sqrRange || toBlock.normalize().dot(caller->forward) < 0) { // Discard blocks too far or behind the creature
 					continue;
 				}
 				MCube* cube = world->getCube(x, y, z);
