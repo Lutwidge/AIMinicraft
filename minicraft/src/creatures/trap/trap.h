@@ -87,7 +87,8 @@ public:
 	//TRAP ANIMAL 
 	virtual void TrapAnimal(AICreature* creatureToKill)
 	{
-		creatureToKill->switchState(new DeadState(creatureToKill));
+		//creatureToKill->switchState(new DeadState(creatureToKill));
+		creatureToKill->die();
 	}
 
 	bool updateSatiation(float elapsed) override

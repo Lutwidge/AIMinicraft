@@ -455,11 +455,11 @@ public:
 		switchState(new IdleState(this, false));
 	}
 
-	~Owl()
+	/*~Owl() // DO not use your own destroy
 	{
 		manager->unregisterCreature(this);
 		delete state;
-	}
+	}*/
 
 	bool isPartnerValid() override
 	{

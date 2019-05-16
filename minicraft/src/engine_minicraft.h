@@ -169,7 +169,7 @@ public :
 			new Bird("Bird" + toString(i), World, cm, getRandomSpawnPos(true));
 			new Ocelot("Ocelot" + toString(i), World, cm, getRandomSpawnPos());
 			new Griffin("Griffin" + toString(i), World, cm, getRandomSpawnPos(true));
-			new Owl("Owl" + toString(i), World, cm, getRandomSpawnPos(true));
+			//new Owl("Owl" + toString(i), World, cm, getRandomSpawnPos(true));
 			new Copycat("Copycat" + toString(i), World, cm, getRandomSpawnPos());
 			new Bear("Bear" + toString(i), World, cm, getRandomSpawnPos());
 			new Trap("Trap" + toString(i), World, cm, getRandomSpawnPos());
