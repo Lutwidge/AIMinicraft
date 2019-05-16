@@ -59,16 +59,15 @@ public:
 			if (owl->updateSatiation(elapsed))
 			{
 				//Fuite de predateur prioritaire
-				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
-				if (creature != nullptr)
+				owl->predator = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
+				if (owl->predator != nullptr)
 				{
-					YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "trouve predateur");
-					owl->switchState(new FleeState(owl, creature->position));
+					owl->switchState(new FleeState(owl, owl->predator->position));
 					return;
 				}
 
 				//Priorité recherche de bouffe
-				if (owl->getSatiation() < 0.2f)
+				if (owl->getSatiation() < 0.5f)
 				{
 					owl->switchState(new LookingForFoodState(owl));
 					return;
@@ -90,7 +89,6 @@ public:
 				AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
 				if (crea != nullptr)
 				{
-					YLog::log(YLog::ENGINE_INFO, "trouve");
 					owl->target = crea;
 					owl->switchState(new ChaseState(owl));
 					return;
@@ -116,6 +114,7 @@ public:
 
 		LookingForFoodState(Owl* owl) : OwlState(owl) {}
 		YVec3f positionTarget;
+		YVec3f originForward;
 
 		void enter()
 		{
@@ -124,6 +123,7 @@ public:
 			int counter = 0;
 			bool found = false;
 			YVec3f hitPosition;
+			originForward = owl->forward;
 			while (!found && counter < 10)
 			{
 				YVec3f directionRandom(rand() % 100 - 50, rand() % 100 - 50, rand() % 100 - 50);
@@ -168,6 +168,7 @@ public:
 		void update(float elapsed)
 		{
 			AICreature* targetSnake = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
+			owl->forward = owl->forward.rotate(YVec3f(0, 0, 1), 1);
 
 			AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
 			if (creature != nullptr)
@@ -183,7 +184,7 @@ public:
 			}
 			else
 			{
-				owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
+				owl->position += originForward * owl->timeBetweenMoves * elapsed;
 
 				//Point depassé
 				if ((positionTarget - owl->position).getSize() < 0.5)
@@ -219,10 +220,11 @@ public:
 				//Rien ne gene la vue
 				if (!owl->manager->perceptor->raycast(owl->position, toSnake, toSnake.getSize(), pos))
 				{
-					owl->position += toSnake.normalize() * owl->timeBetweenMoves;
+					float mag = toSnake.getSize();
+					owl->position += toSnake.normalize() * owl->timeBetweenMoves * elapsed;
 
 					//Depassé (donc chopppé)
-					if (toSnake.getSize()  < 0.5)
+					if (mag < 0.5)
 					{
 						owl->eat();
 
@@ -288,6 +290,21 @@ public:
 		{
 			YVec3f toTarget = treePos - owl->position;
 			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
+
+			AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
+			if (crea != nullptr)
+			{
+				owl->target = crea;
+				owl->switchState(new ChaseState(owl));
+				return;
+			}
+
+			owl->predator = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
+			if (owl->predator != nullptr)
+			{
+				owl->switchState(new FleeState(owl,owl->predator->position));
+				return;
+			}
 
 			//Depassé , on se repose sur l'arbre
 			if ((treePos - owl->position).getSize() < 0.5)
