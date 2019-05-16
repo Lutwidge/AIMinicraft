@@ -31,7 +31,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : Idle \n", copycat->name.c_str());
+			//printf("%s : Idle \n", copycat->name.c_str());
 			copycat->ground();
 			copycat->initializePath();
 		}
@@ -79,7 +79,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : Eat \n", copycat->name.c_str());
+			//printf("%s : Eat \n", copycat->name.c_str());
 			copycat->gotToEatTarget();
 		}
 
@@ -113,7 +113,7 @@ protected:
 		ReproductionState(Copycat* copycat) : CopycatState(copycat) {}
 
 		virtual void enter() {
-			printf("%s : Reproduction \n", copycat->name.c_str());
+			//printf("%s : Reproduction \n", copycat->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Rat
 			YVec3f meetingPoint = (copycat->position + ((Copycat*)copycat->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);

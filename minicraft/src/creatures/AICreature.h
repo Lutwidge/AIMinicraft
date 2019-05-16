@@ -29,7 +29,7 @@ public:
 
 		virtual void enter() {
 			CreatureType* crtype = creature->getType();
-			printf("%s: Dead\n", creature->name.c_str());
+			//printf("%s: Dead\n", creature->name.c_str());
 			creature->IsDead = true;
 			// On change de liste dans le CreatureManager
 			creature->manager->registerDeadCreature(creature);

@@ -30,7 +30,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s: Idle\n", elephant->name.c_str());
+			//printf("%s: Idle\n", elephant->name.c_str());
 			elephant->wanderingForFruit = false;
 			elephant->wanderingForPartner = false;
 		}
@@ -110,7 +110,7 @@ protected:
 						elephant->move(elapsed);
 					else
 					{
-						printf("%s: Eat\n", elephant->name.c_str());
+						//printf("%s: Eat\n", elephant->name.c_str());
 						//printf((elephant->name + " at (" + toString(elephant->position.X) + ", " + toString(elephant->position.Y) + ", " + toString(elephant->position.Z) + ")\n").c_str());
 						elephant->eat();
 						//printf((elephant->name + " satiation: " + toString(elephant->satiation) + "\n").c_str());
@@ -134,20 +134,10 @@ protected:
 
 		virtual void enter()
 		{
-			YVec3f meetingPoint;
-			MCube::MCubeType cubeTypeUnder;
-			int xOffset = 0;
-
-			do {
-				meetingPoint = (elephant->position + ((Elephant*)elephant->partner)->position) / 2;
-				meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);
-				meetingPoint.X += xOffset;
-				xOffset++;
-				meetingPoint.Z = elephant->world->getHighestPoint(meetingPoint.X, meetingPoint.Y);
-				cubeTypeUnder = creature->world->getCube(meetingPoint.X, meetingPoint.Y, meetingPoint.Z - 1)->getType();
-			} while (!AStar::isTargetValid(elephant->position, meetingPoint, elephant->world, elephant->canFly));
-			
-			elephant->goTo(meetingPoint);
+			YVec3f meetingPoint = (elephant->position + ((Elephant*)elephant->partner)->position) / 2;
+			int z = elephant->world->getSurface(meetingPoint.X, meetingPoint.Y);
+			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, z);
+			elephant->goTo(elephant->world->getNearestAirCube(meetingPoint));
 		}
 
 		virtual void update(float elapsed)
@@ -165,7 +155,7 @@ protected:
 					}
 					else if (!elephant->partner->hasNotReachedTarget())
 					{
-						printf("%s: Reproduction\n", elephant->name.c_str());
+						//printf("%s: Reproduction\n", elephant->name.c_str());
 						elephant->reproduce();
 						return;
 					}
@@ -257,7 +247,7 @@ public:
 
 			if (partner == nullptr && elephantPartner != this && elephantPartner->partner == nullptr && elephantPartner->satiation >= 0.5f)
 			{
-				printf("%s: Going to reproduce with %s\n", name.c_str(), elephantPartner->name.c_str());
+				//printf("%s: Going to reproduce with %s\n", name.c_str(), elephantPartner->name.c_str());
 				partner = elephantPartner;
 				elephantPartner->partner = this;
 				elephantPartner->switchState(new ReproductionState(elephantPartner));
