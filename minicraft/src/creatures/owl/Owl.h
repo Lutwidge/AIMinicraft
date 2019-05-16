@@ -48,7 +48,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans idle");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans idle");
 			timeBeforeSearch = 2;
 			time = timeBeforeSearch;
 		}
@@ -89,7 +89,7 @@ public:
 				AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
 				if (crea != nullptr)
 				{
-					YLog::log(YLog::ENGINE_INFO, "trouve");
+					//YLog::log(YLog::ENGINE_INFO, "trouve");
 					owl->target = crea;
 					owl->switchState(new ChaseState(owl));
 					return;
@@ -118,7 +118,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre LFF");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre LFF");
 			//conter anti boucle infinie
 			int counter = 0;
 			bool found = false;
@@ -199,7 +199,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
 		}
 
 		void update(float elapsed)
@@ -251,7 +251,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans tree research");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans tree research");
 			int counter = 0;
 			bool found = false;
 			float range = 10;
@@ -280,7 +280,7 @@ public:
 		void enter()
 		{
 			owl->forward = (treePos - owl->position).normalize();
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
 		}
 
 		void update(float elapsed)
@@ -304,7 +304,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans flee");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans flee");
 			YVec3f directionFlee = (owl->position - predatorPos).normalize();
 			directionFlee.rotate(YVec3f(0, 0, 1), rand() % 20 - 10);
 
@@ -350,7 +350,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
 			owl->forward = (potentialPartner->position - owl->position).normalize();
 		}
 
@@ -477,7 +477,7 @@ public:
 
 	void die()
 	{
-		YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl est mort");
+		//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl est mort");
 		AICreature::die();
 	}
 

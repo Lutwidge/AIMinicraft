@@ -36,7 +36,8 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed)) 
 			{	
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr) 
+				wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				if (wolf->predator != nullptr)
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -95,7 +96,8 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE) != nullptr)
+				wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				if (wolf->predator != nullptr)
 				{
 					wolf->resetPartner();
 					wolf->switchState(new FleeState(wolf));
@@ -173,7 +175,8 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr)
+				wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				if (wolf->predator != nullptr)
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
