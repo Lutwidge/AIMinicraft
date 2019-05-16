@@ -62,6 +62,7 @@ public:
 				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
 				if (creature != nullptr)
 				{
+					YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "trouve predateur");
 					owl->switchState(new FleeState(owl, creature->position));
 					return;
 				}
@@ -185,7 +186,7 @@ public:
 				owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
 
 				//Point depassé
-				if ((positionTarget - owl->position).dot(owl->forward) < 0)
+				if ((positionTarget - owl->position).getSize() < 0.5)
 				{
 					owl->switchState(new LookingForFoodState(owl));
 				}
@@ -221,7 +222,7 @@ public:
 					owl->position += toSnake.normalize() * owl->timeBetweenMoves;
 
 					//Depassé (donc chopppé)
-					if (toSnake.dot(owl->forward) < 0)
+					if (toSnake.getSize()  < 0.5)
 					{
 						owl->eat();
 
@@ -289,7 +290,7 @@ public:
 			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
 
 			//Depassé , on se repose sur l'arbre
-			if (owl->forward.dot(treePos - owl->position) < 0)
+			if ((treePos - owl->position).getSize() < 0.5)
 			{
 				owl->switchState(new IdleState(owl, true));
 			}
@@ -333,7 +334,7 @@ public:
 		void update(float elapsed)
 		{
 			owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
-			if (owl->forward.dot(fleePosition - owl->position) < 0)
+			if ((fleePosition - owl->position).getSize() < 0.5)
 			{
 				owl->switchState(new IdleState(owl, false));
 			}
@@ -433,6 +434,7 @@ public:
 		manager->registerCreature(this);
 		satiation = 1;
 		sightRange = OWL_SIGHT_RANGE;
+		forward = YVec3f(1, 0, 0);
 		switchState(new IdleState(this, false));
 	}
 
