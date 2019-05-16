@@ -59,7 +59,7 @@ public:
 			if (owl->updateSatiation(elapsed))
 			{
 				//Fuite de predateur prioritaire
-				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
+				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
 				if (creature != nullptr)
 				{
 					owl->switchState(new FleeState(owl, creature->position));
@@ -80,31 +80,26 @@ public:
 						AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Owl, OWL_SIGHT_RANGE);
 						if (crea != nullptr && crea->canReproduce())
 						{
-							YLog::log(YLog::ENGINE_INFO, "Trouvé part");
-							owl->switchState(new GoPechoState(owl, (Owl*)crea));
+							owl->switchState(new ChaseReproState(owl, (Owl*)crea));
 							return;
 						}
 					}
 				}
 
-				//recherche periodiquement a sa place de la nourriture
-				if (time < 0)
+				AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
+				if (crea != nullptr)
 				{
-					time = timeBeforeSearch;
-
-					AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
-					if (crea != nullptr)
-					{
-						owl->target = crea;
-						owl->switchState(new ChaseState(owl));
-						return;
-					}					
-				}
+					YLog::log(YLog::ENGINE_INFO, "trouve");
+					owl->target = crea;
+					owl->switchState(new ChaseState(owl));
+					return;
+				}					
 
 				//Puis va chercher a etre sur une branche
 				if (!owl->isOnBranch)
 				{
 					owl->switchState(new LookingForTreeState(owl));
+					return;
 				}
 			}
 		}
@@ -345,9 +340,9 @@ public:
 		}
 	};
 
-	struct GoPechoState : OwlState
+	struct ChaseReproState : OwlState
 	{
-		GoPechoState(Owl * owl, Owl * target) : OwlState(owl)
+		ChaseReproState(Owl * owl, Owl * target) : OwlState(owl)
 		{
 			potentialPartner = target;
 		}
@@ -410,11 +405,6 @@ public:
 			owl->partner = part;
 			//Delai aleatoire pour eviter la double reproduction
 			timerBeforeReproduce = rand() % 3;
-		}
-
-		void enter()
-		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans truc");
 		}
 
 		void update(float elapsed)
