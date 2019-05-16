@@ -41,7 +41,8 @@ protected:
 			// Mise à jour de la satiété et check de si on est toujours en vie
 			if (snake->updateSatiation(elapsed)) {
 				// Si on voit un prédateur, on fuit
-				if (snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE) != nullptr) {
+				snake->predator = snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE);
+				if (snake->predator != nullptr) {
 					snake->switchState(new FleeState(snake));
 					return;
 				}
@@ -95,12 +96,13 @@ protected:
 			if (snake->updateSatiation(elapsed))
 			{
 				// Si on voit un prédateur, on fuit
-				if (snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE) != nullptr) {
+				snake->predator = snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE);
+				if (snake->predator != nullptr) {
 					snake->switchState(new FleeState(snake));
 					return;
 				}
 				else {
-					// Sinon si le fruit est toujours là, on continue vers lui jusqu'à l'atteindre
+					// Sinon si la proie est valide, on continue vers lui jusqu'à l'atteindre
 					if (snake->isEatTargetValid())
 					{
 						if (snake->hasNotReachedTarget())
@@ -169,7 +171,8 @@ protected:
 			if (snake->updateSatiation(elapsed))
 			{
 				// Si on voit un prédateur, on fuit
-				if (snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE) != nullptr)
+				snake->predator = snake->manager->perceptor->creatureSight(snake, CreatureType::Owl, SNAKE_SIGHT_RANGE);
+				if (snake->predator != nullptr)
 				{
 					snake->resetPartner(); // On retire tout partenaire potentiel
 					snake->switchState(new FleeState(snake));

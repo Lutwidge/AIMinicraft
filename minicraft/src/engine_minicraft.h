@@ -11,6 +11,7 @@
 #include <creatures/rat/rat.h>
 #include "creatures/owl/Owl.h"
 #include "creatures/griffin/griffin.h"
+#include "creatures/wolf/Wolf.h"
 #include "creatures/CreatureManager.h"
 #include "creatures/snake/Snake.h"
 #include "creatures/bear/bear.h"
@@ -185,6 +186,22 @@ public :
 		randomPos = YVec3f(x, y, World->getSurface(x, y));
 		//new Ocelot("Ocelot1", World, cm, randomPos);
 
+		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
+		
+		new Griffin("Griffin The Third aka. Pet3r", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
+			(MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)+12)
+		);
+
+		new Owl("Owl 1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
+			(MWorld::MAT_SIZE_METERS) / 2 + 20, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2) + 5)
+		);
+
+		{
+		int x = rand() % MWorld::MAT_SIZE_METERS;
+		int y = rand() % MWorld::MAT_SIZE_METERS;
+		YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
+		new Copycat("Copycat 1", World, cm, randomPos);
+		}
 		// Bear
 		new Bear("Bear 1", World, cm, getRandomSpawnPos());
 		new Bear("Bear 2", World, cm, getRandomSpawnPos());
@@ -214,6 +231,15 @@ public :
 		//YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
 		//new Copycat("Copycat 1", World, cm, randomPos);
 		//}
+
+		// Wolf
+		new Wolf("Wolf_1", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_2", World, cm, getRandomSpawnPos());
+		new Wolf("Wolf_3", World, cm, getRandomSpawnPos());
+
+		//Snake
+		new Snake("Snake 1", World, cm, getRandomSpawnPos());
+		new Snake("Snake 2", World, cm, getRandomSpawnPos());
 
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
@@ -257,7 +283,7 @@ public :
 			}
 			else if (randomType == CreatureType::Wolf)
 			{
-				//corpse = new Wolf("Corpse", World, cm, randomPos);
+				corpse = new Wolf("Corpse", World, cm, randomPos);
 			}
 
 			if (corpse != nullptr)
