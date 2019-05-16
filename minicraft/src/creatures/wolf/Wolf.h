@@ -4,14 +4,15 @@
 #include <typeinfo>
 #include "../AICreature.h"
 
-#define DIR_COUNT = 4;
-#define WOLF_SPEED = 0.1f;
-#define WOLF_SATIATION_DELAY = 0.01f;
-#define WOLF_REPRODUCTION_THRESHOLD = 0.8f;
-#define WOLF_REPRODUCTION_COUNT = 0.4f;
-#define WOLF_SIGHT_RANGE = 15;
-#define WOLF_EAT_GAIN = 0.3f;
-#define WOLF_MOVEMENT_RANGE = 8;
+#define DIR_COUNT  4
+#define WOLF_SPEED  0.1f
+#define WOLF_SATIATION_DELAY  0.01f
+#define WOLF_REPRODUCTION_THRESHOLD  0.8f
+#define WOLF_REPRODUCTION_COUNT  0.4f
+#define WOLF_SIGHT_RANGE  15
+#define WOLF_EAT_GAIN  0.3f
+#define WOLF_MOVEMENT_RANGE  8
+#define WOLF_FLEE_RANGE  6
 
 class Wolf : public AICreature 
 {
@@ -27,9 +28,7 @@ protected:
 		IdleState(Wolf* wolf): WolfState(wolf) {}
 
 		virtual void enter() {
-			//initializePath
 			YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
-			wolf->ground();
 			wolf->initializePath();
 		}
 
@@ -37,8 +36,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed)) 
 			{	
-				//TO-DO: A CHANGER POUR POINTER VERS TRAP
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, WOLF_SIGHT_RANGE) != nullptr) 
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr) 
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -48,7 +46,7 @@ protected:
 				{
 					if (wolf->canReproduce())
 					{
-						AICreature* targetWolf = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, 15);
+						AICreature* targetWolf = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE);
 						if (targetWolf != nullptr)
 						{
 							if (wolf->setPartner(targetWolf))
@@ -61,9 +59,9 @@ protected:
 					}
 				}
 
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE) != nullptr)
 				{
-					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, 15));
+					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE));
 
 					if (wolf->isEatTargetValid()) 
 					{
@@ -97,7 +95,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE) != nullptr)
 				{
 					wolf->resetPartner();
 					wolf->switchState(new FleeState(wolf));
@@ -142,10 +140,19 @@ protected:
 		virtual void enter()
 		{
 			YLog::log(YLog::USER_INFO, toString("[WOLF] Flee State Enter").c_str());
+			YVec3f fleeTarget = wolf->position + (wolf->position - wolf->predator->position).normalize() * WOLF_FLEE_RANGE;
+
+			fleeTarget = wolf->world->getNearestAirCube(fleeTarget.X, fleeTarget.Y, fleeTarget.Z);
+			wolf->goTo(fleeTarget);
 		}
 
-		virtual void update(float elapsed) {
-
+		virtual void update(float elapsed) 
+		{
+			if (wolf->updateSatiation(elapsed))
+			{
+				if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
+				else wolf->switchState(new IdleState(wolf));
+			}
 		}
 
 		virtual void exit() {}
@@ -166,7 +173,7 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Bear, 15) != nullptr)
+				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr)
 				{
 					wolf->switchState(new FleeState(wolf));
 					return;
@@ -219,7 +226,10 @@ public:
 	virtual void eat()
 	{
 		preyCreature->die();
+
 		satiation += WOLF_EAT_GAIN;
+		if (satiation > 1.0f) satiation = 1.0f;
+
 		preyCreature = nullptr;
 	}
 
@@ -228,38 +238,24 @@ public:
 	int curDirIndex;
 	YVec3f directions[4] = { YVec3f(1, 0, 0), YVec3f(-1, 0, 0), YVec3f(0, -1, 0), YVec3f(0, 1, 0) };
 
-	virtual void ground()
-	{
-		position.Z = world->getSurface(position.X, position.Y);
-	}
-
-	float normalX()
-	{
-		float u = (rand() % 100) * 0.01;
-		float v = (rand() % 100) * 0.01;
-
-		float x = sqrt(-2 * log(u)) * cos(2 * 3.141592 * v);
-
-		return x;
-	}
-
-	float normalY()
-	{
-		float u = (rand() % 100) * 0.01;
-		float v = (rand() % 100) * 0.01;
-
-		float y = sqrt(-2 * log(u)) * sin(2 * 3.141592 * v);
-
-		return y;
-	}
-
 	virtual void initializePath()
 	{
-		int x = normalX() * WOLF_MOVEMENT_RANGE;
-		int y = normalY() * WOLF_MOVEMENT_RANGE;
+		int randomIndex = rand() % 3;
+
+		YVec3f randomDirection = directions[randomIndex];
+		int x = randomDirection.X * WOLF_MOVEMENT_RANGE;
+		int y = randomDirection.Y * WOLF_MOVEMENT_RANGE;
 
 		x += position.X;
 		y += position.Y;
+
+		if (x > world->MAT_SIZE_METERS) x -= randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+
+		if (x < 0) x += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
+
+		if (y > world->MAT_SIZE_METERS) y -= randomDirection.Y * WOLF_MOVEMENT_RANGE * 2;
+
+		if (y < 0) y += randomDirection.X * WOLF_MOVEMENT_RANGE * 2;
 
 		YVec3f target = YVec3f(x, y, world->getSurface(x, y));
 		goTo(target);
