@@ -17,6 +17,7 @@
 #include "creatures/bear/bear.h"
 #include "creatures/copycat/copycat.h"
 #include "creatures/trap/trap.h"
+#include "creatures/sheep/goat.h"
 
 class MEngineMinicraft : public YEngine
 {
@@ -177,6 +178,7 @@ public :
 			new Snake("Snake" + toString(i), World, cm, getRandomSpawnPos());
 			new Rat("Rat" + toString(i), World, cm, getRandomSpawnPos());
 			new Elephant("", World, cm, getRandomSpawnPos());
+			new Goat("Goat" + toString(i), World, cm, getRandomSpawnPos());
 		}
 
 		// Spawn des cadavres
@@ -201,7 +203,7 @@ public :
 			}
 			else if (randomType == CreatureType::Goat)
 			{
-				//corpse = new Goat("Corpse", World, cm, randomPos);
+				corpse = new Goat("Corpse", World, cm, randomPos);
 			}
 			else if (randomType == CreatureType::Griffin)
 				corpse = new Griffin("Corpse", World, cm, randomPos);
