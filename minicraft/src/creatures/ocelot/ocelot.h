@@ -5,7 +5,7 @@
 #include "../AICreature.h"
 
 #define DIR_COUNT 4
-#define OCELOT_SPEED 0.08f
+#define OCELOT_SPEED 0.2f
 #define OCELOT_SATIATION_DECAY 0.01f
 #define OCELOT_REPRODUCTION_THRESHOLD 0.8f
 #define OCELOT_SIGHT_RANGE 50

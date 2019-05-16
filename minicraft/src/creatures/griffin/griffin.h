@@ -34,7 +34,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : Idle \n", griffin->name.c_str());
+			//printf("%s : Idle \n", griffin->name.c_str());
 			// On réinitialise la spirale
 			griffin->initializeSpiralPath();
 		}
@@ -58,7 +58,7 @@ protected:
 				}
 
 				if (griffin->tireness < GRIFF_DW_TIRENESS_THRESHOLD) {
-					printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
+					//printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
 
 					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->world->getSurface(griffin->position.X, griffin->position.Y));
 					griffin->goTo(dest);
@@ -70,7 +70,7 @@ protected:
 				// Sinon, on regarde si on voit un fruit
 				AICreature *owl = griffin->manager->perceptor->creatureSight(griffin, CreatureType::Owl, GRIFF_SIGHT_RANGE);
 				if (owl != nullptr) {
-					printf("%s : Owl in sight ! \n", griffin->name.c_str());
+					//printf("%s : Owl in sight ! \n", griffin->name.c_str());
 					griffin->setTarget(owl);
 
 					griffin->switchState(new EatState(griffin));
@@ -95,7 +95,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : I'm chasing that owl  \n", griffin->name.c_str());
+			//printf("%s : I'm chasing that owl  \n", griffin->name.c_str());
 			griffin->gotToEatTarget();
 			griffin->chaseTime = 0;
 		}
@@ -106,7 +106,7 @@ protected:
 			if (griffin->updateSatiation(elapsed) && griffin->updateTireness(elapsed))
 			{
 				if (griffin->tireness < GRIFF_DW_TIRENESS_THRESHOLD) {
-					printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
+					//printf("%s : Too tire, I have to go down \n", griffin->name.c_str());
 
 					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->world->getSurface(griffin->position.X, griffin->position.Y));
 					griffin->goTo(dest);
@@ -120,7 +120,7 @@ protected:
 					//reset owl position. Else, chase the last position of the owl
 					griffin->setEatTarget(griffin->targetCreature->position);
 					griffin->chaseTime = 0;
-					printf("%s : Where are you ? %d size we are at %d\n", griffin->name.c_str(), griffin->pathToTarget.size(), griffin->currentMoveIndex);
+					//printf("%s : Where are you ? %d size we are at %d\n", griffin->name.c_str(), griffin->pathToTarget.size(), griffin->currentMoveIndex);
 				}
 
 
@@ -144,14 +144,15 @@ protected:
 						griffin->move(elapsed);
 					}
 					else {
-						printf("%s : Reach !\n", griffin->name.c_str());
+						//printf("%s : Reach !\n", griffin->name.c_str());
 						griffin->eat();
+						griffin->switchState(new IdleState(griffin));
 						return;
 					}
 				}
 				// Sinon, retour à l'état idle
 				else {
-					printf("%s : Owl perime \n", griffin->name.c_str());
+					//printf("%s : Owl perime \n", griffin->name.c_str());
 					griffin->switchState(new IdleState(griffin));
 					return;
 				}
