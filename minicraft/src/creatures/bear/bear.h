@@ -5,7 +5,7 @@
 
 namespace {
 	static constexpr auto BEAR_SIGHT_RANGE = 10;
-	static constexpr auto BEAR_SPEED = 0.05f;
+	static constexpr auto BEAR_SPEED = 0.2f;
 	static constexpr auto BEAR_SATIATION_DECAY = 0.001f;
 	static constexpr auto BEAR_REPRODUCTION_THRESHOLD = 0.75f;
 	static constexpr auto BEAR_EAT_GAIN = 0.4f;

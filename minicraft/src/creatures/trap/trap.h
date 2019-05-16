@@ -9,7 +9,7 @@
 #define TRAP_SPEED 0.f
 #define TRAP_SATIATION_DECAY 0.f
 #define TRAP_REPRODUCTION_THRESHOLD 0.f
-#define TRAP_SIGHT_RANGE 10
+#define TRAP_SIGHT_RANGE 2
 
 class Trap : public AICreature
 {

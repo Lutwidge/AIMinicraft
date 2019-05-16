@@ -164,82 +164,46 @@ public :
 		cm = new CreatureManager(World);
 		
 		// Birds
-		int x = rand() % MWorld::MAT_SIZE_METERS;
-		int y = rand() % MWorld::MAT_SIZE_METERS;
-		YVec3f randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
-		//new Bird("Bird1", World, cm, randomPos);
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getHighestPoint(x, y) + 10);
-		//new Bird("Bird2", World, cm, randomPos);
-
-		//// Owl
-		//new Owl("Owl 1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
+		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
 
 		// Ocelot
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x,y));
-		//new Ocelot("Ocelot1", World, cm, randomPos);
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x, y));
-		//new Ocelot("Ocelot1", World, cm, randomPos);
-
-		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
+		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
+		new Ocelot("Ocelot2", World, cm, getRandomSpawnPos());
 		
-		new Griffin("Griffin The Third aka. Pet3r", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
-			(MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)+12)
-		);
+		new Griffin("Griffin The Third aka. Pet3r", World, cm, getRandomSpawnPos(true));
+		new Griffin("Griffin The Fourth aka. Pet4r", World, cm, getRandomSpawnPos(true));
+		new Owl("Owl1", World, cm, getRandomSpawnPos(true));
+		new Owl("Owl2", World, cm, getRandomSpawnPos(true));
+		new Copycat("Copycat1", World, cm, getRandomSpawnPos());
+		new Copycat("Copycat2", World, cm, getRandomSpawnPos());
 
-		new Owl("Owl 1", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, 
-			(MWorld::MAT_SIZE_METERS) / 2 + 20, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2) + 5)
-		);
+		// Bears
+		new Bear("Bear1", World, cm, getRandomSpawnPos());
+		new Bear("Bear2", World, cm, getRandomSpawnPos());
 
-		{
-		int x = rand() % MWorld::MAT_SIZE_METERS;
-		int y = rand() % MWorld::MAT_SIZE_METERS;
-		YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
-		new Copycat("Copycat 1", World, cm, randomPos);
-		}
-		// Bear
-		new Bear("Bear 1", World, cm, getRandomSpawnPos());
-		new Bear("Bear 2", World, cm, getRandomSpawnPos());
-
-		x = rand() % MWorld::MAT_SIZE_METERS;
-		y = rand() % MWorld::MAT_SIZE_METERS;
-		randomPos = YVec3f(x, y, World->getSurface(x, y));
-		//new Trap("Trap_1", World, cm, randomPos);
-
-		
-		//new Snake("Snake", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-		//new Snake("Snake 2", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-		//new Snake("Snake 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 5, (MWorld::MAT_SIZE_METERS) / 2 + 5)));
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 10, (MWorld::MAT_SIZE_METERS) / 2 + 10)));
-		//new Elephant("", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15, World->getSurface((MWorld::MAT_SIZE_METERS) / 2 + 15, (MWorld::MAT_SIZE_METERS) / 2 + 15)));
-
-		//new Bear("Bear 3", World, cm, YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, World->getSurface((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2)));
-
-		new Owl("Severin", World, cm, YVec3f(0, 0, World->getSurface(0, 0)));
-		new Owl("The cooler Severin", World, cm, YVec3f(10, 10, World->getSurface(10, 10)));
-		
-		//{
-		//int x = rand() % MWorld::MAT_SIZE_METERS;
-		//int y = rand() % MWorld::MAT_SIZE_METERS;
-		//YVec3f randomPos = YVec3f(x, y, World->getSurface(x, y));
-		//new Copycat("Copycat 1", World, cm, randomPos);
-		//}
+		// Traps
+		new Trap("Trap_1", World, cm, getRandomSpawnPos());
+		new Trap("Trap_2", World, cm, getRandomSpawnPos());
+		new Trap("Trap_3", World, cm, getRandomSpawnPos());
+		new Trap("Trap_4", World, cm, getRandomSpawnPos());
+		new Trap("Trap_5", World, cm, getRandomSpawnPos());
 
 		// Wolf
 		new Wolf("Wolf_1", World, cm, getRandomSpawnPos());
 		new Wolf("Wolf_2", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf_3", World, cm, getRandomSpawnPos());
 
 		//Snake
-		new Snake("Snake 1", World, cm, getRandomSpawnPos());
-		new Snake("Snake 2", World, cm, getRandomSpawnPos());
+		new Snake("Snake1", World, cm, getRandomSpawnPos());
+		new Snake("Snake2", World, cm, getRandomSpawnPos());
+
+		//Rats
+		new Rat("Rat1", World, cm, getRandomSpawnPos());
+		new Rat("Rat2", World, cm, getRandomSpawnPos());
+
+		//Elephants
+		new Elephant("", World, cm, getRandomSpawnPos());
+		new Elephant("", World, cm, getRandomSpawnPos());
 
 		// Spawn des cadavres
 		for (int i = 0; i < 5; i++)
@@ -255,11 +219,11 @@ public :
 				corpse = new Bird("Corpse", World, cm, randomPos);
 			else if (randomType == CreatureType::Copycat)
 			{
-				//corpse = new Copycat("Corpse", World, cm, randomPos);
+				corpse = new Copycat("Corpse", World, cm, randomPos);
 			}
 			else if (randomType == CreatureType::Elephant)
 			{
-				//corpse = new Elephant("Corpse", World, cm, randomPos);
+				corpse = new Elephant("Corpse", World, cm, randomPos);
 			}
 			else if (randomType == CreatureType::Goat)
 			{
@@ -279,7 +243,7 @@ public :
 				corpse = new Snake("Corpse", World, cm, randomPos);
 			else if (randomType == CreatureType::Trap)
 			{
-				//corpse = new Trap("Corpse", World, cm, randomPos);
+				corpse = new Trap("Corpse", World, cm, randomPos);
 			}
 			else if (randomType == CreatureType::Wolf)
 			{
