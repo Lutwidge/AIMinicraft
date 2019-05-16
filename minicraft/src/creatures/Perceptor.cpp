@@ -84,6 +84,9 @@ AICreature* Perceptor::deadCreatureSight(AICreature* caller, float range)
 		if (target == caller) { // Discard self
 			continue;
 		}
+		if (target->CadaverBeingTargetted) { // Discard cadaver already being targetted
+			continue;
+		}
 		YVec3f toTarget = caller->position - target->position;
 		if (toTarget.getSize() > range || toTarget.normalize().dot(caller->forward) < 0) { // Discard targets too far or behind
 			continue;

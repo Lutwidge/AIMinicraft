@@ -60,6 +60,7 @@ protected:
 
 					if (copycat->isEatTargetValid())
 					{
+						eatTarget->CadaverBeingTargetted = true;
 						copycat->switchState(new EatState(copycat));
 						return;
 					}

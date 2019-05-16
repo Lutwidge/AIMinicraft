@@ -63,6 +63,7 @@ protected:
                         rat->setEatTarget( eatTarget );
 
                         if ( rat->isEatTargetValid() ) {
+							eatTarget->CadaverBeingTargetted = true;
                             rat->switchState( new EatState( rat ) );
                             return;
                         }
