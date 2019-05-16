@@ -7,7 +7,7 @@
 
 #define DIR_COUNT 4
 #define GOAT_DIR_COUNT 4
-#define GOAT_SPEED 0.05f
+#define GOAT_SPEED 0.2f
 #define GOAT_SATIATION_DECAY 0.01f
 #define GOAT_REPRODUCTION_THRESHOLD 0.8f
 #define GOAT_SIGHT_RANGE 15
@@ -273,6 +273,8 @@ public:
 	virtual void incrementSpiralPath()
 	{
 		pathLength += GOAT_SPIRAL_PATH_INCREMENT;
+		if (pathLength > MWorld::MAT_SIZE_METERS / 4)
+			pathLength = MWorld::MAT_SIZE_METERS / 4;
 		curDirIndex++;
 		curDirIndex = curDirIndex % DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);

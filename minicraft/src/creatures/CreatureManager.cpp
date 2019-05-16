@@ -66,6 +66,12 @@ void CreatureManager::update(float dt) {
 			typeCreatures->arr[i]->update(dt);
 		}
 	}
+
+	for (int i = 0; i < deadCreatures->count; i++)
+	{
+		deadCreatures->arr[i]->update(dt);
+	}
+
 	perceptor->nextFrame();
 }
 

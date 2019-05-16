@@ -9,7 +9,7 @@ namespace
 {
     static constexpr auto RAT_SIGHT_RANGE = 5;
     static constexpr auto RAT_DIR_COUNT = 4;
-    static constexpr auto RAT_SPEED = 0.099f;
+    static constexpr auto RAT_SPEED = 0.1f;
     static constexpr auto RAT_SATIATION_DECAY = 0.01f;
     static constexpr auto RAT_REPRODUCTION_THRESHOLD = 0.75f;
     static constexpr auto RAT_EAT_GAIN = 0.4f;
@@ -243,6 +243,8 @@ public:
 	virtual void incrementSpiralPath()
 	{
 		pathLength += 1;
+		if (pathLength > MWorld::MAT_SIZE_METERS / 4)
+			pathLength = MWorld::MAT_SIZE_METERS / 4;
 		curDirIndex++;
 		curDirIndex = curDirIndex % RAT_DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);

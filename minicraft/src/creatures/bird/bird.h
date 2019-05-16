@@ -9,8 +9,8 @@ namespace
 {
 	static constexpr auto BIRD_SIGHT_RANGE = 15;
 	static constexpr auto BIRD_DIR_COUNT = 4;
-	static constexpr auto BIRD_SPEED = 0.2f;
-	static constexpr auto BIRD_SATIATION_DECAY = 0.01f;
+	static constexpr auto BIRD_SPEED = 0.1f;
+	static constexpr auto BIRD_SATIATION_DECAY = 0.02f;
 	static constexpr auto BIRD_REPRODUCTION_THRESHOLD = 0.8f;
 	static constexpr auto BIRD_EAT_GAIN = 0.1f;
 	static constexpr auto BIRD_MOVEMENT_RANGE = 8;
@@ -270,6 +270,8 @@ public:
 	virtual void incrementSpiralPath()
 	{
 		pathLength += BIRD_SPIRAL_PATH_INCREMENT;
+		if (pathLength > MWorld::MAT_SIZE_METERS / 4)
+			pathLength = MWorld::MAT_SIZE_METERS / 4;
 		curDirIndex++;
 		curDirIndex = curDirIndex % DIR_COUNT;
 		setSpiralPath(pathLength, curDirIndex);

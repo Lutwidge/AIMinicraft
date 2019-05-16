@@ -165,7 +165,7 @@ public :
 		cm = new CreatureManager(World);
 		
 		// Spawn
-		for (unsigned int i = 0; i < 12; i++)
+		for (unsigned int i = 0; i < 6; i++)
 		{
 			new Bird("Bird" + toString(i), World, cm, getRandomSpawnPos(true));
 			new Ocelot("Ocelot" + toString(i), World, cm, getRandomSpawnPos());

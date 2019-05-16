@@ -5,7 +5,7 @@
 #include "../AICreature.h"
 
 #define DIR_COUNT  4
-#define WOLF_SPEED  0.1f
+#define WOLF_SPEED  0.2f
 #define WOLF_SATIATION_DELAY  0.01f
 #define WOLF_REPRODUCTION_THRESHOLD  0.8f
 #define WOLF_REPRODUCTION_COUNT  0.4f
@@ -59,9 +59,10 @@ protected:
 					}
 				//}
 
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE) != nullptr)
+				AICreature* target = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Goat, WOLF_SIGHT_RANGE);
+				if (target != nullptr)
 				{
-					wolf->setEatTarget(wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE));
+					wolf->setEatTarget(target);
 
 					if (wolf->isEatTargetValid()) 
 					{
