@@ -6,7 +6,7 @@
 namespace {
 	static constexpr auto BEAR_SIGHT_RANGE = 10;
 	static constexpr auto BEAR_SPEED = 0.2f;
-	static constexpr auto BEAR_SATIATION_DECAY = 0.001f;
+	static constexpr auto BEAR_SATIATION_DECAY = 0.01f;
 	static constexpr auto BEAR_REPRODUCTION_THRESHOLD = 0.75f;
 	static constexpr auto BEAR_EAT_GAIN = 0.4f;
 	static constexpr auto BEAR_WANDERING_RANGE = 5;
@@ -23,7 +23,7 @@ protected:
 		IdleState(Bear* bear) : BearState(bear) {}
 
 		virtual void enter() {
-			printf("%s : Idle \n", bear->name.c_str());
+			//printf("%s : Idle \n", bear->name.c_str());
 			// On réinitialise la chemin
 			bear->goTo(getNewWaypoint());
 		}
@@ -88,7 +88,7 @@ protected:
 		EatState(Bear* bear) : BearState(bear) {}
 
 		virtual void enter() {
-			printf("%s : Eat \n", bear->name.c_str());
+			//printf("%s : Eat \n", bear->name.c_str());
 			bear->gotToEatTarget();
 		}
 
@@ -121,7 +121,7 @@ protected:
 		ReproductionState(Bear* bear) : BearState(bear) {}
 
 		virtual void enter() {
-			printf("%s : Reproduction \n", bear->name.c_str());
+			//printf("%s : Reproduction \n", bear->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Bear
 			YVec3f meetingPoint = (bear->position + ((Bear*)bear->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);

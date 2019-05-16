@@ -86,7 +86,10 @@ public:
 	}
 
 	inline YVec3f getNearestAirCube(int x, int y, int z) {
-		MCube* cube = getCube(x - 1, y, z);
+		MCube* cube = getCube(x, y, z);
+		if (cube->getType() == MCube::CUBE_AIR)
+			return YVec3f(x, y, z);
+		cube = getCube(x - 1, y, z);
 		if (cube->getType() == MCube::CUBE_AIR)
 			return YVec3f(x - 1, y, z);
 		cube = getCube(x + 1, y, z);
@@ -105,6 +108,11 @@ public:
 		if (cube->getType() == MCube::CUBE_AIR)
 			return YVec3f(x, y, z + 1);
 		return YVec3f(x, y, z);
+	}
+
+	inline YVec3f getNearestAirCube(YVec3f pos)
+	{
+		return getNearestAirCube(pos.X, pos.Y, pos.Z);
 	}
 
 	inline MCube * getCube(int x, int y, int z)
@@ -138,7 +146,7 @@ public:
 		if (z >= MAT_HEIGHT * MChunk::CHUNK_SIZE)
 			z = (MAT_HEIGHT * MChunk::CHUNK_SIZE) - 1;
 
-		YLog::log(YLog::ENGINE_INFO, ("Update world VAO + VBO"));
+		//YLog::log(YLog::ENGINE_INFO, ("Update world VAO + VBO"));
 		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->disableHiddenCubes();
 		Chunks[x / MChunk::CHUNK_SIZE][y / MChunk::CHUNK_SIZE][z / MChunk::CHUNK_SIZE]->toVbos();
 	}
@@ -496,7 +504,7 @@ public:
 
 	void add_world_to_vbo(void)
 	{
-		YLog::log(YLog::ENGINE_INFO, ("Initialize world VAO + VBO "));
+		//YLog::log(YLog::ENGINE_INFO, ("Initialize world VAO + VBO "));
 		for (int x = 0; x<MAT_SIZE; x++)
 			for (int y = 0; y<MAT_SIZE; y++)
 				for (int z = 0; z<MAT_HEIGHT; z++)

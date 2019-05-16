@@ -36,14 +36,14 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed)) 
 			{	
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr) 
-				{
-					wolf->switchState(new FleeState(wolf));
-					return;
-				}
-
-				else
-				{
+				//wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				//if (wolf->predator != nullptr)
+				//{
+				//	wolf->switchState(new FleeState(wolf));
+				//	return;
+				//}
+				//else
+				//{
 					if (wolf->canReproduce())
 					{
 						AICreature* targetWolf = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE);
@@ -57,7 +57,7 @@ protected:
 						}
 						//return;
 					}
-				}
+				//}
 
 				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Ocelot, WOLF_SIGHT_RANGE) != nullptr)
 				{
@@ -95,15 +95,16 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Wolf, WOLF_SIGHT_RANGE) != nullptr)
-				{
-					wolf->resetPartner();
-					wolf->switchState(new FleeState(wolf));
-					return;
-				}
+				//wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				//if (wolf->predator != nullptr)
+				//{
+				//	wolf->resetPartner();
+				//	wolf->switchState(new FleeState(wolf));
+				//	return;
+				//}
 
-				else
-				{
+				//else
+				//{
 					if (wolf->isPartnerValid())
 					{
 						if (wolf->hasNotReachedTarget())
@@ -125,7 +126,7 @@ protected:
 							return;
 						}
 					}
-				}
+				//}
 			}
 
 		}
@@ -173,13 +174,14 @@ protected:
 		{
 			if (wolf->updateSatiation(elapsed))
 			{
-				if (wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE) != nullptr)
-				{
-					wolf->switchState(new FleeState(wolf));
-					return;
-				}
-				else
-				{
+				//wolf->predator = wolf->manager->perceptor->creatureSight(wolf, CreatureType::Trap, WOLF_SIGHT_RANGE);
+				//if (wolf->predator != nullptr)
+				//{
+				//	wolf->switchState(new FleeState(wolf));
+				//	return;
+				//}
+				//else
+				//{
 					if (wolf->isEatTargetValid())
 					{
 						if (wolf->hasNotReachedTarget()) wolf->move(elapsed);
@@ -195,7 +197,7 @@ protected:
 						wolf->switchState(new IdleState(wolf));
 						return;
 					}
-				}
+				//}
 			}
 		}
 

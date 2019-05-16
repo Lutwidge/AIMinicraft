@@ -41,6 +41,7 @@
     <ClInclude Include="src\octave_perlin.h" />
     <ClInclude Include="src\SimpleList.h" />
     <ClInclude Include="src\world.h" />
+    <ClInclude Include="src\creatures\copycat\copycat.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />

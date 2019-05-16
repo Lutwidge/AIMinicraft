@@ -36,7 +36,7 @@ protected:
 
 				ocelot->setEatTarget(ocelot->manager->perceptor->creatureSight(ocelot, CreatureType::Bird, OCELOT_SIGHT_RANGE));
 				if (ocelot->isEatTargetValid()) {
-					YLog::log(YLog::USER_INFO, toString("[OCELOT] Found prey !").c_str());
+					//YLog::log(YLog::USER_INFO, toString("[OCELOT] Found prey !").c_str());
 					ocelot->switchState(new EatState(ocelot));
 					return;
 				}

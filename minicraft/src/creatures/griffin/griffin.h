@@ -169,7 +169,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : GoingDown \n", griffin->name.c_str());
+			//printf("%s : GoingDown \n", griffin->name.c_str());
 
 		}
 
@@ -183,7 +183,7 @@ protected:
 						griffin->move(elapsed);
 					}
 					else {
-						printf("%s : GoingDown to rest !    ", griffin->name.c_str());
+						//printf("%s : GoingDown to rest !    ", griffin->name.c_str());
 						griffin->switchState(new RestState(griffin));
 						return;
 					}
@@ -201,7 +201,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : Rest \n", griffin->name.c_str());
+			//printf("%s : Rest \n", griffin->name.c_str());
 		}
 
 		virtual void update(float elapsed) {
@@ -210,7 +210,7 @@ protected:
 			if (griffin->updateSatiation(elapsed)) {
 				
 				if (griffin->tireness > GRIFF_UP_TIRENESS_THRESHOLD) {
-					printf("%s : I'm back !  ", griffin->name.c_str());
+					//printf("%s : I'm back !  ", griffin->name.c_str());
 
 					YVec3f dest = YVec3f(griffin->position.X, griffin->position.Y, griffin->position.Z + 12);
 					griffin->goTo(dest);
@@ -233,7 +233,7 @@ protected:
 
 		virtual void enter()
 		{
-			printf("%s : Going Up ! \n", griffin->name.c_str());
+			//printf("%s : Going Up ! \n", griffin->name.c_str());
 		}
 
 		virtual void update(float elapsed) {
@@ -246,7 +246,7 @@ protected:
 						griffin->move(elapsed);
 					}
 					else {
-						printf("%s : Up to idle   ", griffin->name.c_str());
+						//printf("%s : Up to idle   ", griffin->name.c_str());
 						griffin->switchState(new IdleState(griffin));
 						return;
 					}
@@ -263,7 +263,7 @@ protected:
 		ReproductionState(Griffin* griffin) : GriffinState(griffin) {}
 
 		virtual void enter() {
-			printf("%s : Reproduction \n", griffin->name.c_str());
+			//printf("%s : Reproduction \n", griffin->name.c_str());
 			// Définition point de rencontre valide avec le reprodTarget du Griffin
 			YVec3f meetingPoint = (griffin->position + ((Griffin*)griffin->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);
@@ -361,7 +361,7 @@ public:
 
 	virtual void eat()
 	{
-		printf("%s : I EAT YOU MowlER FuuhER \n", name.c_str());
+		//printf("%s : I EAT YOU MowlER FuuhER \n", name.c_str());
 		targetCreature->die();
 		satiation += GRIFF_EAT_GAIN;
 		if (satiation > 1.0f)

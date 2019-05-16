@@ -36,7 +36,7 @@ public:
 		}
 	};
 
-	//Quitte l'idle quand il a reperé un serpent ou quand il meurt de fin
+	//Quitte l'idle quand il a reperï¿½ un serpent ou quand il meurt de fin
 	struct IdleState : public OwlState
 	{
 		IdleState(Owl* owl, bool onBranch) : OwlState(owl) 
@@ -48,7 +48,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans idle");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans idle");
 			timeBeforeSearch = 2;
 			time = timeBeforeSearch;
 		}
@@ -66,7 +66,7 @@ public:
 					return;
 				}
 
-				//Priorité recherche de bouffe
+				//Prioritï¿½ recherche de bouffe
 				if (owl->getSatiation() < 0.5f)
 				{
 					owl->switchState(new LookingForFoodState(owl));
@@ -118,7 +118,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre LFF");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre LFF");
 			//conter anti boucle infinie
 			int counter = 0;
 			bool found = false;
@@ -149,7 +149,7 @@ public:
 					directionRandom.Y = abs(directionRandom.Y);
 				}
 
-				//Aucune collision , on peut voler par là
+				//Aucune collision , on peut voler par lï¿½
 				if (!owl->manager->perceptor->raycast(owl->position, directionRandom,owl->sightRange, hitPosition))
 				{
 					found = true;
@@ -186,7 +186,7 @@ public:
 			{
 				owl->position += originForward * owl->timeBetweenMoves * elapsed;
 
-				//Point depassé
+				//Point depassï¿½
 				if ((positionTarget - owl->position).getSize() < 0.5)
 				{
 					owl->switchState(new LookingForFoodState(owl));
@@ -201,7 +201,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
 		}
 
 		void update(float elapsed)
@@ -223,12 +223,12 @@ public:
 					float mag = toSnake.getSize();
 					owl->position += toSnake.normalize() * owl->timeBetweenMoves * elapsed;
 
-					//Depassé (donc chopppé)
+					//Depassï¿½ (donc chopppï¿½)
 					if (mag < 0.5)
 					{
 						owl->eat();
 
-						//Rassasié , va chercher un arbre
+						//Rassasiï¿½ , va chercher un arbre
 						owl->switchState(new LookingForTreeState(owl));
 					}
 				}
@@ -254,7 +254,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans tree research");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans tree research");
 			int counter = 0;
 			bool found = false;
 			float range = 10;
@@ -283,7 +283,7 @@ public:
 		void enter()
 		{
 			owl->forward = (treePos - owl->position).normalize();
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
 		}
 
 		void update(float elapsed)
@@ -306,7 +306,7 @@ public:
 				return;
 			}
 
-			//Depassé , on se repose sur l'arbre
+			//Depassï¿½ , on se repose sur l'arbre
 			if ((treePos - owl->position).getSize() < 0.5)
 			{
 				owl->switchState(new IdleState(owl, true));
@@ -322,7 +322,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans flee");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans flee");
 			YVec3f directionFlee = (owl->position - predatorPos).normalize();
 			directionFlee.rotate(YVec3f(0, 0, 1), rand() % 20 - 10);
 
@@ -368,7 +368,7 @@ public:
 
 		void enter()
 		{
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
+			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
 			owl->forward = (potentialPartner->position - owl->position).normalize();
 		}
 
@@ -496,7 +496,7 @@ public:
 
 	void die()
 	{
-		YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl est mort");
+		//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl est mort");
 		AICreature::die();
 	}
 

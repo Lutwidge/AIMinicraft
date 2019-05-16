@@ -30,6 +30,7 @@
     <ClInclude Include="src\creatures\AICreature.h" />
     <ClInclude Include="src\creatures\bear\bear.h" />
     <ClInclude Include="src\creatures\bird\bird.h" />
+    <ClInclude Include="src\creatures\copycat\copycat.h" />
     <ClInclude Include="src\creatures\creature.h" />
     <ClInclude Include="src\creatures\CreatureManager.h" />
     <ClInclude Include="src\creatures\CreatureType.h" />
