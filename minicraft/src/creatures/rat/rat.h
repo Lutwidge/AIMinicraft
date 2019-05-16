@@ -58,14 +58,15 @@ protected:
 						}
 					}
 
-					// Sinon, on regarde si on voit un fruit
-					YVec3f fruit;
-					if (rat->manager->perceptor->blockSight(rat, MCube::CUBE_FRUIT, RAT_SIGHT_RANGE, fruit)) {
-						if (rat->setEatTarget(fruit)) {
-							rat->switchState(new EatState(rat));
-							return;
-						}
-					}
+                    AICreature *eatTarget = rat->manager->perceptor->deadCreatureSight( rat, RAT_SIGHT_RANGE );
+                    if ( eatTarget != nullptr ) {
+                        rat->setEatTarget( eatTarget );
+
+                        if ( rat->isEatTargetValid() ) {
+                            rat->switchState( new EatState( rat ) );
+                            return;
+                        }
+                    }
 				}
 
 				// Sinon, mouvement en spirale
@@ -209,31 +210,26 @@ public:
 		switchState(new IdleState(this));
 	}
 
-	/* EATING */
-	virtual bool isEatTargetValid() {
-		return world->getCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z)->isFruit();
-	}
 
-	virtual void eat()
-	{
-		world->getCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z)->setType(MCube::CUBE_BRANCHES);
-		world->respawnFruit();
-		// Regénérer le monde (mais coûteux... comme le picking)
-		world->updateCube((int) realEatTarget.X, (int) realEatTarget.Y, (int) realEatTarget.Z);
-		satiation += RAT_EAT_GAIN;
-		if (satiation > 1.0f)
-			satiation = 1.0f;
-	}
+    /* EATING */
+    AICreature* preyCreature;
 
-	virtual bool setEatTarget(YVec3f target) {
-		realEatTarget = target;
-		// Define eat target as the nearest air cube near the fruit
-		eatTarget = world->getNearestAirCube(target.X, target.Y, target.Z);
-		if (eatTarget == realEatTarget)
-			return false;
-		else
-			return true;
-	}
+    virtual void setEatTarget( AICreature* creature )
+    {
+        preyCreature = creature;
+    }
+
+    virtual bool isEatTargetValid()
+    {
+        return preyCreature != nullptr;
+    }
+
+    virtual void eat()
+    {
+        delete preyCreature;
+        satiation += RAT_EAT_GAIN;
+        preyCreature = nullptr;
+    }
 
 	/* IDLE */
 	virtual void initializeSpiralPath()

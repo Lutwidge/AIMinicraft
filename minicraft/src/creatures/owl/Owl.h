@@ -36,7 +36,7 @@ public:
 		}
 	};
 
-	//Quitte l'idle quand il a reperé un serpent ou quand il meurt de fin
+	//Quitte l'idle quand il a reperï¿½ un serpent ou quand il meurt de fin
 	struct IdleState : public OwlState
 	{
 		IdleState(Owl* owl, bool onBranch) : OwlState(owl) 
@@ -59,15 +59,15 @@ public:
 			if (owl->updateSatiation(elapsed))
 			{
 				//Fuite de predateur prioritaire
-				AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
-				if (creature != nullptr)
+				owl->predator = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
+				if (owl->predator != nullptr)
 				{
-					owl->switchState(new FleeState(owl, creature->position));
+					owl->switchState(new FleeState(owl, owl->predator->position));
 					return;
 				}
 
-				//Priorité recherche de bouffe
-				if (owl->getSatiation() < 0.2f)
+				//Prioritï¿½ recherche de bouffe
+				if (owl->getSatiation() < 0.5f)
 				{
 					owl->switchState(new LookingForFoodState(owl));
 					return;
@@ -89,7 +89,6 @@ public:
 				AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
 				if (crea != nullptr)
 				{
-					//YLog::log(YLog::ENGINE_INFO, "trouve");
 					owl->target = crea;
 					owl->switchState(new ChaseState(owl));
 					return;
@@ -115,6 +114,7 @@ public:
 
 		LookingForFoodState(Owl* owl) : OwlState(owl) {}
 		YVec3f positionTarget;
+		YVec3f originForward;
 
 		void enter()
 		{
@@ -123,6 +123,7 @@ public:
 			int counter = 0;
 			bool found = false;
 			YVec3f hitPosition;
+			originForward = owl->forward;
 			while (!found && counter < 10)
 			{
 				YVec3f directionRandom(rand() % 100 - 50, rand() % 100 - 50, rand() % 100 - 50);
@@ -148,7 +149,7 @@ public:
 					directionRandom.Y = abs(directionRandom.Y);
 				}
 
-				//Aucune collision , on peut voler par là
+				//Aucune collision , on peut voler par lï¿½
 				if (!owl->manager->perceptor->raycast(owl->position, directionRandom,owl->sightRange, hitPosition))
 				{
 					found = true;
@@ -167,6 +168,7 @@ public:
 		void update(float elapsed)
 		{
 			AICreature* targetSnake = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
+			owl->forward = owl->forward.rotate(YVec3f(0, 0, 1), 1);
 
 			AICreature* creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
 			if (creature != nullptr)
@@ -182,10 +184,10 @@ public:
 			}
 			else
 			{
-				owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
+				owl->position += originForward * owl->timeBetweenMoves * elapsed;
 
-				//Point depassé
-				if ((positionTarget - owl->position).dot(owl->forward) < 0)
+				//Point depassï¿½
+				if ((positionTarget - owl->position).getSize() < 0.5)
 				{
 					owl->switchState(new LookingForFoodState(owl));
 				}
@@ -218,14 +220,15 @@ public:
 				//Rien ne gene la vue
 				if (!owl->manager->perceptor->raycast(owl->position, toSnake, toSnake.getSize(), pos))
 				{
-					owl->position += toSnake.normalize() * owl->timeBetweenMoves;
+					float mag = toSnake.getSize();
+					owl->position += toSnake.normalize() * owl->timeBetweenMoves * elapsed;
 
-					//Depassé (donc chopppé)
-					if (toSnake.dot(owl->forward) < 0)
+					//Depassï¿½ (donc chopppï¿½)
+					if (mag < 0.5)
 					{
 						owl->eat();
 
-						//Rassasié , va chercher un arbre
+						//Rassasiï¿½ , va chercher un arbre
 						owl->switchState(new LookingForTreeState(owl));
 					}
 				}
@@ -288,8 +291,23 @@ public:
 			YVec3f toTarget = treePos - owl->position;
 			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
 
-			//Depassé , on se repose sur l'arbre
-			if (owl->forward.dot(treePos - owl->position) < 0)
+			AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
+			if (crea != nullptr)
+			{
+				owl->target = crea;
+				owl->switchState(new ChaseState(owl));
+				return;
+			}
+
+			owl->predator = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, OWL_SIGHT_RANGE);
+			if (owl->predator != nullptr)
+			{
+				owl->switchState(new FleeState(owl,owl->predator->position));
+				return;
+			}
+
+			//Depassï¿½ , on se repose sur l'arbre
+			if ((treePos - owl->position).getSize() < 0.5)
 			{
 				owl->switchState(new IdleState(owl, true));
 			}
@@ -333,7 +351,7 @@ public:
 		void update(float elapsed)
 		{
 			owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
-			if (owl->forward.dot(fleePosition - owl->position) < 0)
+			if ((fleePosition - owl->position).getSize() < 0.5)
 			{
 				owl->switchState(new IdleState(owl, false));
 			}
@@ -433,6 +451,7 @@ public:
 		manager->registerCreature(this);
 		satiation = 1;
 		sightRange = OWL_SIGHT_RANGE;
+		forward = YVec3f(1, 0, 0);
 		switchState(new IdleState(this, false));
 	}
 
