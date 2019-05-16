@@ -153,10 +153,11 @@ public:
 				if (!owl->manager->perceptor->raycast(owl->position, directionRandom,owl->sightRange, hitPosition))
 				{
 					found = true;
-					positionTarget = owl->position + (directionRandom * owl->sightRange);
+					owl->goTo(owl->position + (directionRandom * owl->sightRange));
 					owl->forward = directionRandom;
 				}
 				counter++;
+				
 			}
 
 			if (!found)
@@ -184,10 +185,10 @@ public:
 			}
 			else
 			{
-				owl->position += originForward * owl->timeBetweenMoves * elapsed;
+				owl->move(elapsed);
 
 				//Point depass�
-				if ((positionTarget - owl->position).getSize() < 0.5)
+				if (!owl->hasNotReachedTarget())
 				{
 					owl->switchState(new LookingForFoodState(owl));
 				}
@@ -198,11 +199,6 @@ public:
 	struct ChaseState : OwlState
 	{
 		ChaseState(Owl* owl) : OwlState(owl) {}
-
-		void enter()
-		{
-			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans Chase");
-		}
 
 		void update(float elapsed)
 		{
@@ -285,14 +281,14 @@ public:
 		{
 			owl->forward = (treePos - owl->position).normalize();
 			originForward = owl->forward;
-			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
+			owl->goTo(treePos);
 		}
 
 		void update(float elapsed)
 		{
 			owl->forward = originForward.rotate(YVec3f(0, 0, 1), 1);
 			YVec3f toTarget = treePos - owl->position;
-			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
+			owl->move(elapsed);
 
 			AICreature* crea = owl->manager->perceptor->creatureSight(owl, CreatureType::Snake, OWL_SIGHT_RANGE);
 			if (crea != nullptr)
@@ -310,7 +306,7 @@ public:
 			}
 
 			//Depass� , on se repose sur l'arbre
-			if ((treePos - owl->position).getSize() < 0.5)
+			if (!owl->hasNotReachedTarget())
 			{
 				owl->switchState(new IdleState(owl, true));
 			}
@@ -344,6 +340,7 @@ public:
 			{
 				fleePosition = owl->position + (directionFlee * 10);
 				owl->forward = directionFlee;
+				owl->goTo(fleePosition);
 			}
 			else
 			{
@@ -353,8 +350,8 @@ public:
 
 		void update(float elapsed)
 		{
-			owl->position += owl->forward * owl->timeBetweenMoves * elapsed;
-			if ((fleePosition - owl->position).getSize() < 0.5)
+			owl->move(elapsed);
+			if (!owl->hasNotReachedTarget())
 			{
 				owl->switchState(new IdleState(owl, false));
 			}
@@ -371,14 +368,12 @@ public:
 
 		void enter()
 		{
-			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans reroduction");
 			owl->forward = (potentialPartner->position - owl->position).normalize();
+			owl->goTo(potentialPartner->position);
 		}
 
 		void update(float elapsed)
 		{
-			YVec3f toPartner = potentialPartner->position - owl->position;
-
 			if (owl->updateSatiation(elapsed))
 			{
 				AICreature * creature = owl->manager->perceptor->creatureSight(owl, CreatureType::Griffin, owl->sightRange);
@@ -387,25 +382,15 @@ public:
 					owl->switchState(new FleeState(owl, creature->position));
 					return;
 				}
-				YVec3f pos;
 
-				//Rien ne gene la vue
-				if (!owl->manager->perceptor->raycast(owl->position, toPartner, toPartner.getSize(), pos))
+				if (!owl->hasNotReachedTarget())
 				{
-					if (toPartner.getSize() < 1)
-					{
-						owl->switchState(new ReproState(owl, potentialPartner));
-						return;
-					}
-					else
-					{
-						owl->position += toPartner.normalize() * owl->timeBetweenMoves * elapsed;
-					}
+					owl->switchState(new ReproState(owl, potentialPartner));
+					return;
 				}
 				else
 				{
-					//Perdu de vue
-					owl->switchState(new LookingForTreeState(owl));
+					owl->move(elapsed);
 				}
 			}
 		}
@@ -457,12 +442,6 @@ public:
 		forward = YVec3f(1, 0, 0);
 		switchState(new IdleState(this, false));
 	}
-
-	/*~Owl() // DO not use your own destroy
-	{
-		manager->unregisterCreature(this);
-		delete state;
-	}*/
 
 	bool isPartnerValid() override
 	{
