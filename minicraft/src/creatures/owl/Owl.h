@@ -279,15 +279,18 @@ public:
 	{
 		GoToTreeState(Owl* owl, YVec3f target) : OwlState(owl) , treePos(target){}
 		YVec3f treePos;
+		YVec3f originForward;
 
 		void enter()
 		{
 			owl->forward = (treePos - owl->position).normalize();
-			//YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
+			originForward = owl->forward;
+			YLog::log(YLog::MSG_TYPE::ENGINE_INFO, "owl rentre dans gotree");
 		}
 
 		void update(float elapsed)
 		{
+			owl->forward = originForward.rotate(YVec3f(0, 0, 1), 1);
 			YVec3f toTarget = treePos - owl->position;
 			owl->position += toTarget.normalize() * owl->timeBetweenMoves * elapsed;
 
