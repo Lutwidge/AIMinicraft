@@ -166,7 +166,12 @@ public:
 
 	/* EATING */
 	virtual bool isEatTargetValid() {
-		return prey != nullptr;
+		if (prey != nullptr)
+		{
+			if (!prey->IsDead)
+				return true;
+		}
+		return false;
 	}
 
 	virtual void eat() {

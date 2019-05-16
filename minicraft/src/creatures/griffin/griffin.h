@@ -339,7 +339,12 @@ public:
 	AICreature *targetCreature;
 
 	virtual bool isEatTargetValid() {
-		return true;//owl is dead???
+		if (targetCreature != nullptr)
+		{
+			if (!targetCreature->IsDead)
+				return true;
+		}
+		return false;
 	}
 
 	virtual bool setEatTarget(YVec3f target) {

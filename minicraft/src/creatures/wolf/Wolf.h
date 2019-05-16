@@ -28,7 +28,7 @@ protected:
 		IdleState(Wolf* wolf): WolfState(wolf) {}
 
 		virtual void enter() {
-			YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
+			//YLog::log(YLog::USER_INFO, toString("[WOLF] Idle State Enter").c_str());
 			wolf->initializePath();
 		}
 
@@ -65,7 +65,7 @@ protected:
 
 					if (wolf->isEatTargetValid()) 
 					{
-						YLog::log(YLog::USER_INFO, toString("[WOLF] Found prey !").c_str());
+						//YLog::log(YLog::USER_INFO, toString("[WOLF] Found prey !").c_str());
 						wolf->switchState(new EatState(wolf));
 						return;
 					}
@@ -85,7 +85,7 @@ protected:
 
 		virtual void enter() 
 		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] Reproduce State Enter").c_str());
+			//YLog::log(YLog::USER_INFO, toString("[WOLF] Reproduce State Enter").c_str());
 			YVec3f meetingPoint = (wolf->position + ((Wolf*)wolf->partner)->position) / 2;
 			meetingPoint = YVec3f((int)meetingPoint.X, (int)meetingPoint.Y, (int)meetingPoint.Z);
 			wolf->goTo(YVec3f(meetingPoint.X, meetingPoint.Y, wolf->world->getSurface(meetingPoint.X, meetingPoint.Y)));
@@ -140,7 +140,7 @@ protected:
 
 		virtual void enter()
 		{
-			YLog::log(YLog::USER_INFO, toString("[WOLF] Flee State Enter").c_str());
+			//YLog::log(YLog::USER_INFO, toString("[WOLF] Flee State Enter").c_str());
 			YVec3f fleeTarget = wolf->position + (wolf->position - wolf->predator->position).normalize() * WOLF_FLEE_RANGE;
 
 			fleeTarget = wolf->world->getNearestAirCube(fleeTarget.X, fleeTarget.Y, fleeTarget.Z);
@@ -166,7 +166,7 @@ protected:
 		virtual void enter() 
 		{
 			wolf->eatTarget = wolf->preyCreature->position;
-			YLog::log(YLog::USER_INFO, toString("[WOLF] Go to prey !").c_str());
+			//YLog::log(YLog::USER_INFO, toString("[WOLF] Go to prey !").c_str());
 			wolf->gotToEatTarget();
 		}
 
@@ -220,9 +220,13 @@ public:
 		preyCreature = creature;
 	}
 
-	virtual bool isEatTargetValid()
-	{
-		return preyCreature != nullptr;
+	virtual bool isEatTargetValid() {
+		if (preyCreature != nullptr)
+		{
+			if (!preyCreature->IsDead)
+				return true;
+		}
+		return false;
 	}
 
 	virtual void eat()

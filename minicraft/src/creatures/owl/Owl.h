@@ -488,9 +488,13 @@ public:
 		satiation -= 0.2;
 	}
 
-	bool isEatTargetValid() override
-	{
-		return true;
+	virtual bool isEatTargetValid() {
+		if (target != nullptr)
+		{
+			if (!target->IsDead)
+				return true;
+		}
+		return false;
 	}
 
 	float getSatiation()

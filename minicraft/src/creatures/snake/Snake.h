@@ -228,9 +228,13 @@ public:
 		preyCreature = creature;
 	}
 
-	virtual bool isEatTargetValid()
-	{
-		return preyCreature != nullptr;
+	virtual bool isEatTargetValid() {
+		if (preyCreature != nullptr)
+		{
+			if (!preyCreature->IsDead)
+				return true;
+		}
+		return false;
 	}
 
 	virtual void eat()

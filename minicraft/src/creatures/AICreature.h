@@ -29,8 +29,8 @@ public:
 
 		virtual void enter() {
 			CreatureType* crtype = creature->getType();
-			//printf("%s: Dead\n", creature->name.c_str());
 			creature->IsDead = true;
+			printf("%s: Dead\n", creature->name.c_str());
 			// On change de liste dans le CreatureManager
 			creature->manager->registerDeadCreature(creature);
 			// On donne a la creature sa target finale
@@ -62,7 +62,8 @@ public:
 	}
 
 	~AICreature() {
-		manager->unregisterCreature(this);
+		//manager->unregisterCreature(this);
+		manager->unregisterDeadCreature(this);
 		delete state;
 	}
 

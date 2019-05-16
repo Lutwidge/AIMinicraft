@@ -163,93 +163,24 @@ public :
 		// Spawn les premières créatures
 		cm = new CreatureManager(World);
 		
-		// Birds
-		new Bird("Bird1", World, cm, getRandomSpawnPos(true));
-		new Bird("Bird2", World, cm, getRandomSpawnPos(true));
-		new Bird("Bird3", World, cm, getRandomSpawnPos(true));
-		new Bird("Bird4", World, cm, getRandomSpawnPos(true));
-		new Bird("Bird5", World, cm, getRandomSpawnPos(true));
-		new Bird("Bird6", World, cm, getRandomSpawnPos(true));
-
-		// Ocelot
-		new Ocelot("Ocelot1", World, cm, getRandomSpawnPos());
-		new Ocelot("Ocelot2", World, cm, getRandomSpawnPos());
-		new Ocelot("Ocelot3", World, cm, getRandomSpawnPos());
-		new Ocelot("Ocelot4", World, cm, getRandomSpawnPos());
-		new Ocelot("Ocelot5", World, cm, getRandomSpawnPos());
-		new Ocelot("Ocelot6", World, cm, getRandomSpawnPos());
-		
-		new Griffin("Griffin The Third aka. Pet3r", World, cm, getRandomSpawnPos(true));
-		new Griffin("Griffin The Fourth aka. Pet4t", World, cm, getRandomSpawnPos(true));
-		new Griffin("Griffin The Fifth aka. Pet5t", World, cm, getRandomSpawnPos(true));
-		new Griffin("Griffin The Fifth aka. Pet5t", World, cm, getRandomSpawnPos(true));
-		new Griffin("Griffin The Fifth aka. Pet5t", World, cm, getRandomSpawnPos(true));
-		new Griffin("Griffin The Fifth aka. Pet5t", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl1", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl2", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl3", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl3", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl3", World, cm, getRandomSpawnPos(true));
-		new Owl("Owl3", World, cm, getRandomSpawnPos(true));
-		new Copycat("Copycat1", World, cm, getRandomSpawnPos());
-		new Copycat("Copycat2", World, cm, getRandomSpawnPos());
-		new Copycat("Copycat3", World, cm, getRandomSpawnPos());
-		new Copycat("Copycat3", World, cm, getRandomSpawnPos());
-		new Copycat("Copycat3", World, cm, getRandomSpawnPos());
-		new Copycat("Copycat3", World, cm, getRandomSpawnPos());
-
-		// Bears
-		new Bear("Bear1", World, cm, getRandomSpawnPos());
-		new Bear("Bear2", World, cm, getRandomSpawnPos());
-		new Bear("Bear3", World, cm, getRandomSpawnPos());
-		new Bear("Bear3", World, cm, getRandomSpawnPos());
-		new Bear("Bear3", World, cm, getRandomSpawnPos());
-		new Bear("Bear3", World, cm, getRandomSpawnPos());
-
-		// Traps
-		new Trap("Trap_1", World, cm, getRandomSpawnPos());
-		new Trap("Trap_2", World, cm, getRandomSpawnPos());
-		new Trap("Trap_3", World, cm, getRandomSpawnPos());
-		new Trap("Trap_4", World, cm, getRandomSpawnPos());
-		new Trap("Trap_5", World, cm, getRandomSpawnPos());
-		new Trap("Trap_5", World, cm, getRandomSpawnPos());
-		new Trap("Trap_5", World, cm, getRandomSpawnPos());
-		new Trap("Trap_5", World, cm, getRandomSpawnPos());
-
-		// Wolf
-		new Wolf("Wolf1", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf2", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf3", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf3", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf3", World, cm, getRandomSpawnPos());
-		new Wolf("Wolf3", World, cm, getRandomSpawnPos());
-
-		//Snake
-		new Snake("Snake1", World, cm, getRandomSpawnPos());
-		new Snake("Snake2", World, cm, getRandomSpawnPos());
-		new Snake("Snake3", World, cm, getRandomSpawnPos());
-		new Snake("Snake3", World, cm, getRandomSpawnPos());
-		new Snake("Snake3", World, cm, getRandomSpawnPos());
-		new Snake("Snake3", World, cm, getRandomSpawnPos());
-
-		//Rats
-		new Rat("Rat1", World, cm, getRandomSpawnPos());
-		new Rat("Rat2", World, cm, getRandomSpawnPos());
-		new Rat("Rat3", World, cm, getRandomSpawnPos());
-		new Rat("Rat3", World, cm, getRandomSpawnPos());
-		new Rat("Rat3", World, cm, getRandomSpawnPos());
-		new Rat("Rat3", World, cm, getRandomSpawnPos());
-
-		//Elephants
-		new Elephant("", World, cm, getRandomSpawnPos());
-		new Elephant("", World, cm, getRandomSpawnPos());
-		new Elephant("", World, cm, getRandomSpawnPos());
-		new Elephant("", World, cm, getRandomSpawnPos());
-		new Elephant("", World, cm, getRandomSpawnPos());
-		new Elephant("", World, cm, getRandomSpawnPos());
+		// Spawn
+		for (unsigned int i = 0; i < 12; i++)
+		{
+			new Bird("Bird" + toString(i), World, cm, getRandomSpawnPos(true));
+			new Ocelot("Ocelot" + toString(i), World, cm, getRandomSpawnPos());
+			new Griffin("Griffin" + toString(i), World, cm, getRandomSpawnPos(true));
+			new Owl("Owl" + toString(i), World, cm, getRandomSpawnPos(true));
+			new Copycat("Copycat" + toString(i), World, cm, getRandomSpawnPos());
+			new Bear("Bear" + toString(i), World, cm, getRandomSpawnPos());
+			new Trap("Trap" + toString(i), World, cm, getRandomSpawnPos());
+			new Wolf("Wolf" + toString(i), World, cm, getRandomSpawnPos());
+			new Snake("Snake" + toString(i), World, cm, getRandomSpawnPos());
+			new Rat("Rat" + toString(i), World, cm, getRandomSpawnPos());
+			new Elephant("", World, cm, getRandomSpawnPos());
+		}
 
 		// Spawn des cadavres
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 15; i++)
 		{
 			int x = rand() % MWorld::MAT_SIZE_METERS;
 			int y = rand() % MWorld::MAT_SIZE_METERS;

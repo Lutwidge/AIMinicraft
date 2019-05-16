@@ -42,6 +42,7 @@
     <ClInclude Include="src\SimpleList.h" />
     <ClInclude Include="src\world.h" />
     <ClInclude Include="src\creatures\copycat\copycat.h" />
+    <ClInclude Include="src\creatures\trap\trap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="minicraft.rc" />
